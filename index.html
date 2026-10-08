@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sri Devi Navaratri Celebrations 2026 | Chunduru Family</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Cinzel & Noto Serif -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;800&family=Noto+Serif:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            vedic: {
+              gold: '#D4AF37',
+              lightgold: '#FDF6E2',
+              deepred: '#800000',
+              saffron: '#C04000',
+              saffronLight: '#FFF8F0',
+              darkmaroon: '#4A0E17',
+              cream: '#FCFBF7',
+              bordergold: '#E5C158'
+            }
+          },
+          fontFamily: {
+            title: ['Cinzel', 'serif'],
+            body: ['Noto Serif', 'serif']
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #FAF7F2;
+      color: #2D1A1E;
+      font-family: 'Noto Serif', serif;
+    }
+    .ornament-border {
+      border: 1px solid #E5C158;
+      box-shadow: 0 4px 20px -2px rgba(128, 0, 0, 0.08);
+    }
+    .custom-scroll::-webkit-scrollbar {
+      height: 6px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: #D4AF37;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- Header & Invocations -->
+  <header class="bg-gradient-to-b from-vedic-darkmaroon to-vedic-deepred text-white py-8 px-4 text-center border-b-4 border-vedic-gold relative shadow-md">
+    <div class="max-w-4xl mx-auto space-y-2">
+      <div class="text-vedic-gold tracking-widest text-sm md:text-base font-semibold space-x-3">
+        <span>🙏 Om Sai Ram! 🙏</span>
+        <span>•</span>
+        <span>🙏 Om Sri Matre Namaha! 🙏</span>
+      </div>
+      <h1 class="text-3xl md:text-5xl font-extrabold font-title tracking-wider text-amber-100 pt-1">
+        Sri Devi Navaratri 2026
+      </h1>
+      <p class="text-amber-200 text-sm md:text-base font-medium">
+        October 11th, 2026 – October 20th, 2026 &nbsp;|&nbsp; Daily 7:00 PM – 9:00 PM PDT
+      </p>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="max-w-5xl mx-auto px-4 py-8 flex-1 w-full space-y-8">
+
+    <!-- Zoom Access Banner -->
+    <section class="bg-vedic-saffronLight ornament-border rounded-xl p-6 text-center">
+      <h2 class="text-xl md:text-2xl font-title font-bold text-vedic-deepred mb-2">
+        Join Live Evening Puja &amp; Aarti
+      </h2>
+      <p class="text-stone-700 text-sm md:text-base max-w-xl mx-auto mb-4">
+        Every evening from 7:00 PM to 9:00 PM PDT. Join virtually with family and friends to participate in the parayana, bhajans, and aarti.
+      </p>
+      
+      <div class="flex items-center justify-center gap-3 mb-4">
+        <a id="zoomJoinBtn" href="https://clever.zoom.us/j/93949980083?pwd=2cJ7ig7bNTAkw7Eb80HbZHWhwbMPJA.1" target="_blank" rel="noopener noreferrer" 
+           class="inline-block bg-vedic-deepred hover:bg-vedic-darkmaroon text-amber-100 font-title font-semibold px-8 py-2.5 rounded-lg border border-vedic-gold shadow-sm transition-all transform active:scale-95 text-base">
+          📹 Join Zoom Meeting
+        </a>
+      </div>
+
+      <div class="inline-flex flex-wrap items-center justify-center gap-4 text-xs md:text-sm text-stone-700 bg-white/80 border border-amber-200 px-4 py-2 rounded-lg">
+        <div><span class="font-semibold text-vedic-darkmaroon">Meeting ID:</span> <span id="meetingIdText">939 4998 0083</span></div>
+        <span class="hidden sm:inline text-amber-300">|</span>
+        <div><span class="font-semibold text-vedic-darkmaroon">Passcode:</span> <span id="passcodeText">DASARA2026</span></div>
+        <button type="button" onclick="copyPasscode()" class="text-xs bg-amber-100 hover:bg-amber-200 text-vedic-deepred px-2 py-0.5 rounded border border-amber-300 transition">
+          Copy Passcode
+        </button>
+      </div>
+      <div id="copyNotice" class="text-xs text-green-700 font-semibold mt-1.5 hidden">Passcode copied to clipboard!</div>
+    </section>
+
+    <!-- 10-Day Navigation Strip -->
+    <section>
+      <div class="flex items-center justify-between mb-3">
+        <h3 class="font-title text-lg font-bold text-vedic-darkmaroon uppercase tracking-wide">
+          10 Days Schedule
+        </h3>
+        <span class="text-xs text-stone-500 italic">Select any day to inspect details</span>
+      </div>
+      <div id="dayTabsContainer" class="flex gap-2 overflow-x-auto pb-2 custom-scroll">
+        <!-- Rendered by JS -->
+      </div>
+    </section>
+
+    <!-- Selected Day View Card -->
+    <section id="todayCard" class="bg-white ornament-border rounded-xl p-6 md:p-8 space-y-6">
+      <!-- Header of the active day -->
+      <div class="border-b border-amber-200 pb-4 flex flex-col md:flex-row md:items-center justify-between gap-2">
+        <div>
+          <div class="flex items-center gap-2">
+            <span id="activeDayBadge" class="bg-vedic-deepred text-amber-100 text-xs px-2.5 py-1 rounded-full font-title font-bold">
+              Day 1
+            </span>
+            <span id="activeDateText" class="text-sm font-semibold text-stone-600">
+              2026-10-11 (Sunday)
+            </span>
+          </div>
+          <h2 id="activeAlankaram" class="text-2xl md:text-3xl font-title font-extrabold text-vedic-deepred mt-2">
+            Sri Bala Tripura Sundari Devi
+          </h2>
+          <p id="activeThithi" class="text-sm text-amber-800 font-medium">
+            Thithi: Prathama
+          </p>
+        </div>
+        <div id="statusIndicator" class="text-xs md:text-sm font-semibold text-amber-800 bg-amber-50 border border-amber-200 px-3 py-1.5 rounded-lg text-center self-start md:self-auto">
+          Upcoming Celebration
+        </div>
+      </div>
+
+      <!-- Grid: Left side Stotram Flow, Right side Last Year Photo Placeholder -->
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
+        
+        <!-- Left: Stotram Flow -->
+        <div class="md:col-span-7 space-y-4">
+          <h3 class="font-title text-base font-bold text-vedic-darkmaroon border-b border-stone-200 pb-1 flex items-center gap-2">
+            <span>📖</span> Daily Puja &amp; Stotram Order
+          </h3>
+          <ol id="stotramList" class="space-y-2.5 text-sm">
+            <!-- Rendered dynamically by renderActiveDay() -->
+          </ol>
+        </div>
+
+        <!-- Right: Devi Photo Placeholder Card -->
+        <div class="md:col-span-5">
+          <div class="bg-stone-50 border border-stone-200 rounded-lg p-4 text-center">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-title font-bold text-vedic-darkmaroon">Last Year Alankaram</span>
+              <span class="text-[11px] text-stone-500 italic">Reference</span>
+            </div>
+            
+            <div class="relative w-full aspect-[4/5] bg-amber-50 rounded border-2 border-dashed border-amber-300 flex flex-col items-center justify-center p-4 text-stone-500 overflow-hidden group">
+              <img id="deviPhotoImg" src="" alt="Devi Alankaram Photo" class="hidden absolute inset-0 w-full h-full object-cover">
+              <div id="deviPhotoPlaceholder" class="flex flex-col items-center space-y-2">
+                <svg class="w-10 h-10 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
+                <span class="text-xs font-medium text-amber-900">Alankaram Photo Placeholder</span>
+                <span id="photoOutfitNote" class="text-[11px] text-stone-500 text-center px-2"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-stone-900 text-stone-400 py-6 text-center text-xs border-t border-vedic-gold/40 space-y-1">
+    <p class="font-title text-amber-200">Chunduru Family Sri Devi Navaratri Celebrations 2026</p>
+    <p>Chants &amp; Ashtottarams sourced from Vaidika Vignanam (vignanam.org)</p>
+  </footer>
+
+  <!-- App Logic & Calendar Sync -->
+  <script>
+    const scheduleData = {
+      event: {
+        startDate: "2026-10-11",
+        endDate: "2026-10-20"
+      },
+      standardStotrams: {
+        khadgamala: { title: "Sri Devi Khadgamala Stotram", url: "https://vignanam.org/english/sri-devi-khadgamala-stotram.html" },
+        mahishasura: { title: "Sri Mahishasura Mardini Stotram", url: "https://vignanam.org/english/sri-mahishasura-mardini-stotram.html" },
+        bhavani: { title: "Bhavani Ashtakam", url: "https://vignanam.org/english/bhavani-ashtakam.html" },
+        babaDhupAarti: { title: "Sri Shirdi Sai Baba Dhup Aarti", url: "https://vignanam.org/english/shirdi-sai-baba-harati.html" }
+      },
+      days: [
+        {
+          dayNumber: 1,
+          date: "2026-10-11",
+          dayOfWeek: "Sunday",
+          thithi: "Prathama",
+          alankaram: "Sri Bala Tripura Sundari Devi",
+          photoUrl: "",
+          lastYearAlankaramNotes: "Pink langa with blue-green dupatta",
+          ashtottaram: { title: "Sri Bala Tripura Sundari Ashtottara Sata Namavali", url: "https://vignanam.org/english/sri-shodashi-tripura-sundari-ashtottara-sata-namavali.html" }
+        },
+        {
+          dayNumber: 2,
+          date: "2026-10-12",
+          dayOfWeek: "Monday",
+          thithi: "Dvitiya",
+          alankaram: "Sri Gayatri Devi",
+          photoUrl: "",
+          lastYearAlankaramNotes: "Chandan + light purple saree (Surya aura, Swan)",
+          ashtottaram: { title: "Sri Gayatri Ashtottara Sata Namavali", url: "https://vignanam.org/english/gayatri-ashtottara-sata-namavali.html" }
+        },
+        {
+          dayNumber: 3,
+          date: "2026-10-13",
+          dayOfWeek: "Tuesday",
+          thithi: "Tritiya",
+          alankaram: "Sri Annapurna Devi",
+          photoUrl: "",
+          lastYearAlankaramNotes: "Blue maroon saree (Siva Lingam backdrop)",
+          ashtottaram: { title: "Sri Annapurna Ashtottara Sata Namavali", url: "https://vignanam.org/english/sri-annapurna-ashtottara-sata-namavali.html" }
+        },
+        {
+          dayNumber: 4,
+          date: "2026-10-14",
+          dayOfWeek: "Wednesday",
+          thithi: "Chathurthi",
+          alankaram: "Sri Meenakshi Devi",
+          photoUrl: "",
+          lastYearAlankaramNotes: "Green saree with lime garland",
+          ashtottaram: { title: "Sri Kamakshi / Meenakshi Ashtottara Sata Namavali", url: "https://vignanam.org/english/sri-kamakshi-ashtottara-sata-namavali.html" }
+        },
+        {
+          dayNumber: 5,
+          date: "2026-10-15",
+          dayOfWeek: "Thursday",
+          thithi: "Panchami",
+          alankaram: "Sri Lalita Devi",
+          photoUrl: "",
+          lastYearAlankaramNotes: "Red saree with blue border (Vaijayanthi mala)",
+          ashtottaram: { title: "Sri Lalitha Ashtottara Sata Namavali", url: "https://vignanam.org/english/lalitha-ashtottara-sata-namaavali.html" }
+        },
+        {
+          dayNumber: 6,
+          date: "2026-10-16",
+          dayOfWeek: "Friday",
+          thithi: "Shashti",
+          alankaram: "Sri Maha Lakshmi Devi",
+          photoUrl: "",
+          lastYearAlankaramNotes: "Pink saree with gold border & silver kalasham",
+          ashtottaram: { title: "Sri Maha Lakshmi Ashtottara Sata Namavali", url: "https://vignanam.org/english/sree-maha-lakshmi-ashtottara-sata-naamaavali.html" }
+        },
+        {
+          dayNumber: 7,
+          date: "2026-10-17",
+          dayOfWeek: "Saturday",
+          thithi: "Saptami (Moola Nakshatram)",
+          alankaram: "Sri Saraswati Devi",
+          photoUrl: "",
+          lastYearAlankaramNotes: "Gold saree with green border, Veena & peacocks",
+          ashtottaram: { title: "Sri Saraswati Ashtottara Sata Namavali", url: "https://vignanam.org/english/saraswati-ashtottara-sata-namavali.html" }
+        },
+        {
+          dayNumber: 8,
+          date: "2026-10-18",
+          dayOfWeek: "Sunday",
+          thithi: "Durgashtami",
+          alankaram: "Sri Durga Devi",
+          photoUrl: "",
+          lastYearAlankaramNotes: "Orange saree with green border & tiger vahana",
+          ashtottaram: { title: "Sri Durga Ashtottara Sata Namavali", url: "https://vignanam.org/english/durga-ashtottara-sata-namavali.html" }
+        },
+        {
+          dayNumber: 9,
+          date: "2026-10-19",
+          dayOfWeek: "Monday",
+          thithi: "Maharnavami",
+          alankaram: "Sri Mahishasura Mardini Devi",
+          photoUrl: "",
+          lastYearAlankaramNotes: "Purple saree with red border, Trishulam & Lion",
+          ashtottaram: { title: "Sri Mahishasura Mardini / Durga Ashtottaram", url: "https://vignanam.org/english/durga-ashtottara-sata-namavali.html" }
+        },
+        {
+          dayNumber: 10,
+          date: "2026-10-20",
+          dayOfWeek: "Tuesday",
+          thithi: "Vijaya Dasami",
+          alankaram: "Sri Raja Rajeswari Devi",
+          photoUrl: "",
+          lastYearAlankaramNotes: "Vaijayanthi mala, Simhasanam, Makara Toranam",
+          ashtottaram: { title: "Sri Raja Rajeshwari / Lalitha Ashtottara Sata Namavali", url: "https://vignanam.org/english/lalitha-ashtottara-sata-namaavali.html" }
+        }
+      ]
+    };
+
+    function getTodayString() {
+      try {
+        const parts = new Intl.DateTimeFormat('en-US', {
+          timeZone: 'America/Los_Angeles',
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit'
+        }).formatToParts(new Date());
+
+        const y = parts.find(p => p.type === 'year').value;
+        const m = parts.find(p => p.type === 'month').value;
+        const d = parts.find(p => p.type === 'day').value;
+        return `${y}-${m}-${d}`;
+      } catch (e) {
+        const d = new Date();
+        return d.toISOString().split('T')[0];
+      }
+    }
+
+    function getInitialDayIndex() {
+      const today = getTodayString();
+      const idx = scheduleData.days.findIndex(d => d.date === today);
+      if (idx !== -1) return idx;
+      if (today < scheduleData.days[0].date) return 0;
+      return scheduleData.days.length - 1;
+    }
+
+    let selectedDayIndex = getInitialDayIndex();
+
+    function renderTabs() {
+      const container = document.getElementById('dayTabsContainer');
+      if (!container) return;
+      container.innerHTML = '';
+      
+      const todayStr = getTodayString();
+
+      scheduleData.days.forEach((day, idx) => {
+        const isSelected = idx === selectedDayIndex;
+        const isToday = day.date === todayStr;
+
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'flex-shrink-0 px-3.5 py-2 rounded-lg text-left transition-all border ' + (
+          isSelected 
+            ? 'bg-vedic-deepred text-amber-100 border-vedic-gold shadow-sm ring-1 ring-vedic-gold' 
+            : 'bg-white text-stone-700 border-stone-200 hover:border-amber-300 hover:bg-amber-50'
+        );
+        
+        btn.onclick = function() {
+          selectedDayIndex = idx;
+          renderTabs();
+          renderActiveDay();
+        };
+
+        const shortName = day.alankaram.replace('Sri ', '').replace(' Devi', '');
+        btn.innerHTML = `
+          <div class="flex items-center gap-1.5">
+            <span class="text-xs font-title font-bold ${isSelected ? 'text-amber-200' : 'text-vedic-darkmaroon'}">Day ${day.dayNumber}</span>
+            ${isToday ? '<span class="text-[10px] bg-amber-400 text-stone-900 px-1 rounded font-bold">TODAY</span>' : ''}
+          </div>
+          <div class="text-[11px] truncate max-w-[110px] ${isSelected ? 'text-stone-200' : 'text-stone-500'}">
+            ${shortName}
+          </div>
+        `;
+        container.appendChild(btn);
+      });
+    }
+
+    function renderActiveDay() {
+      const day = scheduleData.days[selectedDayIndex];
+      const todayStr = getTodayString();
+
+      const badge = document.getElementById('activeDayBadge');
+      const dateText = document.getElementById('activeDateText');
+      const alankaram = document.getElementById('activeAlankaram');
+      const thithi = document.getElementById('activeThithi');
+      const statusEl = document.getElementById('statusIndicator');
+
+      if (badge) badge.textContent = `Day ${day.dayNumber}`;
+      if (dateText) dateText.textContent = `${day.date} (${day.dayOfWeek})`;
+      if (alankaram) alankaram.textContent = day.alankaram;
+      if (thithi) thithi.textContent = `Thithi: ${day.thithi}`;
+
+      if (statusEl) {
+        if (day.date === todayStr) {
+          statusEl.textContent = "🌟 Today's Active Puja";
+          statusEl.className = "text-xs md:text-sm font-semibold text-vedic-deepred bg-amber-200 border border-amber-400 px-3 py-1.5 rounded-lg text-center self-start md:self-auto shadow-sm";
+        } else if (day.date < todayStr) {
+          statusEl.textContent = "✓ Completed";
+          statusEl.className = "text-xs md:text-sm font-medium text-stone-500 bg-stone-100 border border-stone-200 px-3 py-1.5 rounded-lg text-center self-start md:self-auto";
+        } else {
+          statusEl.textContent = "Upcoming Celebration";
+          statusEl.className = "text-xs md:text-sm font-medium text-amber-800 bg-amber-50 border border-amber-200 px-3 py-1.5 rounded-lg text-center self-start md:self-auto";
+        }
+      }
+
+      // Stotram List Order with whole-card link support
+      const stotramList = document.getElementById('stotramList');
+      if (stotramList) {
+        const order = [
+          { num: 1, title: "Puja Vidhanam", type: "plain" },
+          { num: 2, title: scheduleData.standardStotrams.khadgamala.title, url: scheduleData.standardStotrams.khadgamala.url, type: "link" },
+          { num: 3, title: day.ashtottaram.title, url: day.ashtottaram.url, type: "link", highlight: true },
+          { num: 4, title: "Naivedyam", type: "plain" },
+          { num: 5, title: "Mangala Aarti", type: "plain" },
+          { num: 6, title: scheduleData.standardStotrams.mahishasura.title, url: scheduleData.standardStotrams.mahishasura.url, type: "link" },
+          { num: 7, title: scheduleData.standardStotrams.bhavani.title, url: scheduleData.standardStotrams.bhavani.url, type: "link" }
+        ];
+
+        // Day 10 only: Shirdi Sai Baba Dhup Aarti
+        if (day.dayNumber === 10) {
+          order.push({
+            num: 8,
+            title: scheduleData.standardStotrams.babaDhupAarti.title,
+            url: scheduleData.standardStotrams.babaDhupAarti.url,
+            type: "link",
+            special: true
+          });
+        }
+
+        stotramList.innerHTML = order.map(item => {
+          if (item.type === "link") {
+            const containerStyle = item.special 
+              ? 'bg-amber-100/70 border-vedic-gold font-semibold hover:bg-amber-200/80 shadow-sm' 
+              : (item.highlight 
+                  ? 'bg-amber-50/80 border-vedic-gold font-semibold hover:bg-amber-100/90 shadow-sm' 
+                  : 'bg-white border-stone-200 hover:border-amber-400 hover:bg-amber-50/50');
+            
+            return `
+              <li>
+                <a href="${item.url}" target="_blank" rel="noopener noreferrer" 
+                   class="group flex items-center justify-between p-3 rounded-lg border transition-all duration-150 cursor-pointer ${containerStyle}">
+                  <div class="flex items-center gap-2.5">
+                    <span class="w-5 h-5 rounded-full bg-vedic-darkmaroon text-amber-100 flex items-center justify-center text-xs font-bold font-title flex-shrink-0">
+                      ${item.num}
+                    </span>
+                    <span class="text-stone-800 group-hover:text-vedic-deepred transition-colors">
+                      ${item.title}
+                    </span>
+                  </div>
+                  <span class="text-xs text-vedic-deepred font-semibold flex items-center gap-1 group-hover:translate-x-0.5 transition-transform flex-shrink-0 ml-2">
+                    Open ↗
+                  </span>
+                </a>
+              </li>
+            `;
+          } else {
+            return `
+              <li class="flex items-center justify-between p-3 rounded-lg border bg-white border-stone-200">
+                <div class="flex items-center gap-2.5">
+                  <span class="w-5 h-5 rounded-full bg-stone-300 text-stone-800 flex items-center justify-center text-xs font-bold font-title flex-shrink-0">
+                    ${item.num}
+                  </span>
+                  <span class="font-medium text-stone-700">
+                    ${item.title}
+                  </span>
+                </div>
+              </li>
+            `;
+          }
+        }).join('');
+      }
+
+      // Photo rendering
+      const imgEl = document.getElementById('deviPhotoImg');
+      const placeholderEl = document.getElementById('deviPhotoPlaceholder');
+      const photoNoteEl = document.getElementById('photoOutfitNote');
+
+      if (photoNoteEl) {
+        photoNoteEl.textContent = day.lastYearAlankaramNotes ? `Note: ${day.lastYearAlankaramNotes}` : '';
+      }
+
+      if (imgEl && placeholderEl) {
+        if (day.photoUrl && day.photoUrl.trim() !== "") {
+          imgEl.src = day.photoUrl;
+          imgEl.classList.remove('hidden');
+          placeholderEl.classList.add('hidden');
+        } else {
+          imgEl.src = "";
+          imgEl.classList.add('hidden');
+          placeholderEl.classList.remove('hidden');
+        }
+      }
+    }
+
+    function copyPasscode() {
+      const code = document.getElementById('passcodeText').innerText;
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(code).then(showNotice);
+      } else {
+        showNotice();
+      }
+      function showNotice() {
+        const notice = document.getElementById('copyNotice');
+        if (notice) {
+          notice.classList.remove('hidden');
+          setTimeout(() => notice.classList.add('hidden'), 2500);
+        }
+      }
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', function() {
+        renderTabs();
+        renderActiveDay();
+      });
+    } else {
+      renderTabs();
+      renderActiveDay();
+    }
+  </script>
+</body>
+</html>
