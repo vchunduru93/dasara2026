@@ -78,10 +78,10 @@
     <!-- Zoom Access Banner -->
     <section class="bg-vedic-saffronLight ornament-border rounded-xl p-6 text-center">
       <h2 class="text-xl md:text-2xl font-title font-bold text-vedic-deepred mb-2">
-        Join Live Evening Puja &amp; Aarti
+        Join Us for Evening Puja, Aarti &amp; Bhajans
       </h2>
       <p class="text-stone-700 text-sm md:text-base max-w-xl mx-auto mb-4">
-        Every evening from 7:00 PM to 9:00 PM PDT. Join virtually with family and friends to participate in the parayana, bhajans, and aarti.
+        Every evening from 7:00 PM to 9:00 PM PDT, we warmly invite you to our home to celebrate with us. If you can't make it in person, please join us virtually on Zoom.
       </p>
       
       <div class="flex items-center justify-center gap-3 mb-4">
@@ -140,38 +140,17 @@
         </div>
       </div>
 
-      <!-- Grid: Left side Stotram Flow, Right side Last Year Photo Placeholder -->
-      <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
+      <!-- Stotram Flow -->
+      <div>
         
         <!-- Left: Stotram Flow -->
-        <div class="md:col-span-7 space-y-4">
+        <div class="space-y-4">
           <h3 class="font-title text-base font-bold text-vedic-darkmaroon border-b border-stone-200 pb-1 flex items-center gap-2">
             <span>📖</span> Daily Puja &amp; Stotram Order
           </h3>
           <ol id="stotramList" class="space-y-2.5 text-sm">
             <!-- Rendered dynamically by renderActiveDay() -->
           </ol>
-        </div>
-
-        <!-- Right: Devi Photo Placeholder Card -->
-        <div class="md:col-span-5">
-          <div class="bg-stone-50 border border-stone-200 rounded-lg p-4 text-center">
-            <div class="flex items-center justify-between mb-2">
-              <span class="text-xs font-title font-bold text-vedic-darkmaroon">Last Year Alankaram</span>
-              <span class="text-[11px] text-stone-500 italic">Reference</span>
-            </div>
-            
-            <div class="relative w-full aspect-[4/5] bg-amber-50 rounded border-2 border-dashed border-amber-300 flex flex-col items-center justify-center p-4 text-stone-500 overflow-hidden group">
-              <img id="deviPhotoImg" src="" alt="Devi Alankaram Photo" class="hidden absolute inset-0 w-full h-full object-cover">
-              <div id="deviPhotoPlaceholder" class="flex flex-col items-center space-y-2">
-                <svg class="w-10 h-10 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                </svg>
-                <span class="text-xs font-medium text-amber-900">Alankaram Photo Placeholder</span>
-                <span id="photoOutfitNote" class="text-[11px] text-stone-500 text-center px-2"></span>
-              </div>
-            </div>
-          </div>
         </div>
 
       </div>
@@ -205,8 +184,6 @@
           dayOfWeek: "Sunday",
           thithi: "Prathama",
           alankaram: "Sri Bala Tripura Sundari Devi",
-          photoUrl: "",
-          lastYearAlankaramNotes: "Pink langa with blue-green dupatta",
           ashtottaram: { title: "Sri Bala Tripura Sundari Ashtottara Sata Namavali", url: "https://vignanam.org/english/sri-shodashi-tripura-sundari-ashtottara-sata-namavali.html" }
         },
         {
@@ -215,8 +192,6 @@
           dayOfWeek: "Monday",
           thithi: "Dvitiya",
           alankaram: "Sri Gayatri Devi",
-          photoUrl: "",
-          lastYearAlankaramNotes: "Chandan + light purple saree (Surya aura, Swan)",
           ashtottaram: { title: "Sri Gayatri Ashtottara Sata Namavali", url: "https://vignanam.org/english/gayatri-ashtottara-sata-namavali.html" }
         },
         {
@@ -225,8 +200,6 @@
           dayOfWeek: "Tuesday",
           thithi: "Tritiya",
           alankaram: "Sri Annapurna Devi",
-          photoUrl: "",
-          lastYearAlankaramNotes: "Blue maroon saree (Siva Lingam backdrop)",
           ashtottaram: { title: "Sri Annapurna Ashtottara Sata Namavali", url: "https://vignanam.org/english/sri-annapurna-ashtottara-sata-namavali.html" }
         },
         {
@@ -235,8 +208,6 @@
           dayOfWeek: "Wednesday",
           thithi: "Chathurthi",
           alankaram: "Sri Meenakshi Devi",
-          photoUrl: "",
-          lastYearAlankaramNotes: "Green saree with lime garland",
           ashtottaram: { title: "Sri Kamakshi / Meenakshi Ashtottara Sata Namavali", url: "https://vignanam.org/english/sri-kamakshi-ashtottara-sata-namavali.html" }
         },
         {
@@ -245,8 +216,6 @@
           dayOfWeek: "Thursday",
           thithi: "Panchami",
           alankaram: "Sri Lalita Devi",
-          photoUrl: "",
-          lastYearAlankaramNotes: "Red saree with blue border (Vaijayanthi mala)",
           ashtottaram: { title: "Sri Lalitha Ashtottara Sata Namavali", url: "https://vignanam.org/english/lalitha-ashtottara-sata-namaavali.html" }
         },
         {
@@ -255,18 +224,14 @@
           dayOfWeek: "Friday",
           thithi: "Shashti",
           alankaram: "Sri Maha Lakshmi Devi",
-          photoUrl: "",
-          lastYearAlankaramNotes: "Pink saree with gold border & silver kalasham",
           ashtottaram: { title: "Sri Maha Lakshmi Ashtottara Sata Namavali", url: "https://vignanam.org/english/sree-maha-lakshmi-ashtottara-sata-naamaavali.html" }
         },
         {
           dayNumber: 7,
           date: "2026-10-17",
           dayOfWeek: "Saturday",
-          thithi: "Saptami (Moola Nakshatram)",
+          thithi: "Saptami",
           alankaram: "Sri Saraswati Devi",
-          photoUrl: "",
-          lastYearAlankaramNotes: "Gold saree with green border, Veena & peacocks",
           ashtottaram: { title: "Sri Saraswati Ashtottara Sata Namavali", url: "https://vignanam.org/english/saraswati-ashtottara-sata-namavali.html" }
         },
         {
@@ -275,8 +240,6 @@
           dayOfWeek: "Sunday",
           thithi: "Durgashtami",
           alankaram: "Sri Durga Devi",
-          photoUrl: "",
-          lastYearAlankaramNotes: "Orange saree with green border & tiger vahana",
           ashtottaram: { title: "Sri Durga Ashtottara Sata Namavali", url: "https://vignanam.org/english/durga-ashtottara-sata-namavali.html" }
         },
         {
@@ -285,8 +248,6 @@
           dayOfWeek: "Monday",
           thithi: "Maharnavami",
           alankaram: "Sri Mahishasura Mardini Devi",
-          photoUrl: "",
-          lastYearAlankaramNotes: "Purple saree with red border, Trishulam & Lion",
           ashtottaram: { title: "Sri Mahishasura Mardini / Durga Ashtottaram", url: "https://vignanam.org/english/durga-ashtottara-sata-namavali.html" }
         },
         {
@@ -295,8 +256,6 @@
           dayOfWeek: "Tuesday",
           thithi: "Vijaya Dasami",
           alankaram: "Sri Raja Rajeswari Devi",
-          photoUrl: "",
-          lastYearAlankaramNotes: "Vaijayanthi mala, Simhasanam, Makara Toranam",
           ashtottaram: { title: "Sri Raja Rajeshwari / Lalitha Ashtottara Sata Namavali", url: "https://vignanam.org/english/lalitha-ashtottara-sata-namaavali.html" }
         }
       ]
@@ -356,13 +315,13 @@
           renderActiveDay();
         };
 
-        const shortName = day.alankaram.replace('Sri ', '').replace(' Devi', '');
+        const shortName = day.alankaram.replace(' Devi', '');
         btn.innerHTML = `
           <div class="flex items-center gap-1.5">
             <span class="text-xs font-title font-bold ${isSelected ? 'text-amber-200' : 'text-vedic-darkmaroon'}">Day ${day.dayNumber}</span>
             ${isToday ? '<span class="text-[10px] bg-amber-400 text-stone-900 px-1 rounded font-bold">TODAY</span>' : ''}
           </div>
-          <div class="text-[11px] truncate max-w-[110px] ${isSelected ? 'text-stone-200' : 'text-stone-500'}">
+          <div class="text-[11px] truncate max-w-[160px] ${isSelected ? 'text-stone-200' : 'text-stone-500'}">
             ${shortName}
           </div>
         `;
@@ -465,26 +424,6 @@
         }).join('');
       }
 
-      // Photo rendering
-      const imgEl = document.getElementById('deviPhotoImg');
-      const placeholderEl = document.getElementById('deviPhotoPlaceholder');
-      const photoNoteEl = document.getElementById('photoOutfitNote');
-
-      if (photoNoteEl) {
-        photoNoteEl.textContent = day.lastYearAlankaramNotes ? `Note: ${day.lastYearAlankaramNotes}` : '';
-      }
-
-      if (imgEl && placeholderEl) {
-        if (day.photoUrl && day.photoUrl.trim() !== "") {
-          imgEl.src = day.photoUrl;
-          imgEl.classList.remove('hidden');
-          placeholderEl.classList.add('hidden');
-        } else {
-          imgEl.src = "";
-          imgEl.classList.add('hidden');
-          placeholderEl.classList.remove('hidden');
-        }
-      }
     }
 
     function copyPasscode() {
