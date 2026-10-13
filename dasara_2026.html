@@ -408,19 +408,21 @@
       if (stotramList) {
         const order = [
           { num: 1, title: "Puja Vidhanam", type: "plain" },
-          { num: 2, title: scheduleData.standardStotrams.khadgamala.title, url: scheduleData.standardStotrams.khadgamala.url, type: "link" },
-          { num: 3, title: scheduleData.standardStotrams.sriSuktam.title, url: scheduleData.standardStotrams.sriSuktam.url, type: "link" },
-          { num: 4, title: day.ashtottaram.title, url: day.ashtottaram.url, type: "link" },
+          { num: 2, title: scheduleData.standardStotrams.sriSuktam.title, url: scheduleData.standardStotrams.sriSuktam.url, type: "link" },
+          { num: 3, title: day.ashtottaram.title, url: day.ashtottaram.url, type: "link" },
+          { num: 4, title: scheduleData.standardStotrams.khadgamala.title, url: scheduleData.standardStotrams.khadgamala.url, type: "link" },
           { num: 5, title: "Naivedyam", type: "plain" },
           { num: 6, title: "Mangala Aarti", type: "plain" },
-          { num: 7, title: scheduleData.standardStotrams.mahishasura.title, url: scheduleData.standardStotrams.mahishasura.url, type: "link" },
-          { num: 8, title: scheduleData.standardStotrams.bhavani.title, url: scheduleData.standardStotrams.bhavani.url, type: "link" }
+          { num: 7, title: "Manthrapushpam", type: "plain" },
+          { num: 8, title: "Devi Kumari Puja", type: "plain" },
+          { num: 9, title: scheduleData.standardStotrams.mahishasura.title, url: scheduleData.standardStotrams.mahishasura.url, type: "link" },
+          { num: 10, title: scheduleData.standardStotrams.bhavani.title, url: scheduleData.standardStotrams.bhavani.url, type: "link" }
         ];
 
         // Day 10 only: Shirdi Sai Baba Dhup Aarti
         if (day.dayNumber === 10) {
           order.push({
-            num: 9,
+            num: 11,
             title: scheduleData.standardStotrams.babaDhupAarti.title,
             url: scheduleData.standardStotrams.babaDhupAarti.url,
             type: "link",
