@@ -163,10 +163,20 @@
       </h3>
       <ol class="space-y-2.5 text-sm">
         <li>
-          <a href="https://docs.google.com/document/d/1YVPZjOFhMzjDhl3bEsK6cOMbWveLdmBP/edit?usp=sharing&amp;ouid=112134187350523692319&amp;rtpof=true&amp;sd=true" target="_blank" rel="noopener noreferrer"
+          <a href="https://docs.google.com/document/d/1N9DQTxMbBYiH9w5bUM_u9QBSyKmsE_vbsjs-p3a_Was/edit?usp=sharing" target="_blank" rel="noopener noreferrer"
              class="group flex items-center justify-between p-3 rounded-lg border transition-all duration-150 cursor-pointer bg-white border-stone-200 hover:border-amber-400 hover:bg-amber-50/50">
             <div class="flex items-center gap-2.5">
               <span class="w-5 h-5 rounded-full bg-vedic-darkmaroon text-amber-100 flex items-center justify-center text-xs font-bold font-title flex-shrink-0">1</span>
+              <span class="text-stone-800 group-hover:text-vedic-deepred transition-colors">Hey Amba, Hey Amba, Hey Amba Bol</span>
+            </div>
+            <span class="text-xs text-vedic-deepred font-semibold flex items-center gap-1 group-hover:translate-x-0.5 transition-transform flex-shrink-0 ml-2">Open ↗</span>
+          </a>
+        </li>
+        <li>
+          <a href="https://docs.google.com/document/d/1SON7ooWDC2EBivj8wLU68ilQOPzAYBp3W50LwNlA7fw/edit?usp=sharing" target="_blank" rel="noopener noreferrer"
+             class="group flex items-center justify-between p-3 rounded-lg border transition-all duration-150 cursor-pointer bg-white border-stone-200 hover:border-amber-400 hover:bg-amber-50/50">
+            <div class="flex items-center gap-2.5">
+              <span class="w-5 h-5 rounded-full bg-vedic-darkmaroon text-amber-100 flex items-center justify-center text-xs font-bold font-title flex-shrink-0">2</span>
               <span class="text-stone-800 group-hover:text-vedic-deepred transition-colors">Kabhi Durga Banke Kabhi Kali Banke</span>
             </div>
             <span class="text-xs text-vedic-deepred font-semibold flex items-center gap-1 group-hover:translate-x-0.5 transition-transform flex-shrink-0 ml-2">Open ↗</span>
@@ -193,6 +203,7 @@
       standardStotrams: {
         khadgamala: { title: "Sri Devi Khadgamala Stotram", url: "https://vignanam.org/english/sri-devi-khadgamala-stotram.html" },
         mahishasura: { title: "Sri Mahishasura Mardini Stotram", url: "https://vignanam.org/english/sri-mahishasura-mardini-stotram.html" },
+        sriSuktam: { title: "Sri Suktam", url: "https://vignanam.org/english/sri-suktam.html" },
         bhavani: { title: "Bhavani Ashtakam", url: "https://vignanam.org/english/bhavani-ashtakam.html" },
         babaDhupAarti: { title: "Sri Shirdi Sai Baba Dhup Aarti", url: "https://vignanam.org/english/shirdi-sai-baba-harati.html" }
       },
@@ -382,17 +393,18 @@
         const order = [
           { num: 1, title: "Puja Vidhanam", type: "plain" },
           { num: 2, title: scheduleData.standardStotrams.khadgamala.title, url: scheduleData.standardStotrams.khadgamala.url, type: "link" },
-          { num: 3, title: day.ashtottaram.title, url: day.ashtottaram.url, type: "link", highlight: true },
-          { num: 4, title: "Naivedyam", type: "plain" },
-          { num: 5, title: "Mangala Aarti", type: "plain" },
-          { num: 6, title: scheduleData.standardStotrams.mahishasura.title, url: scheduleData.standardStotrams.mahishasura.url, type: "link" },
-          { num: 7, title: scheduleData.standardStotrams.bhavani.title, url: scheduleData.standardStotrams.bhavani.url, type: "link" }
+          { num: 3, title: scheduleData.standardStotrams.sriSuktam.title, url: scheduleData.standardStotrams.sriSuktam.url, type: "link" },
+          { num: 4, title: day.ashtottaram.title, url: day.ashtottaram.url, type: "link", highlight: true },
+          { num: 5, title: "Naivedyam", type: "plain" },
+          { num: 6, title: "Mangala Aarti", type: "plain" },
+          { num: 7, title: scheduleData.standardStotrams.mahishasura.title, url: scheduleData.standardStotrams.mahishasura.url, type: "link" },
+          { num: 8, title: scheduleData.standardStotrams.bhavani.title, url: scheduleData.standardStotrams.bhavani.url, type: "link" }
         ];
 
         // Day 10 only: Shirdi Sai Baba Dhup Aarti
         if (day.dayNumber === 10) {
           order.push({
-            num: 8,
+            num: 9,
             title: scheduleData.standardStotrams.babaDhupAarti.title,
             url: scheduleData.standardStotrams.babaDhupAarti.url,
             type: "link",
