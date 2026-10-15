@@ -126,7 +126,7 @@
         </h3>
         <span class="text-xs text-stone-500 italic">Select any day to inspect details</span>
       </div>
-      <div id="dayTabsContainer" class="flex gap-2 overflow-x-auto pb-2 custom-scroll">
+      <div id="dayTabsContainer" class="flex gap-2 overflow-x-auto p-1 pb-2 custom-scroll">
         <!-- Rendered by JS -->
       </div>
     </section>
@@ -150,6 +150,7 @@
           <p id="activeThithi" class="text-sm text-amber-800 font-medium">
             Thithi: Prathama
           </p>
+          <div id="activeColor" class="mt-2"></div>
         </div>
         <div id="statusIndicator" class="text-xs md:text-sm font-semibold text-amber-800 bg-amber-50 border border-amber-200 px-3 py-1.5 rounded-lg text-center self-start md:self-auto">
           Upcoming Celebration
@@ -250,6 +251,7 @@
       days: [
         {
           dayNumber: 1,
+          dressColor: { name: "Yellow", hex: "#FACC15" },
           date: "2026-10-11",
           dayOfWeek: "Sunday",
           thithi: "Prathama",
@@ -258,6 +260,7 @@
         },
         {
           dayNumber: 2,
+          dressColor: { name: "Peach", hex: "#FB9E7A" },
           date: "2026-10-12",
           dayOfWeek: "Monday",
           thithi: "Dvitiya",
@@ -266,6 +269,7 @@
         },
         {
           dayNumber: 3,
+          dressColor: { name: "Blue", hex: "#1D4ED8" },
           date: "2026-10-13",
           dayOfWeek: "Tuesday",
           thithi: "Tritiya",
@@ -274,6 +278,7 @@
         },
         {
           dayNumber: 4,
+          dressColor: { name: "Green", hex: "#15803D" },
           date: "2026-10-14",
           dayOfWeek: "Wednesday",
           thithi: "Chathurthi",
@@ -282,6 +287,7 @@
         },
         {
           dayNumber: 5,
+          dressColor: { name: "Red", hex: "#C81E1E" },
           date: "2026-10-15",
           dayOfWeek: "Thursday",
           thithi: "Panchami",
@@ -290,6 +296,7 @@
         },
         {
           dayNumber: 6,
+          dressColor: { name: "Pink", hex: "#EC4899" },
           date: "2026-10-16",
           dayOfWeek: "Friday",
           thithi: "Shashti",
@@ -298,6 +305,7 @@
         },
         {
           dayNumber: 7,
+          dressColor: { name: "White", hex: "#FFFFFF" },
           date: "2026-10-17",
           dayOfWeek: "Saturday",
           thithi: "Saptami",
@@ -306,6 +314,7 @@
         },
         {
           dayNumber: 8,
+          dressColor: { name: "Orange", hex: "#EA580C" },
           date: "2026-10-18",
           dayOfWeek: "Sunday",
           thithi: "Durgashtami",
@@ -314,6 +323,7 @@
         },
         {
           dayNumber: 9,
+          dressColor: { name: "Purple", hex: "#7E22CE", alt: "any dark color" },
           date: "2026-10-19",
           dayOfWeek: "Monday",
           thithi: "Maharnavami",
@@ -322,6 +332,7 @@
         },
         {
           dayNumber: 10,
+          dressColor: { name: "Gold", hex: "#B8860B", alt: "anything colorful" },
           date: "2026-10-20",
           dayOfWeek: "Tuesday",
           thithi: "Vijaya Dasami",
@@ -360,6 +371,27 @@
 
     let selectedDayIndex = getInitialDayIndex();
 
+    // Dress color helpers. A null dressColor means the color is still to be announced.
+    function isLightColor(hex) {
+      const n = parseInt(hex.slice(1), 16);
+      const r = (n >> 16) & 255, g = (n >> 8) & 255, b = n & 255;
+      return (0.299 * r + 0.587 * g + 0.114 * b) > 170;
+    }
+
+    // Near-white colors can't be shown as a tint or accent on the white card, so they get neutral greys instead
+    function isNearWhite(hex) {
+      const n = parseInt(hex.slice(1), 16);
+      const r = (n >> 16) & 255, g = (n >> 8) & 255, b = n & 255;
+      return Math.min(r, g, b) > 235;
+    }
+
+    function colorDot(color, sizeClass) {
+      if (!color) {
+        return `<span class="inline-block ${sizeClass} rounded-full border border-dashed border-stone-400 flex-shrink-0" title="Color TBA"></span>`;
+      }
+      return `<span class="inline-block ${sizeClass} rounded-full border border-stone-300 flex-shrink-0" style="background:${color.hex}" title="${color.name}"></span>`;
+    }
+
     function renderTabs() {
       const container = document.getElementById('dayTabsContainer');
       if (!container) return;
@@ -373,12 +405,29 @@
 
         const btn = document.createElement('button');
         btn.type = 'button';
-        btn.className = 'flex-shrink-0 px-3.5 py-2 rounded-lg text-left transition-all border ' + (
-          isSelected 
-            ? 'bg-vedic-deepred text-amber-100 border-vedic-gold shadow-sm ring-1 ring-vedic-gold' 
-            : 'bg-white text-stone-700 border-stone-200 hover:border-amber-300 hover:bg-amber-50'
-        );
-        
+        btn.className = 'flex-shrink-0 px-3.5 py-2 rounded-lg text-left transition-all border';
+
+        // Tab colors: tinted with the day's dress color, solid fill when selected.
+        // Days without a color yet keep the original white / maroon look.
+        const color = day.dressColor;
+        let st;
+        if (!color) {
+          st = isSelected
+            ? { bg: '#800000', border: '#D4AF37', title: '#FDE68A', sub: '#E7E5E4' }
+            : { bg: '#FFFFFF', border: '#E7E5E4', title: '#4A0E17', sub: '#78716C' };
+        } else if (isSelected) {
+          const light = isLightColor(color.hex);
+          st = { bg: color.hex, border: light ? '#A8A29E' : color.hex, title: light ? '#4A0E17' : '#FFFFFF', sub: light ? '#57534E' : 'rgba(255,255,255,0.85)' };
+        } else {
+          const white = isNearWhite(color.hex);
+          st = { bg: white ? '#FFFFFF' : color.hex + '2E', border: white ? '#D6D3D1' : color.hex + 'B3', title: '#4A0E17', sub: '#57534E' };
+        }
+        btn.style.background = st.bg;
+        btn.style.borderColor = st.border;
+        if (isSelected) {
+          btn.style.boxShadow = '0 0 0 2px #FAF7F2, 0 0 0 4px #4A0E17';
+        }
+
         btn.onclick = function() {
           selectedDayIndex = idx;
           renderTabs();
@@ -388,10 +437,11 @@
         const shortName = day.alankaram.replace(' Devi', '');
         btn.innerHTML = `
           <div class="flex items-center gap-1.5">
-            <span class="text-xs font-title font-bold ${isSelected ? 'text-amber-200' : 'text-vedic-darkmaroon'}">Day ${day.dayNumber}</span>
+            ${color ? '' : colorDot(color, 'w-2.5 h-2.5')}
+            <span class="text-xs font-title font-bold" style="color:${st.title}">Day ${day.dayNumber}</span>
             ${isToday ? '<span class="text-[10px] bg-amber-400 text-stone-900 px-1 rounded font-bold">TODAY</span>' : ''}
           </div>
-          <div class="text-[11px] truncate max-w-[160px] ${isSelected ? 'text-stone-200' : 'text-stone-500'}">
+          <div class="text-[11px] truncate max-w-[160px]" style="color:${st.sub}">
             ${shortName}
           </div>
         `;
@@ -413,6 +463,31 @@
       if (dateText) dateText.textContent = `${day.date} (${day.dayOfWeek})`;
       if (alankaram) alankaram.textContent = day.alankaram;
       if (thithi) thithi.textContent = `Thithi: ${day.thithi}`;
+
+      const colorEl = document.getElementById('activeColor');
+      const color = day.dressColor;
+      if (colorEl) {
+        if (color) {
+          const textColor = isLightColor(color.hex) ? '#2D1A1E' : '#FFFFFF';
+          colorEl.innerHTML = `
+            <span class="inline-flex items-center gap-1.5 text-xs md:text-sm font-semibold px-3 py-1 rounded-full border border-stone-300 shadow-sm" style="background:${color.hex};color:${textColor}">
+              Dress color: ${color.name}${color.alt ? ` or ${color.alt}` : ''}
+            </span>`;
+        } else {
+          colorEl.innerHTML = `
+            <span class="inline-flex items-center gap-1.5 text-xs md:text-sm font-medium px-3 py-1 rounded-full border border-dashed border-stone-400 text-stone-500 bg-stone-50">
+              Dress color: to be announced
+            </span>`;
+        }
+      }
+
+      // Thin accent on the day card in the day's color. Near-white colors get a
+      // pearl-grey bar instead, since pure white would be invisible on the white card.
+      const card = document.getElementById('todayCard');
+      if (card) {
+        const accent = color ? (isNearWhite(color.hex) ? '#DDD8CF' : color.hex) : null;
+        card.style.borderTop = accent ? `6px solid ${accent}` : '';
+      }
 
       if (statusEl) {
         if (day.date === todayStr) {
