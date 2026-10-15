@@ -239,6 +239,10 @@
       standardStotrams: {
         khadgamala: { title: "Sri Devi Khadgamala Stotram", url: "https://vignanam.org/english/sri-devi-khadgamala-stotram.html" },
         mahishasura: { title: "Sri Mahishasura Mardini Stotram", url: "https://vignanam.org/english/sri-mahishasura-mardini-stotram.html" },
+        pujaVidhanam: [
+          { title: "Ganapati Puja", url: "https://drive.google.com/file/d/1O1pz4MFetyxzO47hlCg__kefT9Lys8KD/view?usp=sharing" },
+          { title: "Devi Puja", url: "https://drive.google.com/file/d/1QLNkQPwCYlpkLuRxJJ9HHh26_4ERI96Y/view?usp=sharing" }
+        ],
         sriSuktam: { title: "Sri Suktam", url: "https://vignanam.org/english/sri-suktam.html" },
         bhavani: { title: "Bhavani Ashtakam", url: "https://vignanam.org/english/bhavani-ashtakam.html" },
         babaDhupAarti: { title: "Sri Shirdi Sai Baba Dhup Aarti", url: "https://vignanam.org/english/shirdi-sai-baba-harati.html" }
@@ -427,7 +431,7 @@
       const stotramList = document.getElementById('stotramList');
       if (stotramList) {
         const order = [
-          { num: 1, title: "Puja Vidhanam", type: "plain" },
+          { num: 1, title: "Puja Vidhanam", type: "plain", children: scheduleData.standardStotrams.pujaVidhanam },
           { num: 2, title: scheduleData.standardStotrams.sriSuktam.title, url: scheduleData.standardStotrams.sriSuktam.url, type: "link" },
           { num: 3, title: day.ashtottaram.title, url: day.ashtottaram.url, type: "link" },
           { num: 4, title: scheduleData.standardStotrams.khadgamala.title, url: scheduleData.standardStotrams.khadgamala.url, type: "link" },
@@ -478,7 +482,7 @@
             `;
           } else {
             return `
-              <li class="flex items-center justify-between p-3 rounded-lg border bg-white border-stone-200">
+              <li class="p-3 rounded-lg border bg-white border-stone-200">
                 <div class="flex items-center gap-2.5">
                   <span class="w-5 h-5 rounded-full bg-stone-300 text-stone-800 flex items-center justify-center text-xs font-bold font-title flex-shrink-0">
                     ${item.num}
@@ -487,6 +491,18 @@
                     ${item.title}
                   </span>
                 </div>
+                ${item.children ? `
+                <ul class="mt-2.5 ml-7 space-y-1.5">
+                  ${item.children.map(child => `
+                    <li>
+                      <a href="${child.url}" target="_blank" rel="noopener noreferrer"
+                         class="group flex items-center justify-between px-3 py-2 rounded-md border bg-white border-stone-200 hover:border-amber-400 hover:bg-amber-50/50 transition-all duration-150">
+                        <span class="text-stone-800 group-hover:text-vedic-deepred group-hover:font-semibold transition-colors">${child.title}</span>
+                        <span class="text-xs text-vedic-deepred font-semibold flex-shrink-0 ml-2 group-hover:translate-x-0.5 transition-transform">Open ↗</span>
+                      </a>
+                    </li>
+                  `).join('')}
+                </ul>` : ''}
               </li>
             `;
           }
