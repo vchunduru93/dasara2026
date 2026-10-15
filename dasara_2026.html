@@ -246,7 +246,7 @@
         ],
         sriSuktam: { title: "Sri Suktam", url: "https://vignanam.org/english/sri-suktam.html" },
         bhavani: { title: "Bhavani Ashtakam", url: "https://vignanam.org/english/bhavani-ashtakam.html" },
-        babaDhupAarti: { title: "Sri Shirdi Sai Baba Dhup Aarti", url: "https://vignanam.org/english/shirdi-sai-baba-harati.html" }
+        babaDhupAarti: { title: "Sri Shirdi Sai Baba Dhup Aarti", url: "https://vignanam.org/veda/shiridi-sai-baba-evening-aarati---dhoop-aarati-english.html" }
       },
       days: [
         {
@@ -524,18 +524,13 @@
             num: 11,
             title: scheduleData.standardStotrams.babaDhupAarti.title,
             url: scheduleData.standardStotrams.babaDhupAarti.url,
-            type: "link",
-            special: true
+            type: "link"
           });
         }
 
         stotramList.innerHTML = order.map(item => {
           if (item.type === "link") {
-            const containerStyle = item.special 
-              ? 'bg-amber-100/70 border-vedic-gold font-semibold hover:bg-amber-200/80 shadow-sm' 
-              : (item.highlight 
-                  ? 'bg-amber-50/80 border-vedic-gold font-semibold hover:bg-amber-100/90 shadow-sm' 
-                  : 'bg-white border-stone-200 hover:border-amber-400 hover:bg-amber-50/50');
+            const containerStyle = 'bg-white border-stone-200 hover:border-amber-400 hover:bg-amber-50/50';
             
             return `
               <li>
