@@ -10,7 +10,7 @@ function initialLang() {
   const fromUrl = new URLSearchParams(location.search).get('lang');
   if (LANG_LABELS[fromUrl]) return fromUrl;
   const saved = Prefs.get('pujaLang');
-  return LANG_LABELS[saved] ? saved : 'te';
+  return LANG_LABELS[saved] ? saved : 'en';
 }
 
 function escapeHtml(s) {
