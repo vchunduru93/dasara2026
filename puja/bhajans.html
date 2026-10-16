@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bhajans | Sri Devi Navaratri 2026</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png">
+  <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+  <meta property="og:title" content="Bhajans | Sri Devi Navaratri 2026">
+  <meta property="og:image" content="https://dasara2026.vamsichunduru.com/assets/om-512.png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Noto+Serif:ital,wght@0,400;0,600;0,700;1,400&family=Noto+Serif+Telugu:wght@400;600;700&family=Noto+Serif+Devanagari:wght@400;600;700&family=Noto+Serif+Kannada:wght@400;600;700&family=Noto+Serif+Tamil:wght@400;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = { theme: { extend: {
+      colors: { vedic: { gold: '#D4AF37', deepred: '#800000', darkmaroon: '#4A0E17', bordergold: '#E5C158' } },
+      fontFamily: { title: ['Cinzel', 'serif'] }
+    } } }
+  </script>
+  <link rel="stylesheet" href="reader.css">
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <header class="bg-gradient-to-b from-vedic-darkmaroon to-vedic-deepred text-white pt-3 pb-5 px-4 text-center border-b-4 border-vedic-gold">
+    <div class="max-w-2xl mx-auto">
+      <div class="text-left"><a id="backLink" href="../index.html" class="text-amber-200 hover:text-amber-100 text-sm"></a></div>
+      <h1 class="text-2xl md:text-4xl font-extrabold font-title tracking-wider text-amber-100 mt-1">🎶 Bhajans</h1>
+      <p id="nativeTitle" class="text-amber-200 text-base mt-0.5"></p>
+    </div>
+  </header>
+
+  <div class="sticky top-0 z-10 bg-[#FAF7F2]/95 backdrop-blur border-b border-amber-200 shadow-sm">
+    <div class="max-w-2xl mx-auto px-4 py-2 space-y-2">
+      <div class="flex items-center gap-2">
+        <select id="langPicker" aria-label="Language" class="flex-1 min-w-0 text-base font-semibold border border-vedic-bordergold rounded-md bg-white px-2 py-1.5 text-vedic-deepred"></select>
+        <button type="button" id="sizeDown" class="w-9 h-9 rounded-md border border-stone-300 bg-white text-stone-700 text-sm font-semibold" aria-label="Smaller text">A−</button>
+        <button type="button" id="sizeUp" class="w-9 h-9 rounded-md border border-stone-300 bg-white text-stone-700 text-base font-semibold" aria-label="Larger text">A+</button>
+      </div>
+      <!-- Quick jump to a bhajan -->
+      <div id="bhajanChips" class="chip-scroll flex gap-1.5 overflow-x-auto pb-0.5"></div>
+    </div>
+  </div>
+
+  <main class="max-w-2xl mx-auto px-4 py-5 flex-1 w-full space-y-5">
+    <div id="bhajanList" class="space-y-5"></div>
+  </main>
+
+  <footer class="bg-stone-900 text-stone-400 py-6 text-center text-xs border-t border-vedic-gold/40 mt-6">
+    <p class="font-title text-amber-200">Chunduru Family Sri Devi Navaratri Celebrations 2026</p>
+  </footer>
+
+  <script src="data.js"></script>
+  <script src="common.js"></script>
+  <script>
+    const params = new URLSearchParams(location.search);
+    const fromDay = params.get('day'), fromStep = params.get('step');
+    let lang = initialLang();
+
+    function render() {
+      document.documentElement.lang = lang;
+      document.getElementById('langPicker').innerHTML = langOptions(lang);
+      document.getElementById('nativeTitle').textContent = lang === 'en' ? '' : UI.bhajans[lang];
+      const back = document.getElementById('backLink');
+      if (fromDay) {
+        back.href = `day.html?day=${fromDay}&step=${fromStep || 1}&lang=${lang}`;
+        back.textContent = UI.back_to_puja[lang];
+      } else {
+        back.href = '../index.html';
+        back.textContent = UI.back_to_schedule[lang];
+      }
+
+      document.getElementById('bhajanChips').innerHTML = BHAJANS.map((b, i) =>
+        `<a href="#${b.id}" lang="${lang}" class="reading flex-shrink-0 px-3 py-1 rounded-full text-sm border border-stone-300 bg-white text-stone-700 hover:border-amber-400 hover:bg-amber-50 whitespace-nowrap" style="font-size:0.85rem">${i + 1}. ${escapeHtml(b.title[lang])}</a>`
+      ).join('');
+
+      document.getElementById('bhajanList').innerHTML = BHAJANS.map((b, i) => {
+        const text = TEXTS[b.text];
+        const { html } = renderBlocks(text.blocks[lang], b.id);
+        const note = text.note && text.note[lang] ? `<p class="text-xs text-stone-500 italic mt-1">${escapeHtml(text.note[lang])}</p>` : '';
+        return `<section id="${b.id}" class="bg-white ornament-border rounded-xl px-5 py-5 md:px-8 scroll-mt-28">
+          <div class="text-xs font-semibold text-amber-800 tracking-wide">${i + 1} / ${BHAJANS.length}</div>
+          <h2 lang="${lang}" class="reading text-title text-xl md:text-2xl mt-0.5">${escapeHtml(text.title[lang])}</h2>
+          ${note}
+          <div lang="${lang}" class="reading mt-2">${html}</div>
+        </section>`;
+      }).join('');
+    }
+
+    // Quick-jump buttons scroll straight to the bhajan (and keep the #id in the address for sharing)
+    document.getElementById('bhajanChips').onclick = (e) => {
+      const chip = e.target.closest('a[href^="#"]');
+      if (!chip) return;
+      e.preventDefault();
+      document.getElementById(chip.getAttribute('href').slice(1))?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      history.replaceState(null, '', chip.getAttribute('href'));
+    };
+
+    document.getElementById('langPicker').onchange = (e) => {
+      lang = e.target.value;
+      Prefs.set('pujaLang', lang);
+      setUrlParams({ lang });
+      render();
+    };
+
+    setupTextSize(document.querySelector('main'));
+    Promise.all(BHAJANS.map(b => loadText(b.text))).then(() => {
+      render();
+      if (location.hash) document.querySelector(location.hash)?.scrollIntoView();
+    });
+  </script>
+</body>
+</html>

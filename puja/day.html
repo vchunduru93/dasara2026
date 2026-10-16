@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Daily Puja | Sri Devi Navaratri 2026</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png">
+  <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+  <meta property="og:title" content="Daily Puja | Sri Devi Navaratri 2026">
+  <meta property="og:image" content="https://dasara2026.vamsichunduru.com/assets/om-512.png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Noto+Serif:ital,wght@0,400;0,600;0,700;1,400&family=Noto+Serif+Telugu:wght@400;600;700&family=Noto+Serif+Devanagari:wght@400;600;700&family=Noto+Serif+Kannada:wght@400;600;700&family=Noto+Serif+Tamil:wght@400;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = { theme: { extend: {
+      colors: { vedic: { gold: '#D4AF37', deepred: '#800000', darkmaroon: '#4A0E17', bordergold: '#E5C158' } },
+      fontFamily: { title: ['Cinzel', 'serif'] }
+    } } }
+  </script>
+  <link rel="stylesheet" href="reader.css">
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <header class="bg-gradient-to-b from-vedic-darkmaroon to-vedic-deepred text-white pt-3 pb-4 px-4 border-b-4 border-vedic-gold">
+    <div class="max-w-2xl mx-auto flex items-center justify-between gap-3">
+      <a id="scheduleLink" href="../index.html" class="text-amber-200 hover:text-amber-100 text-sm flex-shrink-0"></a>
+      <div class="text-right min-w-0">
+        <div id="dayLine" class="text-vedic-gold text-xs font-semibold tracking-wide"></div>
+        <div id="alankaramLine" class="text-amber-100 text-base md:text-lg font-semibold truncate"></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Sticky toolbar -->
+  <div class="sticky top-0 z-10 bg-[#FAF7F2]/95 backdrop-blur border-b border-amber-200 shadow-sm">
+    <div class="max-w-2xl mx-auto px-4 py-2 space-y-2">
+      <div class="flex items-center gap-2">
+        <select id="langPicker" aria-label="Language" class="flex-1 min-w-0 text-base font-semibold border border-vedic-bordergold rounded-md bg-white px-2 py-1.5 text-vedic-deepred"></select>
+        <button type="button" id="sizeDown" class="w-9 h-9 rounded-md border border-stone-300 bg-white text-stone-700 text-sm font-semibold" aria-label="Smaller text">A−</button>
+        <button type="button" id="sizeUp" class="w-9 h-9 rounded-md border border-stone-300 bg-white text-stone-700 text-base font-semibold" aria-label="Larger text">A+</button>
+        <a id="bhajansLink" href="bhajans.html" class="h-9 px-2.5 rounded-md border border-vedic-bordergold bg-white text-vedic-deepred text-sm font-semibold flex items-center flex-shrink-0">🎶</a>
+      </div>
+      <select id="stepPicker" aria-label="Step" class="w-full text-sm font-semibold border border-stone-300 rounded-md bg-white px-2 py-1.5 text-stone-800"></select>
+      <select id="sectionJump" aria-label="Section" class="w-full text-sm border border-stone-300 rounded-md bg-white px-2 py-1.5 text-stone-600 hidden"></select>
+    </div>
+  </div>
+
+  <main class="max-w-2xl mx-auto px-4 pt-5 pb-28 flex-1 w-full">
+    <article class="bg-white ornament-border rounded-xl px-5 py-6 md:px-8">
+      <div id="stepCount" class="text-xs font-semibold text-amber-800 tracking-wide uppercase"></div>
+      <h1 id="textTitle" class="text-title text-2xl md:text-3xl mt-1 reading"></h1>
+      <p id="textNote" class="text-xs text-stone-500 italic mt-1 hidden"></p>
+      <div id="textBody" class="reading mt-3"></div>
+      <a id="textLink" href="#" target="_blank" rel="noopener noreferrer" class="hidden mt-4 inline-block text-sm font-semibold text-vedic-deepred border border-vedic-bordergold rounded-lg px-3 py-1.5 hover:bg-amber-50"></a>
+      <p id="textCredit" class="text-xs text-stone-500 mt-6 pt-3 border-t border-stone-100 hidden"></p>
+    </article>
+  </main>
+
+  <!-- Prev / Next bar -->
+  <nav class="fixed bottom-0 inset-x-0 z-10 bg-white/95 backdrop-blur border-t border-amber-200 shadow-[0_-4px_12px_rgba(0,0,0,0.06)]">
+    <div class="max-w-2xl mx-auto px-4 py-2.5 flex items-center gap-2">
+      <button type="button" id="prevBtn" class="h-12 px-3 rounded-lg border border-stone-300 bg-white text-stone-700 text-sm font-semibold flex-shrink-0 disabled:opacity-40"></button>
+      <button type="button" id="nextBtn" class="h-12 flex-1 min-w-0 rounded-lg bg-vedic-deepred text-amber-100 border border-vedic-gold px-3 text-left">
+        <div id="nextLabel" class="text-[11px] uppercase tracking-wide text-amber-200 font-semibold"></div>
+        <div id="nextTitle" class="text-sm font-semibold truncate"></div>
+      </button>
+    </div>
+  </nav>
+
+  <script src="data.js"></script>
+  <script src="common.js"></script>
+  <script>
+    const params = new URLSearchParams(location.search);
+    const dayNum = Math.min(10, Math.max(1, parseInt(params.get('day'), 10) || todayDay()));
+    const day = DAYS[dayNum - 1];
+    let stepIdx = Math.min(day.steps.length - 1, Math.max(0, (parseInt(params.get('step'), 10) || 1) - 1));
+    let lang = initialLang();
+
+    function todayDay() {
+      const parts = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Los_Angeles' }).format(new Date());
+      const idx = DAYS.findIndex(d => d.date === parts);
+      return idx === -1 ? 1 : idx + 1;
+    }
+
+    function stepTitle(i) { return day.steps[i].title[lang] || day.steps[i].title.en; }
+
+    function renderChrome() {
+      document.documentElement.lang = lang;
+      document.getElementById('langPicker').innerHTML = langOptions(lang);
+      document.getElementById('scheduleLink').textContent = UI.back_to_schedule[lang];
+      const date = new Date(day.date + 'T12:00:00');
+      const dateText = date.toLocaleDateString(lang === 'en' ? 'en-US' : lang + '-IN', { weekday: 'short', month: 'short', day: 'numeric' });
+      document.getElementById('dayLine').textContent = `${UI.day[lang]} ${day.day} · ${dateText}`;
+      const alank = document.getElementById('alankaramLine');
+      alank.textContent = day.alankaram[lang];
+      alank.lang = lang;
+      document.getElementById('stepPicker').innerHTML = day.steps
+        .map((s, i) => `<option value="${i}"${i === stepIdx ? ' selected' : ''}>${i + 1}. ${escapeHtml(stepTitle(i))}</option>`).join('');
+      document.getElementById('bhajansLink').href = `bhajans.html?lang=${lang}&day=${day.day}&step=${stepIdx + 1}`;
+      document.getElementById('bhajansLink').textContent = '🎶 ' + UI.bhajans[lang];
+    }
+
+    function renderNav() {
+      const prev = document.getElementById('prevBtn');
+      prev.textContent = '← ' + UI.prev[lang];
+      prev.disabled = stepIdx === 0;
+      const isLast = stepIdx === day.steps.length - 1;
+      document.getElementById('nextLabel').textContent = isLast ? '' : `${UI.next[lang]} →`;
+      document.getElementById('nextTitle').textContent = isLast ? UI.done[lang] : stepTitle(stepIdx + 1);
+      document.getElementById('nextBtn').disabled = isLast;
+    }
+
+    async function renderStep() {
+      const step = day.steps[stepIdx];
+      document.getElementById('stepCount').textContent = `${UI.step[lang]} ${stepIdx + 1} ${UI.of[lang]} ${day.steps.length}`;
+      const title = document.getElementById('textTitle');
+      title.textContent = stepTitle(stepIdx);
+      title.lang = lang;
+      const body = document.getElementById('textBody');
+      body.lang = lang;
+      body.innerHTML = '';
+      renderNav();
+      const text = await loadText(step.text);
+      const { html, headings } = renderBlocks(text.blocks[lang] || text.blocks.en, 'step' + stepIdx);
+      body.innerHTML = html;
+
+      const note = document.getElementById('textNote');
+      note.textContent = text.note ? text.note[lang] || '' : '';
+      note.classList.toggle('hidden', !note.textContent);
+
+      const link = document.getElementById('textLink');
+      link.classList.toggle('hidden', !text.link);
+      if (text.link) { link.href = text.link.href; link.textContent = text.link.label[lang]; }
+
+      const credit = document.getElementById('textCredit');
+      credit.classList.toggle('hidden', !text.credit);
+      if (text.credit) credit.textContent = text.credit[lang];
+
+      const jump = document.getElementById('sectionJump');
+      jump.classList.toggle('hidden', headings.length === 0);
+      jump.innerHTML = `<option value="">${UI.sections[lang]}</option>` +
+        headings.map(h => `<option value="${h.id}">${escapeHtml(h.label)}</option>`).join('');
+
+      // Preload the next text so Next is instant
+      if (stepIdx + 1 < day.steps.length) loadText(day.steps[stepIdx + 1].text);
+    }
+
+    function goTo(i) {
+      stepIdx = i;
+      setUrlParams({ day: day.day, step: stepIdx + 1, lang });
+      renderChrome();
+      renderStep();
+      window.scrollTo({ top: 0 });
+    }
+
+    document.getElementById('langPicker').onchange = (e) => {
+      lang = e.target.value;
+      Prefs.set('pujaLang', lang);
+      setUrlParams({ lang });
+      renderChrome();
+      renderStep();
+    };
+    document.getElementById('stepPicker').onchange = (e) => goTo(parseInt(e.target.value, 10));
+    document.getElementById('prevBtn').onclick = () => stepIdx > 0 && goTo(stepIdx - 1);
+    document.getElementById('nextBtn').onclick = () => stepIdx < day.steps.length - 1 && goTo(stepIdx + 1);
+    document.getElementById('sectionJump').onchange = (e) => {
+      const target = document.getElementById(e.target.value);
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      e.target.value = '';
+    };
+
+    setupTextSize(document.querySelector('main'));
+    setUrlParams({ day: day.day, step: stepIdx + 1, lang });
+    renderChrome();
+    renderStep();
+  </script>
+</body>
+</html>
