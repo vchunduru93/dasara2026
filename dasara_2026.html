@@ -486,11 +486,15 @@
         memoriesEl.innerHTML = `
           <div class="border rounded-xl p-4" style="${panelStyle}">
             <h3 class="font-title text-base font-bold text-vedic-darkmaroon mb-3 text-center">🌺 Day ${n} Alankaram</h3>
-            <div class="grid grid-cols-2 gap-3 max-w-md mx-auto">
-              ${tile(day.memories.album, `assets/memories/day${n}-album.jpg`, 'aspect-[3/4]', '📸', 'Photo Album')}
-              ${tile(day.memories.reel, `assets/memories/day${n}-reel.jpg`, 'aspect-[3/4]', '🎬', 'Reel')}
+            <div class="grid grid-cols-2 gap-3 max-w-md mx-auto items-start">
+              <div>
+                ${tile(day.memories.album, `assets/memories/day${n}-album.jpg`, 'aspect-[3/4]', '📸', 'Photo Album')}
+              </div>
+              <div>
+                ${tile(day.memories.reel, `assets/memories/day${n}-reel.jpg`, 'aspect-[3/4]', '🎬', 'Reel')}
+                <p class="text-xs text-stone-600 italic text-center mt-2">Thank you so much to SheniShetty Bhargavi for creating the beautiful reels 🙏</p>
+              </div>
             </div>
-            <p class="text-xs text-stone-600 italic text-center mt-3">Thank you so much to SheniShetty Bhargavi for creating the beautiful reels 🙏</p>
           </div>`;
       }
 
