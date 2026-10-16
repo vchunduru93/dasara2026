@@ -45,8 +45,11 @@
         <button type="button" id="sizeDown" class="w-9 h-9 rounded-md border border-stone-300 bg-white text-stone-700 text-sm font-semibold" aria-label="Smaller text">A−</button>
         <button type="button" id="sizeUp" class="w-9 h-9 rounded-md border border-stone-300 bg-white text-stone-700 text-base font-semibold" aria-label="Larger text">A+</button>
       </div>
-      <select id="stepPicker" aria-label="Step" class="w-full text-sm font-semibold border border-stone-300 rounded-md bg-white px-2 py-1.5 text-stone-800"></select>
-      <select id="sectionJump" aria-label="Section" class="w-full text-sm border border-stone-300 rounded-md bg-white px-2 py-1.5 text-stone-600 hidden"></select>
+      <!-- Step and section pickers share a row on tablets and laptops -->
+      <div class="flex flex-col md:flex-row gap-2">
+        <select id="stepPicker" aria-label="Step" class="w-full md:flex-1 min-w-0 text-base font-semibold border border-stone-300 rounded-md bg-white px-2 py-1.5 text-stone-800"></select>
+        <select id="sectionJump" aria-label="Section" class="w-full md:flex-1 min-w-0 text-base border border-stone-300 rounded-md bg-white px-2 py-1.5 text-stone-600 hidden"></select>
+      </div>
     </div>
   </div>
 
@@ -65,16 +68,16 @@
   <nav class="fixed bottom-0 inset-x-0 z-10 bg-white/95 backdrop-blur border-t border-amber-200 shadow-[0_-4px_12px_rgba(0,0,0,0.06)]">
     <div class="max-w-2xl md:max-w-4xl lg:max-w-5xl mx-auto px-4 py-2.5 flex items-center gap-2">
       <!-- Back · Schedule · Bhajans · Next -->
-      <button type="button" id="prevBtn" class="h-12 w-14 flex-shrink-0 rounded-lg border border-stone-300 bg-white text-stone-700 flex flex-col items-center justify-center leading-none disabled:opacity-40">
-        <span class="text-lg">←</span><span id="prevLabel" class="text-[10px] font-semibold mt-1 truncate max-w-full px-0.5"></span>
+      <button type="button" id="prevBtn" class="h-14 w-14 flex-shrink-0 rounded-lg border border-stone-300 bg-white text-stone-700 flex flex-col items-center justify-center leading-none disabled:opacity-40">
+        <span class="text-2xl" aria-hidden="true">←</span>
       </button>
-      <a id="scheduleLink" href="../index.html" class="h-12 w-14 flex-shrink-0 rounded-lg border border-stone-300 bg-white text-stone-700 flex flex-col items-center justify-center leading-none">
-        <span class="text-lg">⌂</span><span id="scheduleLabel" class="text-[10px] font-semibold mt-1 truncate max-w-full px-0.5"></span>
+      <a id="scheduleLink" href="../index.html" class="h-14 w-14 flex-shrink-0 rounded-lg border border-stone-300 bg-white text-stone-700 flex flex-col items-center justify-center leading-none">
+        <span class="text-2xl" aria-hidden="true">⌂</span>
       </a>
-      <a id="bhajansLink" href="bhajans.html" class="h-12 w-14 flex-shrink-0 rounded-lg border border-stone-300 bg-white text-stone-700 flex flex-col items-center justify-center leading-none text-vedic-deepred border-vedic-bordergold">
-        <span class="text-lg">🎶</span><span id="bhajansLabel" class="text-[10px] font-semibold mt-1 truncate max-w-full px-0.5"></span>
+      <a id="bhajansLink" href="bhajans.html" class="h-14 w-14 flex-shrink-0 rounded-lg border border-stone-300 bg-white text-stone-700 flex flex-col items-center justify-center leading-none text-vedic-deepred border-vedic-bordergold">
+        <span class="text-2xl" aria-hidden="true">🎶</span>
       </a>
-      <button type="button" id="nextBtn" class="h-12 flex-1 min-w-0 rounded-lg bg-vedic-deepred text-amber-100 border border-vedic-gold px-3 flex items-center justify-center gap-2">
+      <button type="button" id="nextBtn" class="h-14 flex-1 min-w-0 rounded-lg bg-vedic-deepred text-amber-100 border border-vedic-gold px-3 flex items-center justify-center gap-2">
         <span id="nextLabel" class="hidden sm:inline flex-shrink-0 text-[11px] uppercase tracking-wide text-amber-200 font-semibold empty:hidden"></span>
         <span id="nextTitle" class="min-w-0 text-sm md:text-base font-semibold truncate"></span>
         <span id="nextArrow" class="flex-shrink-0 font-semibold" aria-hidden="true">→</span>
@@ -86,6 +89,8 @@
   <script src="common.js"></script>
   <script>if ('serviceWorker' in navigator) navigator.serviceWorker.register('../sw.js').catch(() => {});</script>
   <script>
+    // Footer buttons are icon-only; the translated word is their accessible name and tooltip
+    function setName(id, text) { const el = document.getElementById(id); el.setAttribute('aria-label', text); el.title = text; }
     const params = new URLSearchParams(location.search);
     const dayNum = Math.min(10, Math.max(1, parseInt(params.get('day'), 10) || todayDay()));
     const day = DAYS[dayNum - 1];
@@ -103,7 +108,7 @@
     function renderChrome() {
       document.documentElement.lang = lang;
       document.getElementById('langPicker').innerHTML = langOptions(lang);
-      document.getElementById('scheduleLabel').textContent = UI.schedule[lang];
+      setName('scheduleLink', UI.schedule[lang]);
       const date = new Date(day.date + 'T12:00:00');
       const dateText = date.toLocaleDateString(lang === 'en' ? 'en-US' : lang + '-IN', { weekday: 'short', month: 'short', day: 'numeric' });
       document.getElementById('dayLine').textContent = `${UI.day[lang]} ${day.day} · ${dateText}`;
@@ -113,12 +118,12 @@
       document.getElementById('stepPicker').innerHTML = day.steps
         .map((s, i) => `<option value="${i}"${i === stepIdx ? ' selected' : ''}>${i + 1}. ${escapeHtml(stepTitle(i))}</option>`).join('');
       document.getElementById('bhajansLink').href = `bhajans.html?lang=${lang}&day=${day.day}&step=${stepIdx + 1}`;
-      document.getElementById('bhajansLabel').textContent = UI.bhajans[lang];
+      setName('bhajansLink', UI.bhajans[lang]);
     }
 
     function renderNav() {
       const prev = document.getElementById('prevBtn');
-      document.getElementById('prevLabel').textContent = UI.prev[lang];
+      setName('prevBtn', UI.prev[lang]);
       prev.disabled = stepIdx === 0;
       const isLast = stepIdx === day.steps.length - 1;
       document.getElementById('nextLabel').textContent = isLast ? '' : UI.next[lang];
