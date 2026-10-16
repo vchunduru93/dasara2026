@@ -1,0 +1,15 @@
+{
+  "name": "Sri Devi Navaratri 2026",
+  "short_name": "Navaratri",
+  "description": "Daily puja, stotrams and bhajans for Sri Devi Navaratri 2026",
+  "start_url": "/index.html",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#FAF7F2",
+  "theme_color": "#4A0E17",
+  "icons": [
+    { "src": "/assets/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/assets/om-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/assets/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

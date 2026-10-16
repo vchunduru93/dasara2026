@@ -7,6 +7,10 @@
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
   <link rel="icon" type="image/png" sizes="512x512" href="assets/om-512.png">
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="#4A0E17">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Navaratri">
   <meta property="og:title" content="Sri Devi Navaratri 2026 | Chunduru Family">
   <meta property="og:description" content="October 11–20, 2026 · Daily 7:00–9:00 PM PDT · Puja, Aarti &amp; Bhajans">
   <meta property="og:image" content="https://dasara2026.vamsichunduru.com/assets/om-512.png">
@@ -549,6 +553,76 @@
       renderTabs();
       renderActiveDay();
     }
+  </script>
+  <!-- Install-the-app banner: shown until installed or dismissed (remembered per device) -->
+  <div id="installBanner" class="hidden fixed inset-x-0 bottom-0 z-20 px-3 pb-3" style="padding-bottom: max(0.75rem, env(safe-area-inset-bottom))">
+    <div class="max-w-xl mx-auto bg-vedic-darkmaroon text-amber-50 border border-vedic-gold rounded-xl shadow-lg p-3 flex items-start gap-3">
+      <img src="assets/icon-192.png" alt="" class="w-11 h-11 rounded-lg flex-shrink-0">
+      <div class="flex-1 min-w-0">
+        <p class="font-semibold text-sm">Install the Navaratri app</p>
+        <p id="installHelp" class="text-xs text-amber-100/90 mt-0.5">Open the daily puja and bhajans in one tap, full screen, even without internet.</p>
+        <button type="button" id="installBtn" class="hidden mt-2 bg-vedic-gold text-vedic-darkmaroon font-semibold text-sm px-4 py-1.5 rounded-lg">Install</button>
+      </div>
+      <button type="button" id="installClose" class="text-amber-200 hover:text-white text-xl leading-none px-1 -mt-1" aria-label="Dismiss">✕</button>
+    </div>
+  </div>
+
+  <script>
+    // Service worker makes the site installable and readable offline
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js').catch(() => {});
+    }
+
+    (function setupInstallBanner() {
+      const KEY = 'installBannerDismissed';
+      const banner = document.getElementById('installBanner');
+      const installBtn = document.getElementById('installBtn');
+      const dismissed = () => { try { return localStorage.getItem(KEY) === '1'; } catch (e) { return false; } };
+      const installed = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+      if (installed || dismissed()) return;
+
+      // Keep the end of the page reachable while the banner covers the bottom
+      const show = () => {
+        banner.classList.remove('hidden');
+        document.body.style.paddingBottom = banner.offsetHeight + 'px';
+      };
+      const hide = () => {
+        banner.classList.add('hidden');
+        document.body.style.paddingBottom = '';
+      };
+      document.getElementById('installClose').onclick = () => {
+        try { localStorage.setItem(KEY, '1'); } catch (e) {}
+        hide();
+      };
+
+      // Android / Chrome / Edge: offer the browser's own install prompt
+      let deferred = null;
+      window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferred = e;
+        document.getElementById('installHelp').textContent =
+          'Open the daily puja and bhajans in one tap, full screen, even without internet.';
+        installBtn.classList.remove('hidden');
+        show();
+      });
+      installBtn.onclick = async () => {
+        if (!deferred) return;
+        deferred.prompt();
+        await deferred.userChoice;
+        deferred = null;
+        hide();
+      };
+      window.addEventListener('appinstalled', hide);
+
+      // iPhone / iPad Safari has no install prompt, so explain the two taps
+      const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent) ||
+        (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+      if (isIOS) {
+        document.getElementById('installHelp').innerHTML =
+          'Tap the <b>Share</b> button <svg class="inline w-4 h-4 -mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v12m0-12L8 7m4-4 4 4M5 11v8a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-8"/></svg>, then <b>Add to Home Screen</b> to open the puja in one tap.';
+        show();
+      }
+    })();
   </script>
 </body>
 </html>

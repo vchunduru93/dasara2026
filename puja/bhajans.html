@@ -6,6 +6,10 @@
   <title>Bhajans | Sri Devi Navaratri 2026</title>
   <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png">
   <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+  <link rel="manifest" href="../manifest.webmanifest">
+  <meta name="theme-color" content="#4A0E17">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Navaratri">
   <meta property="og:title" content="Bhajans | Sri Devi Navaratri 2026">
   <meta property="og:image" content="https://dasara2026.vamsichunduru.com/assets/om-512.png">
   <script src="https://cdn.tailwindcss.com"></script>
@@ -24,7 +28,7 @@
 
   <header class="bg-gradient-to-b from-vedic-darkmaroon to-vedic-deepred text-white pt-3 pb-5 px-4 text-center border-b-4 border-vedic-gold">
     <div class="max-w-2xl md:max-w-4xl lg:max-w-5xl mx-auto">
-      <div class="text-left"><a id="backLink" href="../index.html" class="text-amber-200 hover:text-amber-100 text-sm"></a></div>
+      <div class="text-left"><a href="../index.html" class="w-10 h-10 flex-shrink-0 rounded-full border border-amber-200/60 text-amber-100 hover:bg-white/10 flex items-center justify-center text-xl" aria-label="Home" title="Home">⌂</a></div>
       <h1 class="text-2xl md:text-4xl font-extrabold font-title tracking-wider text-amber-100 mt-1">🎶 Bhajans</h1>
       <p id="nativeTitle" class="text-amber-200 text-base mt-0.5"></p>
     </div>
@@ -38,20 +42,31 @@
         <button type="button" id="sizeUp" class="w-9 h-9 rounded-md border border-stone-300 bg-white text-stone-700 text-base font-semibold" aria-label="Larger text">A+</button>
       </div>
       <!-- Quick jump to a bhajan -->
-      <div id="bhajanChips" class="chip-scroll flex gap-1.5 overflow-x-auto pb-0.5"></div>
+      <select id="bhajanJump" aria-label="Jump to bhajan" class="w-full text-sm font-semibold border border-stone-300 rounded-md bg-white px-2 py-1.5 text-stone-800"></select>
     </div>
   </div>
 
-  <main class="max-w-2xl md:max-w-4xl lg:max-w-5xl mx-auto px-4 py-5 flex-1 w-full space-y-5">
+  <main class="max-w-2xl md:max-w-4xl lg:max-w-5xl mx-auto px-4 pt-5 pb-24 flex-1 w-full space-y-5">
     <div id="bhajanList" class="space-y-5"></div>
   </main>
 
-  <footer class="bg-stone-900 text-stone-400 py-6 text-center text-xs border-t border-vedic-gold/40 mt-6">
+  <footer class="bg-stone-900 text-stone-400 pt-6 pb-24 text-center text-xs border-t border-vedic-gold/40 mt-6">
     <p class="font-title text-amber-200">Chunduru Family Sri Devi Navaratri Celebrations 2026</p>
   </footer>
 
+  <!-- Back to puja (when opened from the reader) · Schedule -->
+  <nav class="fixed bottom-0 inset-x-0 z-10 bg-white/95 backdrop-blur border-t border-amber-200 shadow-[0_-4px_12px_rgba(0,0,0,0.06)]">
+    <div class="max-w-2xl md:max-w-4xl lg:max-w-5xl mx-auto px-4 py-2.5 flex items-center gap-2">
+      <a id="backLink" href="day.html" class="h-12 flex-1 min-w-0 rounded-lg bg-vedic-deepred text-amber-100 border border-vedic-gold px-3 text-sm font-semibold flex items-center hidden"></a>
+      <a id="scheduleLink" href="../index.html" class="h-12 w-14 flex-shrink-0 rounded-lg border border-stone-300 bg-white text-stone-700 flex flex-col items-center justify-center leading-none">
+        <span class="text-lg">⌂</span><span id="scheduleLabel" class="text-[10px] font-semibold mt-1 truncate max-w-full px-0.5"></span>
+      </a>
+    </div>
+  </nav>
+
   <script src="data.js"></script>
   <script src="common.js"></script>
+  <script>if ('serviceWorker' in navigator) navigator.serviceWorker.register('../sw.js').catch(() => {});</script>
   <script>
     const params = new URLSearchParams(location.search);
     const fromDay = params.get('day'), fromStep = params.get('step');
@@ -62,16 +77,16 @@
       document.getElementById('langPicker').innerHTML = langOptions(lang);
       document.getElementById('nativeTitle').textContent = lang === 'en' ? '' : UI.bhajans[lang];
       const back = document.getElementById('backLink');
+      back.classList.toggle('hidden', !fromDay);
       if (fromDay) {
         back.href = `day.html?day=${fromDay}&step=${fromStep || 1}&lang=${lang}`;
         back.textContent = UI.back_to_puja[lang];
-      } else {
-        back.href = '../index.html';
-        back.textContent = UI.back_to_schedule[lang];
       }
+      document.getElementById('scheduleLabel').textContent = UI.schedule[lang];
 
-      document.getElementById('bhajanChips').innerHTML = BHAJANS.map((b, i) =>
-        `<a href="#${b.id}" lang="${lang}" class="reading flex-shrink-0 px-3 py-1 rounded-full text-sm border border-stone-300 bg-white text-stone-700 hover:border-amber-400 hover:bg-amber-50 whitespace-nowrap" style="font-size:0.85rem">${i + 1}. ${escapeHtml(b.title[lang])}</a>`
+      const current = location.hash.slice(1);
+      document.getElementById('bhajanJump').innerHTML = BHAJANS.map((b, i) =>
+        `<option value="${b.id}"${b.id === current ? ' selected' : ''}>${i + 1}. ${escapeHtml(b.title[lang])}</option>`
       ).join('');
 
       document.getElementById('bhajanList').innerHTML = BHAJANS.map((b, i) => {
@@ -87,13 +102,10 @@
       }).join('');
     }
 
-    // Quick-jump buttons scroll straight to the bhajan (and keep the #id in the address for sharing)
-    document.getElementById('bhajanChips').onclick = (e) => {
-      const chip = e.target.closest('a[href^="#"]');
-      if (!chip) return;
-      e.preventDefault();
-      document.getElementById(chip.getAttribute('href').slice(1))?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      history.replaceState(null, '', chip.getAttribute('href'));
+    // Picking a bhajan scrolls to it (and keeps the #id in the address for sharing)
+    document.getElementById('bhajanJump').onchange = (e) => {
+      document.getElementById(e.target.value)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      history.replaceState(null, '', '#' + e.target.value);
     };
 
     document.getElementById('langPicker').onchange = (e) => {

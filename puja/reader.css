@@ -13,7 +13,7 @@ body { background-color: #FAF7F2; color: #2D1A1E; font-family: 'Noto Serif', ser
 .reading:lang(ml) { font-family: 'Noto Serif Malayalam', 'Noto Serif', serif; }
 .reading:lang(bn) { font-family: 'Noto Serif Bengali', 'Noto Serif', serif; }
 .reading:lang(en) { font-family: 'Noto Serif', serif; }
-.reading .line { display: block; padding-left: 1.25em; text-indent: -1.25em; }
+.reading .line { display: block; padding-left: 1.25em; text-indent: -1.25em; overflow-wrap: anywhere; }  /* long joined words like (gōtraḥ)/(gōtrōdbhavasya) wrap instead of widening the page */
 .reading .p-heading { font-weight: 600; color: #800000; font-size: 1.15em; margin-top: 1.75em; margin-bottom: 0.35em;
                       padding-bottom: 0.2em; border-bottom: 1px solid #F3E3B5; scroll-margin-top: 8rem; }
 .reading .p-label { font-size: 0.8em; font-style: italic; color: #57534E; margin-top: 0.9em; margin-bottom: 0.1em; }
