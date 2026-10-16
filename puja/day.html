@@ -11,7 +11,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Noto+Serif:ital,wght@0,400;0,600;0,700;1,400&family=Noto+Serif+Telugu:wght@400;600;700&family=Noto+Serif+Devanagari:wght@400;600;700&family=Noto+Serif+Kannada:wght@400;600;700&family=Noto+Serif+Tamil:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Noto+Serif:ital,wght@0,400;0,600;0,700;1,400&family=Noto+Serif+Telugu:wght@400;600;700&family=Noto+Serif+Devanagari:wght@400;600;700&family=Noto+Serif+Kannada:wght@400;600;700&family=Noto+Serif+Tamil:wght@400;600;700&family=Noto+Serif+Malayalam:wght@400;600;700&family=Noto+Serif+Bengali:wght@400;600;700&display=swap" rel="stylesheet">
   <script>
     tailwind.config = { theme: { extend: {
       colors: { vedic: { gold: '#D4AF37', deepred: '#800000', darkmaroon: '#4A0E17', bordergold: '#E5C158' } },
@@ -23,7 +23,7 @@
 <body class="min-h-screen flex flex-col">
 
   <header class="bg-gradient-to-b from-vedic-darkmaroon to-vedic-deepred text-white pt-3 pb-4 px-4 border-b-4 border-vedic-gold">
-    <div class="max-w-2xl mx-auto flex items-center justify-between gap-3">
+    <div class="max-w-2xl md:max-w-4xl lg:max-w-5xl mx-auto flex items-center justify-between gap-3">
       <a id="scheduleLink" href="../index.html" class="text-amber-200 hover:text-amber-100 text-sm flex-shrink-0"></a>
       <div class="text-right min-w-0">
         <div id="dayLine" class="text-vedic-gold text-xs font-semibold tracking-wide"></div>
@@ -34,7 +34,7 @@
 
   <!-- Sticky toolbar -->
   <div class="sticky top-0 z-10 bg-[#FAF7F2]/95 backdrop-blur border-b border-amber-200 shadow-sm">
-    <div class="max-w-2xl mx-auto px-4 py-2 space-y-2">
+    <div class="max-w-2xl md:max-w-4xl lg:max-w-5xl mx-auto px-4 py-2 space-y-2">
       <div class="flex items-center gap-2">
         <select id="langPicker" aria-label="Language" class="flex-1 min-w-0 text-base font-semibold border border-vedic-bordergold rounded-md bg-white px-2 py-1.5 text-vedic-deepred"></select>
         <button type="button" id="sizeDown" class="w-9 h-9 rounded-md border border-stone-300 bg-white text-stone-700 text-sm font-semibold" aria-label="Smaller text">A−</button>
@@ -46,7 +46,7 @@
     </div>
   </div>
 
-  <main class="max-w-2xl mx-auto px-4 pt-5 pb-28 flex-1 w-full">
+  <main class="max-w-2xl md:max-w-4xl lg:max-w-5xl mx-auto px-4 pt-5 pb-28 flex-1 w-full">
     <article class="bg-white ornament-border rounded-xl px-5 py-6 md:px-8">
       <div id="stepCount" class="text-xs font-semibold text-amber-800 tracking-wide uppercase"></div>
       <h1 id="textTitle" class="text-title text-2xl md:text-3xl mt-1 reading"></h1>
@@ -59,7 +59,7 @@
 
   <!-- Prev / Next bar -->
   <nav class="fixed bottom-0 inset-x-0 z-10 bg-white/95 backdrop-blur border-t border-amber-200 shadow-[0_-4px_12px_rgba(0,0,0,0.06)]">
-    <div class="max-w-2xl mx-auto px-4 py-2.5 flex items-center gap-2">
+    <div class="max-w-2xl md:max-w-4xl lg:max-w-5xl mx-auto px-4 py-2.5 flex items-center gap-2">
       <button type="button" id="prevBtn" class="h-12 px-3 rounded-lg border border-stone-300 bg-white text-stone-700 text-sm font-semibold flex-shrink-0 disabled:opacity-40"></button>
       <button type="button" id="nextBtn" class="h-12 flex-1 min-w-0 rounded-lg bg-vedic-deepred text-amber-100 border border-vedic-gold px-3 text-left">
         <div id="nextLabel" class="text-[11px] uppercase tracking-wide text-amber-200 font-semibold"></div>
@@ -108,7 +108,6 @@
       const isLast = stepIdx === day.steps.length - 1;
       document.getElementById('nextLabel').textContent = isLast ? '' : `${UI.next[lang]} →`;
       document.getElementById('nextTitle').textContent = isLast ? UI.done[lang] : stepTitle(stepIdx + 1);
-      document.getElementById('nextBtn').disabled = isLast;
     }
 
     async function renderStep() {
@@ -163,7 +162,11 @@
     };
     document.getElementById('stepPicker').onchange = (e) => goTo(parseInt(e.target.value, 10));
     document.getElementById('prevBtn').onclick = () => stepIdx > 0 && goTo(stepIdx - 1);
-    document.getElementById('nextBtn').onclick = () => stepIdx < day.steps.length - 1 && goTo(stepIdx + 1);
+    // On the last step, "Puja complete" takes you back to the schedule
+    document.getElementById('nextBtn').onclick = () => {
+      if (stepIdx < day.steps.length - 1) goTo(stepIdx + 1);
+      else location.href = '../index.html';
+    };
     document.getElementById('sectionJump').onchange = (e) => {
       const target = document.getElementById(e.target.value);
       if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });

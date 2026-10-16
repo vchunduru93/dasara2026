@@ -3,10 +3,15 @@ body { background-color: #FAF7F2; color: #2D1A1E; font-family: 'Noto Serif', ser
 
 /* Reading text: per-script fonts, size controlled by --scale */
 .reading { font-size: calc(1.0625rem * var(--scale, 1)); line-height: 1.85; }
+/* Larger base size on tablets and laptops, where the panel is wider */
+@media (min-width: 768px) { .reading { font-size: calc(1.1875rem * var(--scale, 1)); } }
+@media (min-width: 1024px) { .reading { font-size: calc(1.25rem * var(--scale, 1)); } }
 .reading:lang(te) { font-family: 'Noto Serif Telugu', 'Noto Serif', serif; }
 .reading:lang(hi) { font-family: 'Noto Serif Devanagari', 'Noto Serif', serif; }
 .reading:lang(kn) { font-family: 'Noto Serif Kannada', 'Noto Serif', serif; }
 .reading:lang(ta) { font-family: 'Noto Serif Tamil', 'Noto Serif', serif; }
+.reading:lang(ml) { font-family: 'Noto Serif Malayalam', 'Noto Serif', serif; }
+.reading:lang(bn) { font-family: 'Noto Serif Bengali', 'Noto Serif', serif; }
 .reading:lang(en) { font-family: 'Noto Serif', serif; }
 .reading .line { display: block; padding-left: 1.25em; text-indent: -1.25em; }
 .reading .p-heading { font-weight: 600; color: #800000; font-size: 1.15em; margin-top: 1.75em; margin-bottom: 0.35em;
