@@ -121,7 +121,12 @@
     setupTextSize(document.querySelector('main'));
     Promise.all(BHAJANS.map(b => loadText(b.text))).then(() => {
       render();
-      if (location.hash) document.querySelector(location.hash)?.scrollIntoView();
+      if (location.hash) {
+        const jump = () => document.querySelector(location.hash)?.scrollIntoView();
+        jump();
+        // Web fonts arriving later shift the layout, so jump again once they've loaded
+        document.fonts?.ready.then(jump);
+      }
     });
   </script>
 </body>
