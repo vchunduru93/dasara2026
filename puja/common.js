@@ -59,13 +59,20 @@ function setupTextSize(target) {
   const row = document.getElementById('sizeRow');
   const slider = document.getElementById('sizeSlider');
   let scale = Math.min(1.6, Math.max(0.8, parseFloat(Prefs.get('pujaScale')) || 1));
-  const apply = () => target.style.setProperty('--scale', scale);
+  const label = document.getElementById('sizeLabel');
+  // The label shows the actual reading size in pixels, which also depends on screen width
+  const apply = () => {
+    target.style.setProperty('--scale', scale);
+    const reading = target.querySelector('.reading:not(.text-title)') || target;
+    label.textContent = `${Math.round(parseFloat(getComputedStyle(reading).fontSize))}px`;
+  };
   slider.value = scale;
   slider.oninput = () => { scale = +slider.value; Prefs.set('pujaScale', scale); apply(); };
   toggle.onclick = () => {
     const open = row.classList.toggle('hidden') === false;
     toggle.setAttribute('aria-expanded', open);
     toggle.classList.toggle('tool-btn-on', open);
+    if (open) apply();
   };
   apply();
 }
