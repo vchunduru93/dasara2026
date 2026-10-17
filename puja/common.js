@@ -53,13 +53,85 @@ function langOptions(lang) {
     .map(code => `<option value="${code}"${code === lang ? ' selected' : ''}>${LANG_LABELS[code]}</option>`).join('');
 }
 
+// Aa opens a slider for the reading text size (saved per device)
 function setupTextSize(target) {
-  let scale = parseFloat(Prefs.get('pujaScale')) || 1;
+  const toggle = document.getElementById('sizeToggle');
+  const row = document.getElementById('sizeRow');
+  const slider = document.getElementById('sizeSlider');
+  let scale = Math.min(1.6, Math.max(0.8, parseFloat(Prefs.get('pujaScale')) || 1));
   const apply = () => target.style.setProperty('--scale', scale);
-  document.getElementById('sizeUp').onclick = () => { scale = Math.min(1.6, +(scale + 0.1).toFixed(1)); Prefs.set('pujaScale', scale); apply(); };
-  document.getElementById('sizeDown').onclick = () => { scale = Math.max(0.8, +(scale - 0.1).toFixed(1)); Prefs.set('pujaScale', scale); apply(); };
+  slider.value = scale;
+  slider.oninput = () => { scale = +slider.value; Prefs.set('pujaScale', scale); apply(); };
+  toggle.onclick = () => {
+    const open = row.classList.toggle('hidden') === false;
+    toggle.setAttribute('aria-expanded', open);
+    toggle.classList.toggle('tool-btn-on', open);
+  };
   apply();
 }
+
+// Play/pause auto scroll at 0.25x–4x speed; the speed slider shows while it runs.
+// Holding a finger on the screen pauses it, and it stops at the bottom of the page.
+const AutoScroll = (() => {
+  let playing = false, last = 0, carry = 0, touching = false, holdUntil = 0, wakeLock = null;
+  const BASE = 30;  // pixels per second at 1x
+  let rate = 1;
+  let btn, row;
+
+  function frame(t) {
+    if (!playing) return;
+    if (last && !touching && t > holdUntil) {
+      carry += BASE * rate * (t - last) / 1000;
+      const px = Math.floor(carry);
+      if (px >= 1) { window.scrollBy(0, px); carry -= px; }
+      if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2) { set(false); return; }
+    }
+    last = t;
+    requestAnimationFrame(frame);
+  }
+
+  // Keep the screen awake while reading hands-free (where the browser allows it)
+  async function keepAwake(on) {
+    try {
+      if (on && !wakeLock && navigator.wakeLock) wakeLock = await navigator.wakeLock.request('screen');
+      if (!on && wakeLock) { await wakeLock.release(); wakeLock = null; }
+    } catch (e) { wakeLock = null; }
+  }
+
+  function set(on) {
+    playing = on; last = 0; carry = 0;
+    btn.setAttribute('aria-pressed', on);
+    btn.classList.toggle('tool-btn-on', on);
+    document.getElementById('playIcon').classList.toggle('hidden', on);
+    document.getElementById('pauseIcon').classList.toggle('hidden', !on);
+    row.classList.toggle('hidden', !on);
+    keepAwake(on);
+    if (on) requestAnimationFrame(frame);
+  }
+
+  function setup() {
+    btn = document.getElementById('scrollToggle');
+    row = document.getElementById('speedRow');
+    const slider = document.getElementById('speedSlider');
+    const label = document.getElementById('speedLabel');
+    rate = Math.min(4, Math.max(0.25, parseFloat(Prefs.get('pujaScrollRate')) || 1));
+    const show = () => { label.textContent = `${rate}x`; };
+    slider.value = rate;
+    slider.oninput = () => { rate = +slider.value; Prefs.set('pujaScrollRate', rate); show(); };
+    show();
+    btn.onclick = () => set(!playing);
+    const main = document.querySelector('main');
+    main.addEventListener('touchstart', () => { touching = true; }, { passive: true });
+    window.addEventListener('touchend', () => { touching = false; last = 0; }, { passive: true });
+    window.addEventListener('touchcancel', () => { touching = false; last = 0; }, { passive: true });
+    document.addEventListener('visibilitychange', () => { if (playing && document.visibilityState === 'visible') keepAwake(true); });
+  }
+
+  // Let a smooth jump (section or bhajan picker) finish before scrolling resumes
+  function hold(ms) { holdUntil = performance.now() + ms; last = 0; }
+
+  return { setup, hold, isPlaying: () => playing };
+})();
 
 function setUrlParams(params) {
   const url = new URL(location.href);

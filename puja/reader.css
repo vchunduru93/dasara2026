@@ -40,3 +40,7 @@ body { background-color: #FAF7F2; color: #2D1A1E; font-family: 'Noto Serif', ser
 .btn-emboss:active:not(:disabled), .btn-emboss-red:active {
   transform: translateY(1px); box-shadow: inset 0 2px 3px rgba(0,0,0,0.18); }
 .btn-emboss:disabled { box-shadow: none; }
+
+/* Toolbar sliders and the "on" state of the Aa and auto-scroll buttons */
+.slider { accent-color: #800000; height: 2.25rem; }
+.tool-btn-on { background-color: #800000 !important; color: #FEF3C7 !important; border-color: #D4AF37 !important; }

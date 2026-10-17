@@ -42,8 +42,22 @@
     <div class="max-w-2xl md:max-w-4xl lg:max-w-5xl mx-auto px-4 py-2 space-y-2">
       <div class="flex items-center gap-2">
         <select id="langPicker" aria-label="Language" class="flex-1 min-w-0 text-xl font-semibold border border-vedic-bordergold rounded-md bg-white px-2 py-1.5 text-vedic-deepred"></select>
-        <button type="button" id="sizeDown" class="w-11 h-11 rounded-md border border-stone-300 bg-white text-stone-700 text-xl font-semibold" aria-label="Smaller text">A−</button>
-        <button type="button" id="sizeUp" class="w-11 h-11 rounded-md border border-stone-300 bg-white text-stone-700 text-xl font-semibold" aria-label="Larger text">A+</button>
+        <button type="button" id="sizeToggle" class="tool-btn w-11 h-11 rounded-md border border-stone-300 bg-white text-stone-700 text-xl font-semibold" aria-label="Text size" title="Text size" aria-expanded="false" aria-controls="sizeRow">Aa</button>
+        <button type="button" id="scrollToggle" class="tool-btn w-11 h-11 rounded-md border border-stone-300 bg-white text-stone-700 flex items-center justify-center" aria-label="Auto scroll" title="Auto scroll" aria-pressed="false">
+          <svg id="playIcon" class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg>
+          <svg id="pauseIcon" class="w-6 h-6 hidden" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>
+        </button>
+      </div>
+      <!-- Text size slider (opened by Aa) -->
+      <div id="sizeRow" class="hidden flex items-center gap-3 px-1">
+        <span class="text-base font-semibold text-stone-500" aria-hidden="true">A</span>
+        <input id="sizeSlider" type="range" min="0.8" max="1.6" step="0.05" class="slider flex-1" aria-label="Text size">
+        <span class="text-3xl font-semibold text-stone-500" aria-hidden="true">A</span>
+      </div>
+      <!-- Auto-scroll speed slider (shown while scrolling) -->
+      <div id="speedRow" class="hidden flex items-center gap-3 px-1">
+        <input id="speedSlider" type="range" min="0.25" max="4" step="0.25" class="slider flex-1" aria-label="Scroll speed">
+        <output id="speedLabel" for="speedSlider" class="w-14 text-right text-xl font-semibold text-stone-700 tabular-nums">1x</output>
       </div>
       <!-- Step and section pickers share a row on tablets and laptops -->
       <div class="flex flex-col md:flex-row gap-2">
@@ -74,8 +88,8 @@
       <a id="scheduleLink" href="../index.html" class="h-14 w-14 btn-emboss flex-shrink-0 rounded-lg border border-stone-300 bg-white text-stone-700 flex flex-col items-center justify-center leading-none">
         <svg class="w-9 h-9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"/><path d="M5.5 9v11h13V9"/><path d="M10 20v-5.5h4V20"/></svg>
       </a>
-      <a id="bhajansLink" href="bhajans.html" class="h-14 w-14 btn-emboss flex-shrink-0 rounded-lg border border-stone-300 bg-white text-stone-700 flex flex-col items-center justify-center leading-none text-vedic-deepred border-vedic-bordergold">
-        <span class="text-4xl leading-none" aria-hidden="true">🎶</span>
+      <a id="bhajansLink" href="bhajans.html" class="h-14 w-14 btn-emboss flex-shrink-0 rounded-lg border border-stone-300 bg-white text-stone-700 flex flex-col items-center justify-center leading-none">
+        <svg class="w-9 h-9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
       </a>
       <button type="button" id="nextBtn" class="h-14 flex-1 min-w-0 rounded-lg bg-vedic-deepred text-amber-100 border border-vedic-gold btn-emboss-red px-2 flex items-center justify-center gap-2">
         <span id="nextLabel" class="hidden sm:inline flex-shrink-0 text-base uppercase tracking-wide text-amber-200 font-semibold empty:hidden"></span>
@@ -200,11 +214,13 @@
     });
     document.getElementById('sectionJump').onchange = (e) => {
       const target = document.getElementById(e.target.value);
+      AutoScroll.hold(900);
       if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
       e.target.value = '';
     };
 
     setupTextSize(document.querySelector('main'));
+    AutoScroll.setup();
     setUrlParams({ day: day.day, step: stepIdx + 1, lang });
     renderChrome();
     renderStep();
