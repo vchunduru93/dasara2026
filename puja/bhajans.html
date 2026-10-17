@@ -65,6 +65,8 @@
 
   <footer class="bg-stone-900 text-stone-400 pt-6 pb-24 text-center text-xl border-t border-vedic-gold/40 mt-6">
     <p class="font-title text-amber-200">Chunduru Family Sri Devi Navaratri Celebrations 2026</p>
+    <p class="text-sm max-w-xl mx-auto px-4 mt-3">Texts and lyrics are shared for personal, non-commercial devotional use. All rights belong to their respective owners.</p>
+    <p class="text-sm mt-1">Contact: <a href="mailto:dasara@vamsichunduru.com" class="underline hover:text-amber-200">dasara@vamsichunduru.com</a></p>
   </footer>
 
   <!-- Back to puja (when opened from the reader) · Schedule -->
@@ -87,6 +89,25 @@
     const fromDay = params.get('day'), fromStep = params.get('step');
     let lang = initialLang();
 
+    // Bhajans whose lyrics live on another site: title, credit, and one big button out.
+    // The button opens the lyrics in the reading language when there's a page for it, else English.
+    function linkCard(b, i, text) {
+      const credit = text.credit ? (text.credit[lang] || text.credit.en) : '';
+      const link = text.links[lang] || text.links.en;
+      return `<section id="${b.id}" class="bg-white ornament-border rounded-xl px-5 py-5 md:px-8 scroll-mt-28">
+          <div class="text-xl font-semibold text-amber-800 tracking-wide">${i + 1} / ${BHAJANS.length}</div>
+          <h2 lang="${lang}" class="reading text-title text-xl md:text-2xl mt-0.5">${escapeHtml(text.title[lang])}</h2>
+          ${credit ? `<p lang="${lang}" class="text-base text-stone-500 mt-1">${escapeHtml(credit)}</p>` : ''}
+          <a href="${escapeHtml(link.href)}" target="_blank" rel="noopener noreferrer"
+             class="btn-emboss-red mt-4 flex items-center justify-center gap-2 w-full sm:w-auto sm:inline-flex rounded-lg border border-vedic-gold text-amber-100 text-xl font-semibold px-6 py-3">
+            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+            <span lang="${lang}">${escapeHtml(UI.open_lyrics[lang])}</span>
+            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg>
+          </a>
+          ${link.site ? `<p lang="${lang}" class="text-sm text-stone-500 mt-2">${escapeHtml(UI.lyrics_on[lang])} ${escapeHtml(link.site)}</p>` : ''}
+        </section>`;
+    }
+
     function render() {
       document.documentElement.lang = lang;
       document.getElementById('langPicker').innerHTML = langOptions(lang);
@@ -107,6 +128,7 @@
 
       document.getElementById('bhajanList').innerHTML = BHAJANS.map((b, i) => {
         const text = TEXTS[b.text];
+        if (text.links) return linkCard(b, i, text);
         const { html } = renderBlocks(text.blocks[lang], b.id);
         const note = text.note && text.note[lang] ? `<p class="text-xl text-stone-500 italic mt-1">${escapeHtml(text.note[lang])}</p>` : '';
         return `<section id="${b.id}" class="bg-white ornament-border rounded-xl px-5 py-5 md:px-8 scroll-mt-28">
