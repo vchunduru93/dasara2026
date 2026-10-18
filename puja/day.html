@@ -162,7 +162,8 @@
       body.innerHTML = '';
       renderNav();
       const text = await loadText(step.text);
-      const { html, headings } = renderBlocks(text.blocks[lang] || text.blocks.en, 'step' + stepIdx);
+      const blocks = text.blocks[lang] || text.blocks.en;
+      const { html, headings } = renderBlocks(text.refrain ? shortenRefrains(blocks) : blocks, 'step' + stepIdx);
       body.innerHTML = html;
 
       const note = document.getElementById('textNote');

@@ -60,3 +60,8 @@ body { background-color: #FAF7F2; color: #2D1A1E; font-family: 'Noto Serif', ser
                       margin-top: 1.4em; margin-bottom: 0.35em; padding-bottom: 0.15em;
                       border-bottom: 1px solid #F3E3B5; scroll-margin-top: 8rem; }
 .reading .p-section .line { padding-left: 0; text-indent: 0; }
+
+/* Refrain cue: a short reminder to sing the refrain line again */
+.reading .p-refrain { font-style: italic; color: #92400E; margin: 0.1em 0 0.6em; }
+.reading .p-refrain .line { padding-left: 0; text-indent: 0; }
+.reading .p-refrain .line::before { content: "↻ "; font-style: normal; color: #B45309; }

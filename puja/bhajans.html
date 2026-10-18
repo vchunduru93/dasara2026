@@ -133,7 +133,8 @@
       document.getElementById('bhajanList').innerHTML = BHAJANS.map((b, i) => {
         const text = TEXTS[b.text];
         if (text.links) return linkCard(b, i, text);
-        const { html } = renderBlocks(text.blocks[lang], b.id);
+        const blocks = text.refrain ? shortenRefrains(text.blocks[lang]) : text.blocks[lang];
+        const { html } = renderBlocks(blocks, b.id);
         const note = text.note && text.note[lang] ? `<p class="text-xl text-stone-500 italic mt-1">${escapeHtml(text.note[lang])}</p>` : '';
         return `<section id="${b.id}" class="bg-white ornament-border rounded-xl px-5 py-5 md:px-8 scroll-mt-28">
           <div class="text-xl font-semibold text-amber-800 tracking-wide">${i + 1} / ${BHAJANS.length}</div>

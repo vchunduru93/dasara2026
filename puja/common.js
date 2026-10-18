@@ -164,3 +164,33 @@ function setupToolbarToggle() {
   btn.onclick = () => { collapsed = !collapsed; Prefs.set('pujaToolbarCollapsed', collapsed ? '1' : '0'); set(collapsed); };
   set(collapsed);
 }
+
+// Refrain notation for bhajans and stotrams with a repeated closing line: the line is written out the
+// first time, then each later stanza ends with a short "↻ first words…" cue (verse numbers kept, and
+// back-to-back repeats shown once as "×2")
+function shortenRefrains(blocks) {
+  const marker = l => (l.match(/\s*॥\s*[\d०-९౦-౯೦-೯௦-௯൦-൯০-৯]+\s*॥\s*$/) || [''])[0];
+  const norm = l => l.replace(marker(l), '').replace(/[\s।॥|,.!~]+/g, ' ').trim().toLowerCase();
+  const counts = {};
+  blocks.forEach(([, lines]) => { const k = norm(lines[lines.length - 1] || ''); if (k) counts[k] = (counts[k] || 0) + 1; });
+  const [refrain, n] = Object.entries(counts).sort((a, b) => b[1] - a[1])[0] || [];
+  if (!refrain || n < 3) return blocks;
+  const cue = l => l.replace(marker(l), '').replace(/^[\s॥|]+/, '').split(/\s+/).slice(0, 4).join(' ')
+    .replace(/[,.।॥|]+$/, '') + ' …' + marker(l).replace(/^\s*/, ' ');
+  let seen = false;
+  const out = [];
+  for (const [kind, lines] of blocks) {
+    const last = lines[lines.length - 1];
+    if (norm(last || '') !== refrain) { out.push([kind, lines]); continue; }
+    if (!seen) { seen = true; out.push([kind, lines]); continue; }
+    if (lines.length > 1) out.push([kind, lines.slice(0, -1)]);
+    const prev = out[out.length - 1];
+    if (lines.length === 1 && prev && prev[0] === 'refrain') {
+      prev[2] = (prev[2] || 1) + 1;  // same cue again right after: count it instead of repeating
+      prev[1] = [prev[1][0].replace(/ ×\d+$/, '') + ` ×${prev[2]}`];
+    } else {
+      out.push(['refrain', [cue(last)]]);
+    }
+  }
+  return out.map(([kind, lines]) => [kind, lines]);
+}
