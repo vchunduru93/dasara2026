@@ -243,6 +243,21 @@
     };
 
     setupTextSize(document.querySelector('main'));
+    setupPickers();
+    // The bhajans button opens a quick list; picking one goes straight to it (with Back to puja)
+    document.getElementById('bhajansLink').addEventListener('click', e => {
+      e.preventDefault();
+      const link = e.currentTarget;
+      if (link.closePicker) { link.closePicker(); return; }
+      openPicker({
+        title: UI.bhajans[lang] || UI.bhajans.en,
+        options: BHAJANS.map((b, i) => ({ value: b.id, text: `${i + 1}. ${b.title[lang] || b.title.en}` })),
+        listLang: lang,
+        returnFocus: link,
+        opener: link,
+        onPick: id => { location.href = `${link.href.split('#')[0]}#${id}`; },
+      });
+    });
     AutoScroll.setup();
     setupToolbarToggle();
     setUrlParams({ day: day.day, step: stepIdx + 1, lang });

@@ -235,3 +235,73 @@ function numberStanzas(blocks) {
 function verseNumbers(blocks) {
   return blocks.map(([kind, lines]) => [kind, lines.map(l => l.replace(/\s*॥\s*([\d०-९౦-౯೦-೯௦-௯൦-൯০-৯]+)\s*॥\s*$/, ' ⟦$1⟧'))]);
 }
+
+// A list picker: a sheet that slides up on phones, a centered dialog on wider screens.
+// options: [{value, text}] ("3. Title" gets a number badge); onPick(value) runs when one is chosen.
+// opener: a bottom-bar button that opened it; it stays visible and highlighted, and on phones the sheet rises from just above the bar.
+function openPicker({ title, options, current, onPick, listLang = '', returnFocus = null, opener = null }) {
+  const back = document.createElement('div');
+  back.className = 'picker-backdrop';
+  const sheet = document.createElement('div');
+  sheet.className = 'picker';
+  sheet.setAttribute('role', 'dialog');
+  sheet.setAttribute('aria-modal', 'true');
+  sheet.innerHTML = `<div class="picker-grab"></div>
+    <div class="picker-head"><span class="picker-title">${escapeHtml(title)}</span>
+      <button type="button" class="picker-close" aria-label="Close">×</button></div>
+    <div class="picker-list" lang="${listLang}">${options.map(o => {
+      const m = o.text.match(/^(\d+)\.\s*(.*)$/);
+      return `<button type="button" class="picker-opt${o.value === current ? ' on' : ''}" data-v="${escapeHtml(o.value)}">
+        ${m ? `<span class="picker-num">${m[1]}</span><span>${escapeHtml(m[2])}</span>` : `<span>${escapeHtml(o.text)}</span>`}
+        <span class="picker-tick" aria-hidden="true">✓</span></button>`;
+    }).join('')}</div>`;
+  const bar = opener?.closest('nav');
+  if (bar) {
+    sheet.classList.add('from-bar');
+    sheet.style.setProperty('--bar-h', `${bar.offsetHeight}px`);
+    bar.classList.add('picker-bar');
+    opener.classList.add('picker-opener');
+  }
+  document.body.append(back, sheet);
+  requestAnimationFrame(() => { back.classList.add('open'); sheet.classList.add('open'); });
+  sheet.querySelector('.on')?.scrollIntoView({ block: 'center' });
+  const onKey = e => { if (e.key === 'Escape') close(); };
+  const close = () => {
+    document.removeEventListener('keydown', onKey);
+    back.classList.remove('open');
+    sheet.classList.remove('open');
+    setTimeout(() => { back.remove(); sheet.remove(); }, 230);
+    bar?.classList.remove('picker-bar');
+    opener?.classList.remove('picker-opener');
+    if (opener) opener.closePicker = null;
+    returnFocus?.focus({ preventScroll: true });
+  };
+  document.addEventListener('keydown', onKey);
+  if (opener) opener.closePicker = close;  // tapping the lit-up button again closes it
+  back.onclick = close;
+  sheet.querySelector('.picker-close').onclick = close;
+  sheet.querySelectorAll('.picker-opt').forEach(b => b.onclick = () => { close(); onPick(b.dataset.v); });
+}
+
+// Toolbar dropdowns open the picker; the <select> stays the source of truth (picking sets it and fires "change")
+function setupPickers() {
+  const titleFor = (select) => {
+    const lang = document.documentElement.lang || 'en';
+    const t = { langPicker: UI.language, stepPicker: UI.puja, sectionJump: UI.sections, bhajanJump: UI.bhajans }[select.id];
+    return t ? (t[lang] || t.en).replace(/…$/, '') : '';
+  };
+  const open = (select) => openPicker({
+    title: titleFor(select),
+    options: [...select.options].filter(o => o.value !== '').map(o => ({ value: o.value, text: o.text })),
+    current: select.value,
+    listLang: select.id === 'langPicker' ? '' : document.documentElement.lang,
+    returnFocus: select,
+    onPick: v => { select.value = v; select.dispatchEvent(new Event('change', { bubbles: true })); },
+  });
+  ['langPicker', 'stepPicker', 'sectionJump', 'bhajanJump'].forEach(id => {
+    const select = document.getElementById(id);
+    if (!select) return;
+    select.addEventListener('mousedown', e => { e.preventDefault(); open(select); });
+    select.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(select); } });
+  });
+}

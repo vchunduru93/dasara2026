@@ -81,3 +81,39 @@ body { background-color: #FAF7F2; color: #2D1A1E; font-family: 'Noto Serif', ser
 
 /* A stanza that is only the chorus, written out the first time: spaced like a stanza, but not numbered */
 .reading .p-chorus { margin: 0.55em 0; }
+
+
+/* Dropdown picker (setupPickers): bottom sheet on phones, centered dialog on tablets and laptops */
+.picker-backdrop { position: fixed; inset: 0; background: rgba(28,16,18,0.45); z-index: 50; opacity: 0; transition: opacity .18s; }
+.picker-backdrop.open { opacity: 1; }
+.picker { position: fixed; left: 0; right: 0; bottom: 0; z-index: 51; background: #FAF7F2; border-radius: 18px 18px 0 0;
+  max-height: 78vh; display: flex; flex-direction: column; transform: translateY(100%); transition: transform .22s ease-out;
+  box-shadow: 0 -8px 30px rgba(0,0,0,.18); padding-bottom: env(safe-area-inset-bottom); }
+.picker.open { transform: translateY(0); }
+.picker-grab { width: 40px; height: 5px; border-radius: 3px; background: #D6D3D1; margin: 8px auto 4px; }
+.picker-head { display: flex; align-items: center; justify-content: space-between; padding: 6px 18px 10px; border-bottom: 1px solid #F3E3B5; }
+.picker-title { font-family: Cinzel, serif; font-weight: 700; color: #800000; font-size: 1.1rem; }
+.picker-close { width: 36px; height: 36px; border-radius: 9999px; color: #57534E; font-size: 1.5rem; line-height: 1; }
+.picker-list { overflow-y: auto; padding: 6px 10px 14px; -webkit-overflow-scrolling: touch; }
+.picker-opt { display: flex; align-items: center; gap: 12px; width: 100%; text-align: left; padding: 14px 12px; border-radius: 12px;
+  font-size: 1.15rem; color: #2D1A1E; }
+.picker-opt + .picker-opt { border-top: 1px solid #F1ECE4; }
+.picker-opt.on { background: #FFF1D6; color: #800000; font-weight: 700; }
+.picker-tick { margin-left: auto; color: #800000; visibility: hidden; }
+.picker-opt.on .picker-tick { visibility: visible; }
+.picker-num { flex: none; width: 28px; height: 28px; border-radius: 9999px; background: #4A0E17; color: #FEF3C7; font-size: .85rem;
+  display: flex; align-items: center; justify-content: center; font-weight: 700; }
+/* Opened from a bottom-bar button: the bar stays above the dimmed page with that button lit up */
+.picker-bar { z-index: 52 !important; }
+.picker-opener { background-image: linear-gradient(to bottom, #9E1B1B, #6E0000) !important; color: #FEF3C7 !important;
+  border-color: #D4AF37 !important; box-shadow: inset 0 2px 3px rgba(0,0,0,0.3) !important; }
+@media (max-width: 767px) { .picker.from-bar { bottom: var(--bar-h); max-height: calc(78vh - var(--bar-h)); padding-bottom: 0; } }
+@media (min-width: 768px) {
+  .picker { left: 50%; right: auto; bottom: auto; top: 50%; width: min(520px, 90vw); max-height: 70vh; border-radius: 18px;
+    transform: translate(-50%, -46%) scale(.97); opacity: 0; transition: transform .18s ease-out, opacity .18s; }
+  .picker.open { transform: translate(-50%, -50%); opacity: 1; }
+  .picker-grab { display: none; }
+  .picker-head { padding: 16px 20px 12px; }
+  .picker-opt { padding: 11px 12px; font-size: 1.05rem; cursor: pointer; }
+  .picker-opt:hover:not(.on) { background: #FBF3E4; }
+}

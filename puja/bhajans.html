@@ -167,6 +167,7 @@
     };
 
     setupTextSize(document.querySelector('main'));
+    setupPickers();
     AutoScroll.setup();
     setupToolbarToggle();
     Promise.all(BHAJANS.map(b => loadText(b.text))).then(() => {
