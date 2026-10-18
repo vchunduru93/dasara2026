@@ -278,7 +278,9 @@
           date: "2026-10-16",
           dayOfWeek: "Friday",
           thithi: "Shashti",
-          alankaram: "Sri Maha Lakshmi Devi"
+          alankaram: "Sri Maha Lakshmi Devi",
+          // Photo album link still to come
+          memories: { album: "", reel: "https://www.instagram.com/reel/DellfyJuzY9/" }
         },
         {
           dayNumber: 7,
@@ -286,7 +288,8 @@
           date: "2026-10-17",
           dayOfWeek: "Saturday",
           thithi: "Saptami",
-          alankaram: "Sri Saraswati Devi"
+          alankaram: "Sri Saraswati Devi",
+          memories: { album: "https://photos.google.com/share/AF1QipPMdWzecrtoKRxFRoJ8VVzW0L4bIhX6Pqui5-alg_3Id9yaDcBz8VxyXn4w2UGf7Q?key=OTRfWHg3RGxyUTVhU2tFT3NrelEzS0EteS1FWGJR", reel: "https://www.instagram.com/p/DeoFwQvmyLG/" }
         },
         {
           dayNumber: 8,
@@ -465,7 +468,13 @@
       memoriesEl.classList.toggle('hidden', !showMemories);
       if (showMemories) {
         // Thumbnails are saved in assets/memories/ (Instagram image links expire)
-        const tile = (href, img, aspect, icon, label) => `
+        // Tiles without a link yet show a "coming soon" placeholder in the same shape
+        const tile = (href, img, aspect, icon, label) => !href ? `
+          <div class="relative flex flex-col items-center justify-center gap-1 rounded-lg border-2 border-dashed border-vedic-gold/70 bg-white/60 text-center px-2 ${aspect}">
+            <span class="text-3xl" aria-hidden="true">${icon}</span>
+            <span class="text-sm font-semibold text-vedic-darkmaroon">${label}</span>
+            <span class="text-xs italic text-stone-500">Coming soon</span>
+          </div>` : `
           <a href="${href}" target="_blank" rel="noopener noreferrer"
              class="group relative block overflow-hidden rounded-lg border border-vedic-gold bg-stone-200 ${aspect}">
             <img src="${img}" alt="${label}" loading="lazy" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
