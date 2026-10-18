@@ -2,10 +2,11 @@
 // The footers show the newest one as "Last updated".
 window.UPDATES = [
   {
-    date: '2026-10-18T09:53:00-07:00',
+    date: '2026-10-18T10:02:00-07:00',
     title: 'Finer scroll control and more photos',
     items: [
       'ગુજરાતી: the whole site can now be read in Gujarati, our eighth language.',
+      'Tap the Zoom meeting ID or passcode on the home page to copy it.',
       'The puja page header now shows each day’s thithi next to the date.',
       'This Updates page: tap “Last updated” at the bottom of any page to see what’s new.',
       'Auto-scroll speed now runs from 0.25x to 2x in small steps, with − and + buttons beside both sliders for exact adjustments.',

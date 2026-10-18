@@ -115,15 +115,14 @@
         </a>
       </div>
 
-      <div class="inline-flex flex-wrap items-center justify-center gap-4 text-xs md:text-sm text-stone-700 bg-white/80 border border-amber-200 px-4 py-2 rounded-lg">
-        <div><span class="font-semibold text-vedic-darkmaroon">Meeting ID:</span> <span id="meetingIdText">939 4998 0083</span></div>
+      <div class="inline-flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-xs md:text-sm text-stone-700 bg-white/80 border border-amber-200 px-3 py-2 rounded-lg">
+        <button type="button" onclick="copyText('meetingIdText', 'Meeting ID', this)" title="Tap to copy Meeting ID" aria-label="Copy Meeting ID: 939 4998 0083"
+                class="copy-chip inline-flex items-center gap-1.5 rounded-md border border-dashed border-amber-300 hover:border-solid hover:bg-amber-50 active:scale-95 px-2 py-1 cursor-pointer transition"><span class="font-semibold text-vedic-darkmaroon">Meeting ID:</span> <span id="meetingIdText">939 4998 0083</span><span class="copy-icon text-vedic-deepred"><svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></span></button>
         <span class="hidden sm:inline text-amber-300">|</span>
-        <div><span class="font-semibold text-vedic-darkmaroon">Passcode:</span> <span id="passcodeText">DASARA2026</span></div>
-        <button type="button" onclick="copyPasscode()" class="text-xs bg-amber-100 hover:bg-amber-200 text-vedic-deepred px-2 py-0.5 rounded border border-amber-300 transition">
-          Copy Passcode
-        </button>
+        <button type="button" onclick="copyText('passcodeText', 'Passcode', this)" title="Tap to copy Passcode" aria-label="Copy Passcode: DASARA2026"
+                class="copy-chip inline-flex items-center gap-1.5 rounded-md border border-dashed border-amber-300 hover:border-solid hover:bg-amber-50 active:scale-95 px-2 py-1 cursor-pointer transition"><span class="font-semibold text-vedic-darkmaroon">Passcode:</span> <span id="passcodeText">DASARA2026</span><span class="copy-icon text-vedic-deepred"><svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></span></button>
       </div>
-      <div id="copyNotice" class="text-xs text-green-700 font-semibold mt-1.5 hidden">Passcode copied to clipboard!</div>
+      <div id="copyNotice" class="text-xs text-green-700 font-semibold mt-1.5 hidden" aria-live="polite"></div>
       </div>
     </details>
 
@@ -202,7 +201,7 @@
     <p>Most chants &amp; ashtottarams sourced from Vaidika Vignanam (vignanam.org)</p>
     <p class="max-w-xl mx-auto px-4">Texts and lyrics are shared for personal, non-commercial devotional use. All rights belong to their respective owners.</p>
     <p>Contact: <a href="mailto:dasara@vamsichunduru.com" class="underline hover:text-amber-200">dasara@vamsichunduru.com</a></p>
-    <p><a href="updates.html" class="underline hover:text-amber-200">Last updated: <span data-last-updated>Oct 18, 2026, 9:53 AM</span></a></p>
+    <p><a href="updates.html" class="underline hover:text-amber-200">Last updated: <span data-last-updated>Oct 18, 2026, 10:02 AM</span></a></p>
   </footer>
 
   <!-- App Logic & Calendar Sync -->
@@ -572,20 +571,23 @@
 
     }
 
-    function copyPasscode() {
-      const code = document.getElementById('passcodeText').innerText;
-      if (navigator.clipboard) {
-        navigator.clipboard.writeText(code).then(showNotice);
-      } else {
-        showNotice();
-      }
-      function showNotice() {
+    // Copy the meeting ID (digits only, as Zoom expects) or passcode, and confirm below the box
+    function copyText(id, label, btn) {
+      const text = document.getElementById(id).innerText.replace(id === 'meetingIdText' ? /\s+/g : /^$/, '');
+      const done = () => {
         const notice = document.getElementById('copyNotice');
-        if (notice) {
-          notice.classList.remove('hidden');
-          setTimeout(() => notice.classList.add('hidden'), 2500);
-        }
-      }
+        notice.textContent = `${label} copied to clipboard!`;
+        notice.classList.remove('hidden');
+        btn.classList.add('bg-green-50', 'border-green-400');
+        btn.querySelector('.copy-icon').classList.replace('text-vedic-deepred', 'text-green-700');
+        clearTimeout(btn._t);
+        btn._t = setTimeout(() => {
+          notice.classList.add('hidden');
+          btn.classList.remove('bg-green-50', 'border-green-400');
+          btn.querySelector('.copy-icon').classList.replace('text-green-700', 'text-vedic-deepred');
+        }, 2500);
+      };
+      if (navigator.clipboard) navigator.clipboard.writeText(text).then(done); else done();
     }
 
     if (document.readyState === 'loading') {
