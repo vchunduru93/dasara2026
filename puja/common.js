@@ -33,11 +33,25 @@ function loadText(id) {
   return loading[id];
 }
 
+// A running count at the end of a line, e.g. "... namaḥ (40)" or "... śailasutē ॥ 4 ॥", is shown as a small number at the right edge
+// Counts look like "(40)" (ashtottaram names) or "⟦4⟧" (verse and stanza numbers, see verseNumbers and
+// numberStanzas). A plain "॥2॥" in a bhajan means "sing twice" and stays in the text.
+const LINE_COUNT = /\s*(?:\(([\d०-९౦-౯೦-೯௦-௯൦-൯০-৯]+)\)|⟦([\d०-९౦-౯೦-೯௦-௯൦-൯০-৯]+)⟧)\s*$/;
+function renderLine(l) {
+  const m = l.match(LINE_COUNT);
+  // "(2)" or "(3)" in a bhajan means "sing it twice/three times" and stays in the text; name counts are 10 and up
+  const toDigits = s => s.replace(/[०-९౦-౯೦-೯௦-௯൦-൯০-৯]/g, d => String((d.codePointAt(0) - 0x0966) % 16));
+  if (!m || (m[1] && +toDigits(m[1]) < 10)) return `<span class="line">${escapeHtml(l)}</span>`;
+  // Shown in plain digits (the sources mix in Devanagari, Telugu or Tamil digits, e.g. Tamil "1௦" for 10)
+  const n = (m[1] || m[2]).replace(/[०-९౦-౯೦-೯௦-௯൦-൯০-৯]/g, d => String((d.codePointAt(0) - 0x0966) % 16));
+  return `<span class="line has-count"><span class="line-count">${n}</span>${escapeHtml(l.slice(0, m.index))}</span>`;
+}
+
 // Render a text's blocks; returns [{id, label}] for its section headings
 function renderBlocks(blocks, idPrefix) {
   const headings = [];
   const html = blocks.map(([kind, lines]) => {
-    const text = lines.map(l => `<span class="line">${escapeHtml(l)}</span>`).join('');
+    const text = lines.map(renderLine).join('');
     // "heading" is a maroon section title; "section" is a quieter gray italic one. Both are jump targets.
     if (kind === 'heading' || kind === 'section') {
       const id = `${idPrefix}-s${headings.length}`;
@@ -169,28 +183,43 @@ function setupToolbarToggle() {
 // first time, then each later stanza ends with a short "↻ first words…" cue (verse numbers kept, and
 // back-to-back repeats shown once as "×2")
 function shortenRefrains(blocks) {
-  const marker = l => (l.match(/\s*॥\s*[\d०-९౦-౯೦-೯௦-௯൦-൯০-৯]+\s*॥\s*$/) || [''])[0];
+  const marker = l => (l.match(/\s*(?:॥\s*[\d०-९౦-౯೦-೯௦-௯൦-൯০-৯]+\s*॥|⟦[\d०-९౦-౯೦-೯௦-௯൦-൯০-৯]+⟧)\s*$/) || [''])[0];
   const norm = l => l.replace(marker(l), '').replace(/[\s।॥|,.!~]+/g, ' ').trim().toLowerCase();
   const counts = {};
   blocks.forEach(([, lines]) => { const k = norm(lines[lines.length - 1] || ''); if (k) counts[k] = (counts[k] || 0) + 1; });
   const [refrain, n] = Object.entries(counts).sort((a, b) => b[1] - a[1])[0] || [];
   if (!refrain || n < 3) return blocks;
-  const cue = l => l.replace(marker(l), '').replace(/^[\s॥|]+/, '').split(/\s+/).slice(0, 4).join(' ')
+  const cue = (l, words = 4) => l.replace(marker(l), '').replace(/^[\s॥|]+/, '').split(/\s+/).slice(0, words).join(' ')
     .replace(/[,.।॥|]+$/, '') + ' …' + marker(l).replace(/^\s*/, ' ');
   let seen = false;
   const out = [];
   for (const [kind, lines] of blocks) {
     const last = lines[lines.length - 1];
     if (norm(last || '') !== refrain) { out.push([kind, lines]); continue; }
-    if (!seen) { seen = true; out.push([kind, lines]); continue; }
+    if (!seen) { seen = true; out.push([lines.every(x => norm(x) === refrain) ? 'chorus' : kind, lines]); continue; }
     if (lines.length > 1) out.push([kind, lines.slice(0, -1)]);
     const prev = out[out.length - 1];
     if (lines.length === 1 && prev && prev[0] === 'refrain') {
       prev[2] = (prev[2] || 1) + 1;  // same cue again right after: count it instead of repeating
-      prev[1] = [prev[1][0].replace(/ ×\d+$/, '') + ` ×${prev[2]}`];
+      // "×N" goes before the stanza number, which then shows at the right edge
+      prev[1] = [cue(last, 3).replace(marker(last), '') + ` ×${prev[2]}` + marker(last).replace(/^\s*/, ' ')];
     } else {
       out.push(['refrain', [cue(last)]]);
     }
   }
   return out.map(([kind, lines]) => [kind, lines]);
+}
+
+// Number each stanza of a bhajan (on its last line, shown at the right edge like the stotram verse numbers).
+// Chorus repeats aren't stanzas, so refrain cues and chorus-only stanzas are skipped.
+function numberStanzas(blocks) {
+  let n = 0;
+  return blocks.map(([kind, lines]) => kind === 'text' && lines.length
+    ? [kind, [...lines.slice(0, -1), `${lines[lines.length - 1]} ⟦${++n}⟧`]]
+    : [kind, lines]);
+}
+
+// Stotram verse numbers ("॥ 4 ॥" closing a verse) become right-edge counts
+function verseNumbers(blocks) {
+  return blocks.map(([kind, lines]) => [kind, lines.map(l => l.replace(/\s*॥\s*([\d०-९౦-౯೦-೯௦-௯൦-൯০-৯]+)\s*॥\s*$/, ' ⟦$1⟧'))]);
 }

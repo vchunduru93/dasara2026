@@ -26,7 +26,7 @@ body { background-color: #FAF7F2; color: #2D1A1E; font-family: 'Noto Serif', ser
 .reading .p-source .line, .reading .p-prose .line { padding-left: 0; text-indent: 0; }
 .reading .p-prose { margin: 0.55em 0; }
 .reading .p-source { font-size: 0.78em; color: #78716C; margin-top: 1em; }
-.text-title { font-weight: 700; color: #800000; line-height: 1.35; }
+.text-title { font-weight: 700; color: #800000; line-height: 1.35; overflow-wrap: anywhere; }  /* long one-word titles (e.g. Malayalam) wrap instead of widening the page */
 .chip-scroll { scrollbar-width: none; }
 .chip-scroll::-webkit-scrollbar { display: none; }
 
@@ -65,3 +65,12 @@ body { background-color: #FAF7F2; color: #2D1A1E; font-family: 'Noto Serif', ser
 .reading .p-refrain { font-style: italic; color: #92400E; margin: 0.1em 0 0.6em; }
 .reading .p-refrain .line { padding-left: 0; text-indent: 0; }
 .reading .p-refrain .line::before { content: "↻ "; font-style: normal; color: #B45309; }
+
+/* Running name counts (10, 20 … 108): small italic numbers lined up at the right edge, out of the text */
+.reading .line { position: relative; }
+.reading .line.has-count { padding-right: 2.6em; }
+.reading .line-count { position: absolute; right: 0; top: 0.38em; text-indent: 0;
+                       font-size: 0.72em; font-style: italic; color: #A16207; line-height: 1; white-space: nowrap; }
+
+/* A stanza that is only the chorus, written out the first time: spaced like a stanza, but not numbered */
+.reading .p-chorus { margin: 0.55em 0; }

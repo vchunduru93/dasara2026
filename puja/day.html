@@ -163,7 +163,7 @@
       renderNav();
       const text = await loadText(step.text);
       const blocks = text.blocks[lang] || text.blocks.en;
-      const { html, headings } = renderBlocks(text.refrain ? shortenRefrains(blocks) : blocks, 'step' + stepIdx);
+      const { html, headings } = renderBlocks(text.refrain ? shortenRefrains(verseNumbers(blocks)) : blocks, 'step' + stepIdx);
       body.innerHTML = html;
 
       const note = document.getElementById('textNote');
