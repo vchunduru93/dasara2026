@@ -15,7 +15,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Noto+Serif:ital,wght@0,400;0,600;0,700;1,400&family=Noto+Serif+Telugu:wght@400;600;700&family=Noto+Serif+Devanagari:wght@400;600;700&family=Noto+Serif+Kannada:wght@400;600;700&family=Noto+Serif+Tamil:wght@400;600;700&family=Noto+Serif+Malayalam:wght@400;600;700&family=Noto+Serif+Bengali:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Noto+Serif:ital,wght@0,400;0,600;0,700;1,400&family=Noto+Serif+Telugu:wght@400;600;700&family=Noto+Serif+Devanagari:wght@400;600;700&family=Noto+Serif+Kannada:wght@400;600;700&family=Noto+Serif+Tamil:wght@400;600;700&family=Noto+Serif+Malayalam:wght@400;600;700&family=Noto+Serif+Bengali:wght@400;600;700&family=Noto+Serif+Gujarati:wght@400;600;700&display=swap" rel="stylesheet">
   <script>
     tailwind.config = { theme: { extend: {
       colors: { vedic: { gold: '#D4AF37', deepred: '#800000', darkmaroon: '#4A0E17', bordergold: '#E5C158' } },
@@ -93,7 +93,7 @@
     <p class="font-title text-amber-200">Chunduru Family Sri Devi Navaratri Celebrations 2026</p>
     <p class="text-sm max-w-xl mx-auto px-4 mt-3">Texts and lyrics are shared for personal, non-commercial devotional use. All rights belong to their respective owners.</p>
     <p class="text-sm mt-1">Contact: <a href="mailto:dasara@vamsichunduru.com" class="underline hover:text-amber-200">dasara@vamsichunduru.com</a></p>
-    <p class="text-sm mt-1"><a href="../updates.html" class="underline hover:text-amber-200">Last updated: <span data-last-updated>Oct 18, 2026, 9:41 AM</span></a></p>
+    <p class="text-sm mt-1"><a href="../updates.html" class="underline hover:text-amber-200">Last updated: <span data-last-updated>Oct 18, 2026, 9:53 AM</span></a></p>
   </footer>
 
   <!-- Prev / Next bar -->
@@ -193,7 +193,7 @@
 
       const credit = document.getElementById('textCredit');
       credit.classList.toggle('hidden', !text.credit);
-      if (text.credit) credit.textContent = text.credit[lang];
+      if (text.credit) credit.textContent = text.credit[lang] || text.credit.en;
 
       const jump = document.getElementById('sectionJump');
       jump.classList.toggle('hidden', headings.length === 0);
