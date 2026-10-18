@@ -145,3 +145,20 @@ function setUrlParams(params) {
   Object.entries(params).forEach(([k, v]) => url.searchParams.set(k, v));
   history.replaceState(null, '', url);
 }
+
+// The small tab under the toolbar hides or shows it (remembered per device)
+function setupToolbarToggle() {
+  const body = document.getElementById('toolbarBody');
+  const btn = document.getElementById('toolbarToggle');
+  const chevron = document.getElementById('toolbarChevron');
+  const set = (collapsed) => {
+    body.classList.toggle('hidden', collapsed);
+    chevron.classList.toggle('rotate-180', collapsed);
+    btn.setAttribute('aria-expanded', !collapsed);
+    btn.setAttribute('aria-label', collapsed ? 'Show toolbar' : 'Hide toolbar');
+    btn.title = btn.getAttribute('aria-label');
+  };
+  let collapsed = Prefs.get('pujaToolbarCollapsed') === '1';
+  btn.onclick = () => { collapsed = !collapsed; Prefs.set('pujaToolbarCollapsed', collapsed ? '1' : '0'); set(collapsed); };
+  set(collapsed);
+}
