@@ -69,7 +69,19 @@ function langOptions(lang) {
 }
 
 // Aa opens a slider for the reading text size (saved per device)
+// The − and + buttons beside a slider move it one step
+function setupStepButtons() {
+  document.querySelectorAll('.step-btn').forEach(b => {
+    const slider = document.getElementById(b.dataset.slider);
+    b.onclick = () => {
+      b.dataset.dir === '1' ? slider.stepUp() : slider.stepDown();
+      slider.dispatchEvent(new Event('input'));
+    };
+  });
+}
+
 function setupTextSize(target) {
+  setupStepButtons();
   const toggle = document.getElementById('sizeToggle');
   const row = document.getElementById('sizeRow');
   const slider = document.getElementById('sizeSlider');
@@ -92,7 +104,7 @@ function setupTextSize(target) {
   apply();
 }
 
-// Play/pause auto scroll at 0.25x–4x speed; the speed slider shows while it runs.
+// Play/pause auto scroll at 0.25x–2x speed; the speed slider shows while it runs.
 // Holding a finger on the screen pauses it, and it stops at the bottom of the page.
 const AutoScroll = (() => {
   let playing = false, last = 0, carry = 0, touching = false, holdUntil = 0, wakeLock = null;
@@ -136,8 +148,8 @@ const AutoScroll = (() => {
     row = document.getElementById('speedRow');
     const slider = document.getElementById('speedSlider');
     const label = document.getElementById('speedLabel');
-    rate = Math.min(4, Math.max(0.25, parseFloat(Prefs.get('pujaScrollRate')) || 1));
-    const show = () => { label.textContent = `${rate}x`; };
+    rate = Math.min(2, Math.max(0.25, parseFloat(Prefs.get('pujaScrollRate')) || 1));
+    const show = () => { label.textContent = `${+rate.toFixed(2)}x`; };
     slider.value = rate;
     slider.oninput = () => { rate = +slider.value; Prefs.set('pujaScrollRate', rate); show(); };
     show();
