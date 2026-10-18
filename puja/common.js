@@ -173,22 +173,37 @@ function setUrlParams(params) {
   history.replaceState(null, '', url);
 }
 
-// The small tab under the toolbar hides or shows it (remembered per device)
-function setupToolbarToggle() {
-  const body = document.getElementById('toolbarBody');
-  const btn = document.getElementById('toolbarToggle');
-  const chevron = document.getElementById('toolbarChevron');
-  const set = (collapsed) => {
-    body.classList.toggle('hidden', collapsed);
-    document.getElementById('toolbar').classList.toggle('toolbar-collapsed', collapsed);
-    chevron.classList.toggle('rotate-180', collapsed);
-    btn.setAttribute('aria-expanded', !collapsed);
-    btn.setAttribute('aria-label', collapsed ? 'Show toolbar' : 'Hide toolbar');
-    btn.title = btn.getAttribute('aria-label');
+// Full screen: the ⛶ button hides the pinned title and toolbar so only the text and the bottom bar show;
+// the round button in the corner brings them back (remembered per device), and a floating ▶ runs auto scroll.
+// The pinned block's height is kept in --top-h so headings scroll in just below it.
+function setupFocusMode() {
+  const top = document.getElementById('topBar');
+  const exit = document.getElementById('focusExit');
+  const setH = () => document.documentElement.style.setProperty('--top-h', `${top.offsetHeight}px`);
+  new ResizeObserver(setH).observe(top);
+  setH();
+  // The floating play/pause works the toolbar's ▶ button and mirrors its state
+  const play = document.getElementById('focusPlay');
+  const toolbarPlay = document.getElementById('scrollToggle');
+  const sync = () => {
+    const on = toolbarPlay.getAttribute('aria-pressed') === 'true';
+    play.setAttribute('aria-pressed', on);
+    play.querySelector('.focus-play').classList.toggle('hidden', on);
+    play.querySelector('.focus-pause').classList.toggle('hidden', !on);
   };
-  let collapsed = Prefs.get('pujaToolbarCollapsed') === '1';
-  btn.onclick = () => { collapsed = !collapsed; Prefs.set('pujaToolbarCollapsed', collapsed ? '1' : '0'); set(collapsed); };
-  set(collapsed);
+  play.onclick = () => toolbarPlay.click();
+  new MutationObserver(sync).observe(toolbarPlay, { attributes: true, attributeFilter: ['aria-pressed'] });
+  sync();
+  const set = (on) => {
+    top.classList.toggle('hidden', on);
+    exit.classList.toggle('hidden', !on);
+    play.classList.toggle('hidden', !on);
+    document.documentElement.classList.toggle('focus-mode', on);
+    Prefs.set('pujaFocus', on ? '1' : '0');
+  };
+  document.getElementById('focusToggle').onclick = () => set(true);
+  exit.onclick = () => set(false);
+  set(Prefs.get('pujaFocus') === '1');
 }
 
 // Refrain notation for bhajans and stotrams with a repeated closing line: the line is written out the
@@ -239,7 +254,7 @@ function verseNumbers(blocks) {
 // A list picker: a sheet that slides up on phones, a centered dialog on wider screens.
 // options: [{value, text}] ("3. Title" gets a number badge); onPick(value) runs when one is chosen.
 // opener: a bottom-bar button that opened it; it stays visible and highlighted, and on phones the sheet rises from just above the bar.
-function openPicker({ title, options, current, onPick, listLang = '', returnFocus = null, opener = null }) {
+function openPicker({ title, options, current, onPick, listLang = '', returnFocus = null, opener = null, note = '', onClose = null }) {
   const back = document.createElement('div');
   back.className = 'picker-backdrop';
   const sheet = document.createElement('div');
@@ -249,6 +264,7 @@ function openPicker({ title, options, current, onPick, listLang = '', returnFocu
   sheet.innerHTML = `<div class="picker-grab"></div>
     <div class="picker-head"><span class="picker-title">${escapeHtml(title)}</span>
       <button type="button" class="picker-close" aria-label="Close">×</button></div>
+    ${note ? `<p class="picker-note">${escapeHtml(note)}</p>` : ''}
     <div class="picker-list" lang="${listLang}">${options.map(o => {
       const m = o.text.match(/^(\d+)\.\s*(.*)$/);
       return `<button type="button" class="picker-opt${o.value === current ? ' on' : ''}" data-v="${escapeHtml(o.value)}">
@@ -275,6 +291,7 @@ function openPicker({ title, options, current, onPick, listLang = '', returnFocu
     opener?.classList.remove('picker-opener');
     if (opener) opener.closePicker = null;
     returnFocus?.focus({ preventScroll: true });
+    onClose?.();
   };
   document.addEventListener('keydown', onKey);
   if (opener) opener.closePicker = close;  // tapping the lit-up button again closes it
@@ -290,12 +307,12 @@ function setupPickers() {
     const t = { langPicker: UI.language, stepPicker: UI.puja, sectionJump: UI.sections, bhajanJump: UI.bhajans }[select.id];
     return t ? (t[lang] || t.en).replace(/…$/, '') : '';
   };
-  const open = (select) => openPicker({
+  const open = (select, focusEl = select) => openPicker({
     title: titleFor(select),
     options: [...select.options].filter(o => o.value !== '').map(o => ({ value: o.value, text: o.text })),
     current: select.value,
     listLang: select.id === 'langPicker' ? '' : document.documentElement.lang,
-    returnFocus: select,
+    returnFocus: focusEl,
     onPick: v => { select.value = v; select.dispatchEvent(new Event('change', { bubbles: true })); },
   });
   ['langPicker', 'stepPicker', 'sectionJump', 'bhajanJump'].forEach(id => {
@@ -303,5 +320,25 @@ function setupPickers() {
     if (!select) return;
     select.addEventListener('mousedown', e => { e.preventDefault(); open(select); });
     select.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(select); } });
+  });
+  // The globe button opens the language list (its select is hidden)
+  const langBtn = document.getElementById('langBtn');
+  const langPicker = document.getElementById('langPicker');
+  if (langBtn && langPicker) langBtn.addEventListener('click', () => open(langPicker, langBtn));
+}
+
+// First visit to a reader page (no saved language, none in the link): open the language list right away.
+// Closing it without picking keeps the current language, and that's saved too, so it only asks once.
+function promptLanguageIfUnset() {
+  const picker = document.getElementById('langPicker');
+  if (!picker || Prefs.get('pujaLang') || new URLSearchParams(location.search).get('lang')) return;
+  openPicker({
+    title: 'Choose your language',
+    note: 'Your choice is saved on this device for every puja and bhajan. Change it anytime with the 🌐 button at the top.',
+    options: Object.keys(LANG_LABELS).map(code => ({ value: code, text: LANG_LABELS[code] })),
+    current: initialLang(),
+    returnFocus: document.getElementById('langBtn'),
+    onPick: v => { picker.value = v; picker.dispatchEvent(new Event('change', { bubbles: true })); },
+    onClose: () => { if (!Prefs.get('pujaLang')) Prefs.set('pujaLang', initialLang()); },
   });
 }

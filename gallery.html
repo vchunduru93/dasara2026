@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gallery | Sri Devi Navaratri 2026</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="#4A0E17">
+  <meta property="og:title" content="Gallery | Sri Devi Navaratri 2026">
+  <meta property="og:image" content="https://dasara2026.vamsichunduru.com/assets/om-512.png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Noto+Serif:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = { theme: { extend: {
+      colors: { vedic: { gold: '#D4AF37', deepred: '#800000', darkmaroon: '#4A0E17', bordergold: '#E5C158' } },
+      fontFamily: { title: ['Cinzel', 'serif'] }
+    } } }
+  </script>
+  <link rel="stylesheet" href="puja/reader.css">
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <header class="sticky top-0 z-20 bg-gradient-to-b from-vedic-darkmaroon to-vedic-deepred text-white py-4 px-4 md:px-8 text-center border-b-4 border-vedic-gold">
+    <div class="w-full flex items-center justify-between gap-3">
+      <a href="index.html" class="w-10 h-10 flex-shrink-0 rounded-full border border-amber-200/60 text-amber-100 hover:bg-white/10 flex items-center justify-center" aria-label="Home" title="Home"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"/><path d="M5.5 9v11h13V9"/><path d="M10 20v-5.5h4V20"/></svg></a>
+      <div class="flex-1 text-center min-w-0">
+        <h1 class="text-2xl md:text-4xl font-extrabold font-title tracking-wider text-amber-100">📸 Gallery 📸</h1>
+        <p class="text-amber-200 text-lg mt-0.5">Photos and reels from every day</p>
+      </div>
+      <a href="https://chat.whatsapp.com/GDYeEZFk9EN0AdC6W2S295" target="_blank" rel="noopener" class="w-10 h-10 flex-shrink-0 rounded-full border border-amber-200/60 text-amber-100 hover:bg-white/10 flex items-center justify-center" aria-label="Join our Community" title="Join our Community"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.47 14.38c-.3-.15-1.75-.86-2.02-.96-.27-.1-.47-.15-.67.15-.2.3-.77.96-.94 1.16-.17.2-.35.22-.65.07-.3-.15-1.25-.46-2.38-1.47-.88-.79-1.47-1.76-1.64-2.06-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.21 3.08c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.23 1.36.2 1.87.12.57-.08 1.75-.72 2-1.41.25-.69.25-1.29.17-1.41-.07-.13-.27-.2-.57-.35M12.04 21.5h-.01a9.4 9.4 0 0 1-4.8-1.31l-.34-.2-3.57.93.95-3.48-.22-.36a9.4 9.4 0 0 1-1.44-5.02c0-5.2 4.23-9.43 9.44-9.43 2.52 0 4.89.98 6.67 2.77a9.37 9.37 0 0 1 2.76 6.67c0 5.2-4.23 9.43-9.44 9.43m8.03-17.46A11.27 11.27 0 0 0 12.04.72C5.79.72.7 5.8.7 12.06c0 2 .52 3.95 1.52 5.67L.6 23.28l5.68-1.49a11.3 11.3 0 0 0 5.75 1.47h.01c6.25 0 11.34-5.09 11.34-11.34 0-3.03-1.18-5.88-3.32-8.02"/></svg></a>
+    </div>
+  </header>
+
+  <main class="w-full max-w-6xl mx-auto px-4 md:px-8 py-6 flex-1">
+    <p class="text-sm text-stone-600 italic text-center mb-5">Tap a photo to open the day’s album, or a reel to watch it. Thank you so much to Bhargavi (<a href="https://www.instagram.com/shenisetti/" target="_blank" rel="noopener" class="underline hover:text-stone-900">@shenisetti</a>) for creating the beautiful reels 🙏</p>
+    <div id="gallery" class="grid gap-5 md:grid-cols-2 lg:grid-cols-3"></div>
+  </main>
+
+  <script src="schedule.js"></script>
+  <script>
+    // Today in Pacific time, as "YYYY-MM-DD" (same rule as the home page)
+    const parts = new Intl.DateTimeFormat('en-US', { timeZone: 'America/Los_Angeles', year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(new Date());
+    const get = t => parts.find(p => p.type === t).value;
+    const todayStr = `${get('year')}-${get('month')}-${get('day')}`;
+
+    const rgb = hex => { const n = parseInt(hex.slice(1), 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; };
+    const isNearWhite = hex => Math.min(...rgb(hex)) > 235;
+
+    // Thumbnails are saved in assets/memories/; tiles without a link yet show a placeholder in the same shape
+    const tile = (href, img, icon, label, note) => !href ? `
+      <div class="relative flex flex-col items-center justify-center gap-1 rounded-lg border-2 border-dashed border-vedic-gold/70 bg-white/60 text-center px-2 aspect-[3/4]">
+        <span class="text-3xl opacity-80" aria-hidden="true">${icon}</span>
+        <span class="text-sm font-semibold text-vedic-darkmaroon">${label}</span>
+        <span class="text-xs italic text-stone-500">${note}</span>
+      </div>` : `
+      <a href="${href}" target="_blank" rel="noopener noreferrer"
+         class="group relative block overflow-hidden rounded-lg border border-vedic-gold bg-stone-200 aspect-[3/4]">
+        <img src="${img}" alt="${label}" loading="lazy" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+        <span class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/75 to-transparent text-white text-sm font-semibold px-2.5 pt-6 pb-2">${icon} ${label}</span>
+      </a>`;
+
+    document.getElementById('gallery').innerHTML = scheduleData.days.map(day => {
+      const n = day.dayNumber, m = day.memories || {};
+      const past = day.date < todayStr;
+      const note = day.date === todayStr ? 'After tonight’s puja' : past ? 'Coming soon' : 'After the puja';
+      const hex = day.dressColor ? day.dressColor.hex : null;
+      // Tinted with the day's dress color, like the home page (neutral for white)
+      const style = hex && !isNearWhite(hex) ? `background:${hex}26;border-color:${hex}B3` : 'background:#FFFFFF;border-color:#D6D3D1';
+      const date = new Date(day.date + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+      return `
+      <section id="day${n}" class="border rounded-xl p-4 scroll-mt-28 ${!m.album && !m.reel && !past ? 'opacity-70' : ''}" style="${style}">
+        <!-- The day's heading opens that day on the home page -->
+        <a href="index.html#day${n}" class="group block mb-3" title="Open Day ${n} on the home page">
+          <span class="flex items-center gap-2">
+            <span class="bg-vedic-deepred text-amber-100 text-xs px-2.5 py-1 rounded-full font-title font-bold">Day ${n}</span>
+            <span class="text-sm font-semibold text-stone-600">${date}</span>
+            <span class="ml-auto text-vedic-deepred text-sm font-semibold whitespace-nowrap group-hover:translate-x-0.5 transition-transform">View day →</span>
+          </span>
+          <span class="block font-title text-lg font-bold text-vedic-deepred mt-2 leading-snug group-hover:underline">${day.alankaram}</span>
+        </a>
+        <div class="grid grid-cols-2 gap-3">
+          ${tile(m.album, `assets/memories/day${n}-album.jpg`, '📸', 'Photo Album', note)}
+          ${tile(m.reel, `assets/memories/day${n}-reel.jpg`, '🎬', 'Reel', note)}
+        </div>
+      </section>`;
+    }).join('');
+    if (location.hash) document.querySelector(location.hash)?.scrollIntoView();
+  </script>
+  <script>if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});</script>
+</body>
+</html>

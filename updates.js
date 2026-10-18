@@ -2,6 +2,17 @@
 // The footers show the newest one as "Last updated".
 window.UPDATES = [
   {
+    date: '2026-10-18T16:55:00-07:00',
+    title: 'Gallery and full-screen reading',
+    items: [
+      'New Gallery page: every day’s photo album and reel in one place. Tap a day’s name to open it on the home page.',
+      'The home page opens with the Gallery, the Zoom details and the 10-day schedule all on the first screen.',
+      'Page titles stay at the top as you scroll.',
+      'Full screen in the puja and bhajan pages: tap ⛶ to hide everything but the text, with a big ▶ button to start and pause auto scroll.',
+      'Language is now the 🌐 button in the toolbar, and the first time you open a puja you’re asked to pick your language.'
+    ]
+  },
+  {
     date: '2026-10-18T16:22:00-07:00',
     title: 'Finer scroll control and more photos',
     items: [

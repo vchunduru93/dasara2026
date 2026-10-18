@@ -56,9 +56,6 @@
       border: 1px solid #E5C158;
       box-shadow: 0 4px 20px -2px rgba(128, 0, 0, 0.08);
     }
-    .zoom-chevron { display: inline-block; transition: transform 0.2s; }
-    details[open] .zoom-chevron { transform: rotate(180deg); }
-    details > summary::-webkit-details-marker { display: none; }
     .custom-scroll::-webkit-scrollbar {
       height: 6px;
     }
@@ -66,73 +63,100 @@
       background: #D4AF37;
       border-radius: 4px;
     }
+    /* Sticky header: once the page scrolls, it shrinks to just the title */
+    #siteHeader { transition: padding 0.2s; }
+    #siteHeader h1 { transition: font-size 0.2s; }
+    #siteHeader.condensed { padding-top: 0.6rem; padding-bottom: 0.6rem; }
+    #siteHeader.condensed .header-extra { display: none; }
+    #siteHeader.condensed h1 { font-size: 1.25rem; padding-top: 0; }
+    @media (min-width: 768px) { #siteHeader.condensed h1 { font-size: 1.6rem; } }
+    #siteHeader.condensed > a { top: 50%; transform: translateY(-50%); }
+    @media (max-width: 639px) { #siteHeader.condensed > a { display: none; } }
+    #todayCard { scroll-margin-top: 5rem; }
   </style>
 </head>
 <body class="min-h-screen flex flex-col">
 
   <!-- Header & Invocations -->
-  <header class="bg-gradient-to-b from-vedic-darkmaroon to-vedic-deepred text-white py-8 px-4 text-center border-b-4 border-vedic-gold relative shadow-md pt-10 md:pt-8">
+  <header id="siteHeader" class="sticky top-0 z-30 bg-gradient-to-b from-vedic-darkmaroon to-vedic-deepred text-white pt-9 pb-5 md:pt-7 md:pb-6 px-4 text-center border-b-4 border-vedic-gold shadow-md">
     <a href="https://chat.whatsapp.com/GDYeEZFk9EN0AdC6W2S295" target="_blank" rel="noopener"
        class="absolute top-2.5 right-3 inline-flex items-center gap-1 rounded-full border border-vedic-gold/40 px-2.5 py-0.5 text-[11px] md:text-xs font-medium text-amber-200/90 hover:border-vedic-gold hover:text-amber-100 transition-colors">
       <svg class="w-3 h-3" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.47 14.38c-.3-.15-1.75-.86-2.02-.96-.27-.1-.47-.15-.67.15-.2.3-.77.96-.94 1.16-.17.2-.35.22-.65.07-.3-.15-1.25-.46-2.38-1.47-.88-.79-1.47-1.76-1.64-2.06-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.21 3.08c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.23 1.36.2 1.87.12.57-.08 1.75-.72 2-1.41.25-.69.25-1.29.17-1.41-.07-.13-.27-.2-.57-.35M12.04 21.5h-.01a9.4 9.4 0 0 1-4.8-1.31l-.34-.2-3.57.93.95-3.48-.22-.36a9.4 9.4 0 0 1-1.44-5.02c0-5.2 4.23-9.43 9.44-9.43 2.52 0 4.89.98 6.67 2.77a9.37 9.37 0 0 1 2.76 6.67c0 5.2-4.23 9.43-9.44 9.43m8.03-17.46A11.27 11.27 0 0 0 12.04.72C5.79.72.7 5.8.7 12.06c0 2 .52 3.95 1.52 5.67L.6 23.28l5.68-1.49a11.3 11.3 0 0 0 5.75 1.47h.01c6.25 0 11.34-5.09 11.34-11.34 0-3.03-1.18-5.88-3.32-8.02"/></svg>
       Join our Community
     </a>
-    <div class="max-w-4xl mx-auto space-y-2">
-      <div class="text-vedic-gold tracking-widest text-sm md:text-base font-semibold space-x-3">
+    <div class="max-w-4xl mx-auto space-y-1.5">
+      <div class="header-extra text-vedic-gold tracking-wide sm:tracking-widest text-xs sm:text-sm md:text-base font-semibold space-x-2 sm:space-x-3">
         <span>🙏 Om Sai Ram! 🙏</span>
         <span>•</span>
         <span>🙏 Om Sri Matre Namaha! 🙏</span>
       </div>
-      <h1 class="text-3xl md:text-5xl font-extrabold font-title tracking-wider text-amber-100 pt-1">
+      <h1 class="text-[1.6rem] leading-tight sm:text-3xl md:text-5xl font-extrabold font-title tracking-wide sm:tracking-wider text-amber-100 pt-1">
         Sri Devi Navaratri 2026
       </h1>
-      <p class="text-amber-200 text-sm md:text-base font-medium">
-        October 11th, 2026 – October 20th, 2026 &nbsp;|&nbsp; Daily 7:00 PM – 9:00 PM PDT
+      <p class="header-extra text-amber-200 text-sm md:text-base font-medium">
+        <span class="sm:hidden">Oct 11 – 20, 2026 &nbsp;|&nbsp; Daily 7–9 PM PDT</span>
+        <span class="hidden sm:inline">October 11th, 2026 – October 20th, 2026 &nbsp;|&nbsp; Daily 7:00 PM – 9:00 PM PDT</span>
       </p>
     </div>
   </header>
 
   <!-- Main Container -->
-  <main class="max-w-5xl mx-auto px-4 py-8 flex-1 w-full space-y-8">
+  <main class="max-w-5xl mx-auto px-4 py-4 md:py-6 flex-1 w-full space-y-5 md:space-y-6">
+
+    <!-- Gallery and Zoom side by side on tablets and laptops, stacked on phones -->
+    <div class="grid gap-3 md:gap-4 md:grid-cols-[5fr_6fr] md:items-stretch">
+
+    <!-- Gallery: every day's album and reel in one place, with the latest days' photos as a strip -->
+    <section class="min-w-0 bg-white ornament-border rounded-xl p-4 md:p-5 flex flex-col">
+      <a href="gallery.html" class="group flex items-center justify-between gap-3">
+        <span class="flex items-center gap-2">
+          <span class="text-xl" aria-hidden="true">📸</span>
+          <span class="font-title text-lg md:text-xl font-bold text-vedic-deepred">Gallery</span>
+          <span class="hidden sm:inline md:hidden text-sm text-stone-600">Photos &amp; reels from every day</span>
+        </span>
+        <span class="text-vedic-deepred font-semibold text-sm whitespace-nowrap group-hover:translate-x-0.5 transition-transform">View all →</span>
+      </a>
+      <!-- Filled from scheduleData, Day 1 first -->
+      <div id="galleryStrip" class="mt-3 flex gap-2 overflow-x-auto custom-scroll pb-1 md:flex-1 md:items-center"></div>
+    </section>
 
     <!-- Zoom Access Banner -->
-    <details open class="group bg-vedic-saffronLight ornament-border rounded-xl p-6 text-center">
-      <summary class="list-none [&::-webkit-details-marker]:hidden cursor-pointer select-none flex items-center justify-center gap-2">
-        <h2 class="text-xl md:text-2xl font-title font-bold text-vedic-deepred">
-          Join Us for Evening Puja, Aarti &amp; Bhajans
-        </h2>
-        <span class="zoom-chevron text-vedic-deepred text-sm" aria-hidden="true">▼</span>
-      </summary>
+    <section class="min-w-0 bg-vedic-saffronLight ornament-border rounded-xl p-4 lg:p-5 text-center">
+      <h2 class="text-lg md:text-xl font-title font-bold text-vedic-deepred">
+        Join Us for Evening Puja, Aarti &amp; Bhajans
+      </h2>
       <div class="mt-2">
-      <p class="text-stone-700 text-sm md:text-base max-w-xl mx-auto mb-4">
+      <p class="hidden sm:block text-stone-700 text-sm max-w-xl mx-auto mb-3">
         Every evening from 7:00 PM to 9:00 PM PDT, we warmly invite you to our home to celebrate with us. If you can't make it in person, please join us virtually on Zoom.
       </p>
-      
-      <div class="flex items-center justify-center gap-3 mb-4">
+
+      <div class="flex items-center justify-center gap-3 mt-3 sm:mt-0 mb-3">
         <a id="zoomJoinBtn" href="https://clever.zoom.us/j/93949980083?pwd=2cJ7ig7bNTAkw7Eb80HbZHWhwbMPJA.1" target="_blank" rel="noopener noreferrer" 
            class="inline-block bg-vedic-deepred hover:bg-vedic-darkmaroon text-amber-100 font-title font-semibold px-8 py-2.5 rounded-lg border border-vedic-gold shadow-sm transition-all transform active:scale-95 text-base">
           📹 Join Zoom Meeting
         </a>
       </div>
 
-      <div class="inline-flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-xs md:text-sm text-stone-700 bg-white/80 border border-amber-200 px-3 py-2 rounded-lg">
+      <div class="inline-flex flex-nowrap items-center justify-center gap-1 sm:gap-2 md:gap-1.5 lg:gap-3 text-xs lg:text-sm whitespace-nowrap text-stone-700 bg-white/80 border border-amber-200 px-1 sm:px-3 md:px-1.5 lg:px-3 py-1.5 sm:py-2 rounded-lg">
         <button type="button" onclick="copyText('meetingIdText', 'Meeting ID', this)" title="Tap to copy Meeting ID" aria-label="Copy Meeting ID: 939 4998 0083"
-                class="copy-chip inline-flex items-center gap-1.5 rounded-md border border-dashed border-amber-300 hover:border-solid hover:bg-amber-50 active:scale-95 px-2 py-1 cursor-pointer transition"><span class="font-semibold text-vedic-darkmaroon">Meeting ID:</span> <span id="meetingIdText">939 4998 0083</span><span class="copy-icon text-vedic-deepred"><svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></span></button>
-        <span class="hidden sm:inline text-amber-300">|</span>
+                class="copy-chip inline-flex items-center gap-1 sm:gap-1.5 rounded-md border border-dashed border-amber-300 hover:border-solid hover:bg-amber-50 active:scale-95 px-1 sm:px-2 py-1 cursor-pointer transition"><span class="font-semibold text-vedic-darkmaroon"><span class="hidden sm:inline md:hidden lg:inline">Meeting </span>ID:</span> <span id="meetingIdText">939 4998 0083</span><span class="copy-icon text-vedic-deepred"><svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></span></button>
+        <span class="hidden sm:inline md:hidden lg:inline text-amber-300">|</span>
         <button type="button" onclick="copyText('passcodeText', 'Passcode', this)" title="Tap to copy Passcode" aria-label="Copy Passcode: DASARA2026"
-                class="copy-chip inline-flex items-center gap-1.5 rounded-md border border-dashed border-amber-300 hover:border-solid hover:bg-amber-50 active:scale-95 px-2 py-1 cursor-pointer transition"><span class="font-semibold text-vedic-darkmaroon">Passcode:</span> <span id="passcodeText">DASARA2026</span><span class="copy-icon text-vedic-deepred"><svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></span></button>
+                class="copy-chip inline-flex items-center gap-1 sm:gap-1.5 rounded-md border border-dashed border-amber-300 hover:border-solid hover:bg-amber-50 active:scale-95 px-1 sm:px-2 py-1 cursor-pointer transition"><span class="font-semibold text-vedic-darkmaroon">Passcode:</span> <span id="passcodeText">DASARA2026</span><span class="copy-icon text-vedic-deepred"><svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></span></button>
       </div>
       <div id="copyNotice" class="text-xs text-green-700 font-semibold mt-1.5 hidden" aria-live="polite"></div>
       </div>
-    </details>
+    </section>
+
+    </div>
 
     <!-- 10-Day Navigation Strip -->
     <section>
-      <div class="flex items-center justify-between mb-3">
-        <h3 class="font-title text-lg font-bold text-vedic-darkmaroon uppercase tracking-wide">
+      <div class="flex items-center justify-between mb-2">
+        <h3 class="font-title text-base md:text-lg font-bold text-vedic-darkmaroon uppercase tracking-wide">
           10 Days Schedule
         </h3>
-        <span class="text-xs text-stone-500 italic">Select any day to inspect details</span>
+        <span class="hidden sm:inline text-xs text-stone-500 italic">Select any day to inspect details</span>
       </div>
       <div id="dayTabsContainer" class="flex gap-2 overflow-x-auto p-1 pb-2 custom-scroll">
         <!-- Rendered by JS -->
@@ -157,7 +181,7 @@
           </h2>
         </div>
         <!-- Thithi, dress color and status pills, side by side in the card's top right -->
-        <div class="flex flex-wrap items-center gap-2 md:justify-end md:flex-nowrap">
+        <div class="flex flex-wrap items-center gap-2 md:justify-end lg:flex-nowrap">
           <span id="activeThithi" class="text-xs md:text-sm font-semibold text-amber-900 bg-amber-50 border border-amber-300 px-3 py-1.5 rounded-full whitespace-nowrap">
             Thithi: Prathama
           </span>
@@ -201,7 +225,7 @@
   <!-- Footer -->
   <footer class="bg-stone-900 text-stone-400 py-6 text-center text-xs border-t border-vedic-gold/40">
     <p class="font-title text-amber-200">Chunduru Family Sri Devi Navaratri Celebrations 2026</p>
-    <p class="mt-2"><a href="updates.html" class="underline hover:text-amber-200">Last updated: <span data-last-updated>Oct 18, 2026, 4:22 PM</span></a><span class="mx-2 text-stone-600" aria-hidden="true">|</span><a href="mailto:dasara@vamsichunduru.com" class="underline hover:text-amber-200" title="dasara@vamsichunduru.com">Contact</a><span class="mx-2 text-stone-600" aria-hidden="true">|</span><a href="https://chat.whatsapp.com/GDYeEZFk9EN0AdC6W2S295" target="_blank" rel="noopener" class="underline hover:text-amber-200">Join on WhatsApp</a></p>
+    <p class="mt-2"><a href="updates.html" class="underline hover:text-amber-200">Last updated: <span data-last-updated>Oct 18, 2026, 4:55 PM</span></a><span class="mx-2 text-stone-600" aria-hidden="true">|</span><a href="mailto:dasara@vamsichunduru.com" class="underline hover:text-amber-200" title="dasara@vamsichunduru.com">Contact</a><span class="mx-2 text-stone-600" aria-hidden="true">|</span><a href="https://chat.whatsapp.com/GDYeEZFk9EN0AdC6W2S295" target="_blank" rel="noopener" class="underline hover:text-amber-200">Join on WhatsApp</a></p>
     <p class="max-w-xl mx-auto px-4 mt-4">Texts and lyrics are shared for personal, non-commercial devotional use. All rights belong to their respective owners.</p>
     <p class="mt-1">Most chants &amp; ashtottarams sourced from <a href="https://vignanam.org" target="_blank" rel="noopener" class="underline hover:text-amber-200">Vaidika Vignanam</a></p>
   </footer>
@@ -223,102 +247,19 @@
           </a>
         </li>`).join('');
   </script>
+  <script src="schedule.js"></script>
   <script>
-    const scheduleData = {
-      event: {
-        startDate: "2026-10-11",
-        endDate: "2026-10-20"
-      },
-      days: [
-        {
-          dayNumber: 1,
-          memories: { album: "https://photos.app.goo.gl/KEYM3g8KTthJG2oZ6", reel: "https://www.instagram.com/reel/DeYmcxVumi7/" },
-          dressColor: { name: "Yellow", hex: "#FACC15" },
-          date: "2026-10-11",
-          dayOfWeek: "Sunday",
-          thithi: "Prathama",
-          alankaram: "Sri Bala Tripura Sundari Devi"
-        },
-        {
-          dayNumber: 2,
-          memories: { album: "https://photos.app.goo.gl/LGKw2Y5GTy4FDHNZ8", reel: "https://www.instagram.com/reel/DebFctcu2oi/" },
-          dressColor: { name: "Peach", hex: "#FB9E7A" },
-          date: "2026-10-12",
-          dayOfWeek: "Monday",
-          thithi: "Dvitiya",
-          alankaram: "Sri Gayatri Devi"
-        },
-        {
-          dayNumber: 3,
-          memories: { album: "https://photos.app.goo.gl/D9JwZYXbunUXhPHA8", reel: "https://www.instagram.com/reel/DedsizRu6sI/" },
-          dressColor: { name: "Blue", hex: "#1D4ED8" },
-          date: "2026-10-13",
-          dayOfWeek: "Tuesday",
-          thithi: "Tritiya",
-          alankaram: "Sri Annapurna Devi"
-        },
-        {
-          dayNumber: 4,
-          memories: { album: "https://photos.app.goo.gl/SAK5kvjLux6tYKXR9", reel: "https://www.instagram.com/reel/DegP_9zuHW5/" },
-          dressColor: { name: "Green", hex: "#15803D" },
-          date: "2026-10-14",
-          dayOfWeek: "Wednesday",
-          thithi: "Chathurthi",
-          alankaram: "Sri Meenakshi Devi"
-        },
-        {
-          dayNumber: 5,
-          memories: { album: "https://photos.app.goo.gl/JmLnEmCiFRbNZpyg6", reel: "https://www.instagram.com/reel/DeiyeORucCJ/" },
-          dressColor: { name: "Red", hex: "#C81E1E" },
-          date: "2026-10-15",
-          dayOfWeek: "Thursday",
-          thithi: "Panchami",
-          alankaram: "Sri Lalita Devi"
-        },
-        {
-          dayNumber: 6,
-          dressColor: { name: "Pink", hex: "#EC4899" },
-          date: "2026-10-16",
-          dayOfWeek: "Friday",
-          thithi: "Shashti",
-          alankaram: "Sri Maha Lakshmi Devi",
-          memories: { album: "https://photos.app.goo.gl/RQhuDd5fgnUxB8y7A", reel: "https://www.instagram.com/reel/DellfyJuzY9/" }
-        },
-        {
-          dayNumber: 7,
-          dressColor: { name: "White", hex: "#FFFFFF" },
-          date: "2026-10-17",
-          dayOfWeek: "Saturday",
-          thithi: "Saptami",
-          alankaram: "Sri Saraswati Devi",
-          memories: { album: "https://photos.google.com/share/AF1QipPMdWzecrtoKRxFRoJ8VVzW0L4bIhX6Pqui5-alg_3Id9yaDcBz8VxyXn4w2UGf7Q?key=OTRfWHg3RGxyUTVhU2tFT3NrelEzS0EteS1FWGJR", reel: "https://www.instagram.com/p/DeoFwQvmyLG/" }
-        },
-        {
-          dayNumber: 8,
-          dressColor: { name: "Orange", hex: "#EA580C" },
-          date: "2026-10-18",
-          dayOfWeek: "Sunday",
-          thithi: "Durgashtami",
-          alankaram: "Sri Durga Devi"
-        },
-        {
-          dayNumber: 9,
-          dressColor: { name: "Purple", hex: "#7E22CE", alt: "any dark color" },
-          date: "2026-10-19",
-          dayOfWeek: "Monday",
-          thithi: "Maharnavami",
-          alankaram: "Sri Mahishasura Mardini Devi"
-        },
-        {
-          dayNumber: 10,
-          dressColor: { name: "Gold", hex: "#B8860B", alt: "anything colorful" },
-          date: "2026-10-20",
-          dayOfWeek: "Tuesday",
-          thithi: "Vijaya Dasami",
-          alankaram: "Sri Raja Rajeswari Devi"
-        }
-      ]
-    };
+    // Gallery strip on the home page: one album thumbnail per day that has photos, in day order
+    (() => {
+      const days = scheduleData.days.filter(d => d.memories && d.memories.album);
+      document.getElementById('galleryStrip').innerHTML = days.map(d => `
+        <a href="gallery.html#day${d.dayNumber}" class="group relative flex-none w-16 sm:w-[4.5rem] md:w-28 aspect-[3/4] overflow-hidden rounded-lg border border-vedic-gold bg-stone-200">
+          <img src="assets/memories/day${d.dayNumber}-album.jpg" alt="Day ${d.dayNumber}: ${d.alankaram}" loading="lazy" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+          <span class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/75 to-transparent text-white text-[11px] font-semibold text-center pt-4 pb-1">Day ${d.dayNumber}</span>
+        </a>`).join('');
+    })();
+  </script>
+  <script>
 
     function getTodayString() {
       try {
@@ -340,6 +281,9 @@
     }
 
     function getInitialDayIndex() {
+      const m = location.hash.match(/^#day(\d+)$/);
+      const linked = m ? scheduleData.days.findIndex(d => d.dayNumber === +m[1]) : -1;
+      if (linked !== -1) return linked;
       const today = getTodayString();
       const idx = scheduleData.days.findIndex(d => d.date === today);
       if (idx !== -1) return idx;
@@ -501,6 +445,7 @@
                 <p class="text-xs text-stone-600 italic text-center mt-2">Thank you so much to Bhargavi (<a href="https://www.instagram.com/shenisetti/" target="_blank" rel="noopener" class="underline hover:text-stone-900">@shenisetti</a>) for creating the beautiful reels 🙏</p>
               </div>
             </div>
+            <p class="text-center mt-3"><a href="gallery.html#day${n}" class="text-sm font-semibold text-vedic-deepred underline hover:text-vedic-darkmaroon">See every day in the Gallery →</a></p>
           </div>`;
       }
 
@@ -602,6 +547,31 @@
       renderTabs();
       renderActiveDay();
     }
+
+    // Shrink the sticky header after scrolling a little (with a gap between the two points so it doesn't flicker)
+    (() => {
+      const header = document.getElementById('siteHeader');
+      const update = () => {
+        const y = window.scrollY;
+        if (y > 90) header.classList.add('condensed');
+        else if (y < 20) header.classList.remove('condensed');
+      };
+      window.addEventListener('scroll', update, { passive: true });
+      update();
+    })();
+
+    // Links like index.html#day3 (from the gallery) open that day and bring its card into view
+    function openLinkedDay() {
+      const m = location.hash.match(/^#day(\d+)$/);
+      const idx = m ? scheduleData.days.findIndex(d => d.dayNumber === +m[1]) : -1;
+      if (idx === -1) return;
+      selectedDayIndex = idx;
+      renderTabs();
+      renderActiveDay();
+      requestAnimationFrame(() => document.getElementById('todayCard').scrollIntoView({ block: 'start' }));
+    }
+    window.addEventListener('hashchange', openLinkedDay);
+    openLinkedDay();
   </script>
   <!-- Install-the-app banner: shown until installed or dismissed (remembered per device) -->
   <div id="installBanner" class="hidden fixed inset-x-0 bottom-0 z-20 px-3 pb-3" style="padding-bottom: max(0.75rem, env(safe-area-inset-bottom))">

@@ -3,6 +3,7 @@
 const CACHE = 'navaratri-2026-v1';
 const CORE = [
   '/index.html',
+  '/schedule.js',
   '/puja/day.html',
   '/puja/bhajans.html',
   '/puja/data.js',
