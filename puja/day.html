@@ -93,7 +93,7 @@
     <p class="font-title text-amber-200">Chunduru Family Sri Devi Navaratri Celebrations 2026</p>
     <p class="text-sm max-w-xl mx-auto px-4 mt-3">Texts and lyrics are shared for personal, non-commercial devotional use. All rights belong to their respective owners.</p>
     <p class="text-sm mt-1">Contact: <a href="mailto:dasara@vamsichunduru.com" class="underline hover:text-amber-200">dasara@vamsichunduru.com</a></p>
-    <p class="text-sm mt-1"><a href="../updates.html" class="underline hover:text-amber-200">Last updated: <span data-last-updated>Oct 18, 2026, 9:27 AM</span></a></p>
+    <p class="text-sm mt-1"><a href="../updates.html" class="underline hover:text-amber-200">Last updated: <span data-last-updated>Oct 18, 2026, 9:41 AM</span></a></p>
   </footer>
 
   <!-- Prev / Next bar -->
@@ -144,7 +144,8 @@
       setName('scheduleLink', UI.schedule[lang]);
       const date = new Date(day.date + 'T12:00:00');
       const dateText = date.toLocaleDateString(lang === 'en' ? 'en-US' : lang + '-IN', { weekday: 'short', month: 'short', day: 'numeric' });
-      document.getElementById('dayLine').textContent = `${UI.day[lang]} ${day.day} · ${dateText}`;
+      // The thithi follows the date on wider screens, and gets its own line on phones
+      document.getElementById('dayLine').innerHTML = `${escapeHtml(`${UI.day[lang]} ${day.day} · ${dateText}`)}<span class="hidden md:inline"> · </span><span class="block md:inline">${escapeHtml(day.thithi[lang] || day.thithi.en)}</span>`;
       const alank = document.getElementById('alankaramLine');
       alank.textContent = day.alankaram[lang];
       alank.lang = lang;

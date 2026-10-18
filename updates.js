@@ -2,9 +2,10 @@
 // The footers show the newest one as "Last updated".
 window.UPDATES = [
   {
-    date: '2026-10-18T09:27:00-07:00',
+    date: '2026-10-18T09:41:00-07:00',
     title: 'Finer scroll control and more photos',
     items: [
+      'The puja page header now shows each day’s thithi next to the date.',
       'This Updates page: tap “Last updated” at the bottom of any page to see what’s new.',
       'Auto-scroll speed now runs from 0.25x to 2x in small steps, with − and + buttons beside both sliders for exact adjustments.',
       'New ashtottarams for Day 9 (Mahishasura Mardini) and Day 10 (Raja Rajeswari) in every language, courtesy of Stotra Nidhi.',
