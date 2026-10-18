@@ -78,7 +78,7 @@
     </div>
   </div>
 
-  <main class="w-full px-4 md:px-8 pt-5 pb-6 flex-1 w-full">
+  <main class="w-full px-4 md:px-8 pt-5 pb-28 flex-1 w-full">
     <article class="bg-white ornament-border rounded-xl px-5 py-6 md:px-8">
       <div id="stepCount" class="text-xl font-semibold text-amber-800 tracking-wide uppercase"></div>
       <h1 id="textTitle" class="text-title text-2xl md:text-3xl mt-1 reading"></h1>
@@ -89,25 +89,20 @@
     </article>
   </main>
 
-  <footer class="bg-stone-900 text-stone-400 pt-6 pb-24 text-center text-xl border-t border-vedic-gold/40 mt-6">
-    <p class="font-title text-amber-200">Chunduru Family Sri Devi Navaratri Celebrations 2026</p>
-    <p class="text-sm mt-3"><a href="../updates.html" class="underline hover:text-amber-200">Last updated: <span data-last-updated>Oct 18, 2026, 11:11 AM</span></a><span class="mx-2 text-stone-600" aria-hidden="true">|</span><a href="mailto:dasara@vamsichunduru.com" class="underline hover:text-amber-200" title="dasara@vamsichunduru.com">Contact</a></p>
-    <p class="text-sm max-w-xl mx-auto px-4 mt-5">Texts and lyrics are shared for personal, non-commercial devotional use. All rights belong to their respective owners.</p>
-  </footer>
 
   <!-- Prev / Next bar -->
   <nav class="fixed bottom-0 inset-x-0 z-10 bg-white/95 backdrop-blur border-t border-amber-200 shadow-[0_-4px_12px_rgba(0,0,0,0.06)]">
     <div class="w-full px-2 md:px-8 py-1.5 flex items-center gap-1.5">
-      <!-- Back · Schedule · Bhajans · Next -->
-      <button type="button" id="prevBtn" class="h-14 w-14 btn-emboss flex-shrink-0 rounded-lg border border-stone-300 bg-white text-stone-700 flex flex-col items-center justify-center leading-none disabled:opacity-40">
-        <svg class="w-9 h-9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-      </button>
+      <!-- Home · Bhajans · Back · Next -->
       <a id="scheduleLink" href="../index.html" class="h-14 w-14 btn-emboss flex-shrink-0 rounded-lg border border-stone-300 bg-white text-stone-700 flex flex-col items-center justify-center leading-none">
         <svg class="w-9 h-9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"/><path d="M5.5 9v11h13V9"/><path d="M10 20v-5.5h4V20"/></svg>
       </a>
       <a id="bhajansLink" href="bhajans.html" class="h-14 w-14 btn-emboss flex-shrink-0 rounded-lg border border-stone-300 bg-white text-stone-700 flex flex-col items-center justify-center leading-none">
         <svg class="w-9 h-9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
       </a>
+      <button type="button" id="prevBtn" class="h-14 w-14 btn-emboss flex-shrink-0 rounded-lg border border-stone-300 bg-white text-stone-700 flex flex-col items-center justify-center leading-none disabled:opacity-40">
+        <svg class="w-9 h-9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      </button>
       <button type="button" id="nextBtn" class="h-14 flex-1 min-w-0 rounded-lg border border-vedic-gold btn-soft px-2 flex items-center justify-center gap-2">
         <span id="nextLabel" class="hidden sm:inline flex-shrink-0 text-base uppercase tracking-wide text-amber-700 font-semibold empty:hidden"></span>
         <span id="nextTitle" class="min-w-0 text-xl font-semibold truncate"></span>
@@ -116,7 +111,6 @@
     </div>
   </nav>
 
-  <script src="../updates.js"></script>
   <script src="data.js"></script>
   <script src="common.js"></script>
   <script>if ('serviceWorker' in navigator) navigator.serviceWorker.register('../sw.js').catch(() => {});</script>
@@ -192,7 +186,16 @@
 
       const credit = document.getElementById('textCredit');
       credit.classList.toggle('hidden', !text.credit);
-      if (text.credit) credit.textContent = text.credit[lang] || text.credit.en;
+      if (text.credit) {
+        // The source's name links to its site, e.g. "Text courtesy Vaidika Vignanam" or the Kumari Puja article title
+        const line = text.credit[lang] || text.credit.en;
+        const link = text.creditLink;
+        const name = link && (text.credit[lang] ? link.name[lang] : link.name.en);
+        const at = name ? line.indexOf(name) : -1;
+        credit.innerHTML = at >= 0
+          ? `${escapeHtml(line.slice(0, at))}<a href="${link.href}" target="_blank" rel="noopener" class="underline hover:text-vedic-deepred">${escapeHtml(name)}</a>${escapeHtml(line.slice(at + name.length))}`
+          : escapeHtml(line);
+      }
 
       const jump = document.getElementById('sectionJump');
       jump.classList.toggle('hidden', headings.length === 0);
