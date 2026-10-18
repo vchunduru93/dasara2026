@@ -2,10 +2,10 @@
 // The footers show the newest one as "Last updated".
 window.UPDATES = [
   {
-    date: '2026-10-18T10:31:00-07:00',
+    date: '2026-10-18T10:59:00-07:00',
     title: 'Finer scroll control and more photos',
     items: [
-      'Every step of the Ganapati and Devi pujas now has a short note on what to do, in every language.',
+      'Every step of the Ganapati and Devi pujas now has a short, simple note on what to do, in every language.',
       'Coconut water (nārikēḷa jalaṃ) added to the abhishekam in Devi Puja Part 1.',
       'ગુજરાતી: the whole site can now be read in Gujarati, our eighth language.',
       'Tap the Zoom meeting ID or passcode on the home page to copy it.',
