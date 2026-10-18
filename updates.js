@@ -2,7 +2,7 @@
 // The footers show the newest one as "Last updated".
 window.UPDATES = [
   {
-    date: '2026-10-18T10:59:00-07:00',
+    date: '2026-10-18T11:11:00-07:00',
     title: 'Finer scroll control and more photos',
     items: [
       'Every step of the Ganapati and Devi pujas now has a short, simple note on what to do, in every language.',
@@ -10,6 +10,7 @@ window.UPDATES = [
       'ગુજરાતી: the whole site can now be read in Gujarati, our eighth language.',
       'Tap the Zoom meeting ID or passcode on the home page to copy it.',
       'The puja page header now shows each day’s thithi next to the date.',
+      'A small blue dot next to “Last updated” means there’s something new you haven’t seen yet.',
       'This Updates page: tap “Last updated” at the bottom of any page to see what’s new.',
       'Auto-scroll speed now runs from 0.25x to 2x in small steps, with − and + buttons beside both sliders for exact adjustments.',
       'New ashtottarams for Day 9 (Mahishasura Mardini) and Day 10 (Raja Rajeswari) in every language, courtesy of Stotra Nidhi.',
@@ -74,5 +75,19 @@ function formatUpdateDate(iso) {
   return new Date(iso).toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' });
 }
 
-// Fill any "Last updated" footer link on the page
-document.querySelectorAll('[data-last-updated]').forEach(el => { el.textContent = formatUpdateDate(UPDATES[0].date); });
+// Fill any "Last updated" footer link on the page, with a small dot when there's news this reader hasn't opened
+(() => {
+  const latest = UPDATES[0].date;
+  let seen = null;
+  try { seen = localStorage.getItem('updatesSeen'); } catch (e) {}
+  const onUpdatesPage = /updates\.html$/.test(location.pathname);
+  if (onUpdatesPage) { try { localStorage.setItem('updatesSeen', latest); } catch (e) {} }
+  const unseen = !onUpdatesPage && (!seen || new Date(seen) < new Date(latest));
+  document.querySelectorAll('[data-last-updated]').forEach(el => {
+    el.textContent = formatUpdateDate(latest);
+    const link = el.closest('a');
+    if (unseen && link) {
+      link.insertAdjacentHTML('afterend', '<span class="inline-block align-top ml-1 w-1.5 h-1.5 rounded-full bg-sky-400" role="img" aria-label="New updates" title="New updates"></span>');
+    }
+  });
+})();
