@@ -14,7 +14,7 @@ body { background-color: #FAF7F2; color: #2D1A1E; font-family: 'Noto Serif', ser
 .reading:lang(bn) { font-family: 'Noto Serif Bengali', 'Noto Serif', serif; }
 .reading:lang(en) { font-family: 'Noto Serif', serif; }
 .reading .line { display: block; padding-left: 1.25em; text-indent: -1.25em; overflow-wrap: anywhere; }  /* long joined words like (gōtraḥ)/(gōtrōdbhavasya) wrap instead of widening the page */
-.reading .p-heading { font-weight: 600; color: #800000; font-size: 1.15em; margin-top: 1.75em; margin-bottom: 0.35em;
+.reading .p-heading { font-weight: 600; color: #800000; font-size: 1em; margin-top: 1.75em; margin-bottom: 0.35em;
                       padding-bottom: 0.2em; border-bottom: 1px solid #F3E3B5; scroll-margin-top: 8rem; }
 .reading .p-label { font-size: 0.8em; font-style: italic; color: #57534E; margin-top: 0.9em; margin-bottom: 0.1em; }
 .reading .p-text { margin: 0.55em 0; }
@@ -44,3 +44,19 @@ body { background-color: #FAF7F2; color: #2D1A1E; font-family: 'Noto Serif', ser
 /* Toolbar sliders and the "on" state of the Aa and auto-scroll buttons */
 .slider { accent-color: #800000; height: 2.25rem; }
 .tool-btn-on { background-color: #800000 !important; color: #FEF3C7 !important; border-color: #D4AF37 !important; }
+
+/* Softer Next / Back-to-puja buttons: warm cream and gold with maroon text, raised like the others */
+.btn-soft { background-image: linear-gradient(to bottom, #FFF8EC, #F6E3BC); color: #800000;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), inset 0 -2px 0 rgba(128,0,0,0.08), 0 2px 3px rgba(0,0,0,0.12);
+  transition: transform 0.05s, box-shadow 0.05s; }
+.btn-soft:active { transform: translateY(1px); box-shadow: inset 0 2px 3px rgba(0,0,0,0.15); }
+
+/* Collapsed toolbar: a slim cream strip with a gold edge, so it's still easy to spot */
+.toolbar-collapsed { height: 0.75rem; border-bottom: 2px solid #D4AF37 !important; }
+.toolbar-collapsed #toolbarToggle { border-color: #D4AF37; border-width: 2px; border-top-width: 0; }
+
+/* Smaller section headings (Khadgamala): the maroon heading style at about verse size */
+.reading .p-section { font-weight: 600; color: #800000; font-size: 1em;
+                      margin-top: 1.4em; margin-bottom: 0.35em; padding-bottom: 0.15em;
+                      border-bottom: 1px solid #F3E3B5; scroll-margin-top: 8rem; }
+.reading .p-section .line { padding-left: 0; text-indent: 0; }

@@ -38,7 +38,7 @@
   </header>
 
   <!-- Sticky toolbar -->
-  <div class="sticky top-0 z-10 bg-[#FAF7F2]/95 backdrop-blur border-b border-amber-200 shadow-sm">
+  <div id="toolbar" class="sticky top-0 z-10 bg-[#FAF7F2]/95 backdrop-blur border-b border-amber-200 shadow-sm">
     <button type="button" id="toolbarToggle" aria-controls="toolbarBody" aria-expanded="true" aria-label="Hide toolbar" title="Hide toolbar"
             class="absolute right-0 md:right-2 top-full -mt-px w-9 h-7 flex items-center justify-center rounded-bl-lg md:rounded-b-lg border border-t-0 border-r-0 md:border-r border-amber-200 bg-[#FAF7F2] text-stone-500 shadow-sm">
       <svg id="toolbarChevron" class="w-5 h-5 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m18 15-6-6-6 6"/></svg>
@@ -94,8 +94,8 @@
       <a id="bhajansLink" href="bhajans.html" class="h-14 w-14 btn-emboss flex-shrink-0 rounded-lg border border-stone-300 bg-white text-stone-700 flex flex-col items-center justify-center leading-none">
         <svg class="w-9 h-9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
       </a>
-      <button type="button" id="nextBtn" class="h-14 flex-1 min-w-0 rounded-lg bg-vedic-deepred text-amber-100 border border-vedic-gold btn-emboss-red px-2 flex items-center justify-center gap-2">
-        <span id="nextLabel" class="hidden sm:inline flex-shrink-0 text-base uppercase tracking-wide text-amber-200 font-semibold empty:hidden"></span>
+      <button type="button" id="nextBtn" class="h-14 flex-1 min-w-0 rounded-lg border border-vedic-gold btn-soft px-2 flex items-center justify-center gap-2">
+        <span id="nextLabel" class="hidden sm:inline flex-shrink-0 text-base uppercase tracking-wide text-amber-700 font-semibold empty:hidden"></span>
         <span id="nextTitle" class="min-w-0 text-xl font-semibold truncate"></span>
         <span id="nextArrow" class="flex-shrink-0"><svg class="w-9 h-9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
       </button>

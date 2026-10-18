@@ -38,10 +38,11 @@ function renderBlocks(blocks, idPrefix) {
   const headings = [];
   const html = blocks.map(([kind, lines]) => {
     const text = lines.map(l => `<span class="line">${escapeHtml(l)}</span>`).join('');
-    if (kind === 'heading') {
+    // "heading" is a maroon section title; "section" is a quieter gray italic one. Both are jump targets.
+    if (kind === 'heading' || kind === 'section') {
       const id = `${idPrefix}-s${headings.length}`;
       headings.push({ id, label: lines[0].replace(/[:\s]+$/, '') });
-      return `<h3 id="${id}" class="p-heading">${text}</h3>`;
+      return `<h3 id="${id}" class="p-${kind}">${text}</h3>`;
     }
     return `<div class="p-${kind}">${text}</div>`;
   }).join('');
@@ -153,6 +154,7 @@ function setupToolbarToggle() {
   const chevron = document.getElementById('toolbarChevron');
   const set = (collapsed) => {
     body.classList.toggle('hidden', collapsed);
+    document.getElementById('toolbar').classList.toggle('toolbar-collapsed', collapsed);
     chevron.classList.toggle('rotate-180', collapsed);
     btn.setAttribute('aria-expanded', !collapsed);
     btn.setAttribute('aria-label', collapsed ? 'Show toolbar' : 'Hide toolbar');

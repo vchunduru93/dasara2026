@@ -34,7 +34,7 @@
     </div>
   </header>
 
-  <div class="sticky top-0 z-10 bg-[#FAF7F2]/95 backdrop-blur border-b border-amber-200 shadow-sm">
+  <div id="toolbar" class="sticky top-0 z-10 bg-[#FAF7F2]/95 backdrop-blur border-b border-amber-200 shadow-sm">
     <button type="button" id="toolbarToggle" aria-controls="toolbarBody" aria-expanded="true" aria-label="Hide toolbar" title="Hide toolbar"
             class="absolute right-0 md:right-2 top-full -mt-px w-9 h-7 flex items-center justify-center rounded-bl-lg md:rounded-b-lg border border-t-0 border-r-0 md:border-r border-amber-200 bg-[#FAF7F2] text-stone-500 shadow-sm">
       <svg id="toolbarChevron" class="w-5 h-5 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m18 15-6-6-6 6"/></svg>
@@ -76,7 +76,7 @@
   <!-- Back to puja (when opened from the reader) · Schedule -->
   <nav class="fixed bottom-0 inset-x-0 z-10 bg-white/95 backdrop-blur border-t border-amber-200 shadow-[0_-4px_12px_rgba(0,0,0,0.06)]">
     <div class="w-full px-2 md:px-8 py-1.5 flex items-center gap-1.5">
-      <a id="backLink" href="day.html" class="h-14 flex-1 min-w-0 rounded-lg bg-vedic-deepred text-amber-100 border border-vedic-gold btn-emboss-red px-2 text-xl font-semibold flex items-center gap-2 hidden"><svg class="w-9 h-9 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span id="backText" class="truncate"></span></a>
+      <a id="backLink" href="day.html" class="h-14 flex-1 min-w-0 rounded-lg border border-vedic-gold btn-soft px-2 text-xl font-semibold flex items-center gap-2 hidden"><svg class="w-9 h-9 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span id="backText" class="truncate"></span></a>
       <a id="scheduleLink" href="../index.html" class="h-14 w-14 btn-emboss flex-shrink-0 rounded-lg border border-stone-300 bg-white text-stone-700 flex flex-col items-center justify-center leading-none">
         <svg class="w-9 h-9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"/><path d="M5.5 9v11h13V9"/><path d="M10 20v-5.5h4V20"/></svg>
       </a>

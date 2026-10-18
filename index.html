@@ -365,7 +365,7 @@
       return `<span class="inline-block ${sizeClass} rounded-full border border-stone-300 flex-shrink-0" style="background:${color.hex}" title="${color.name}"></span>`;
     }
 
-    function renderTabs() {
+    function renderTabs(smooth = false) {
       const container = document.getElementById('dayTabsContainer');
       if (!container) return;
       container.innerHTML = '';
@@ -403,7 +403,7 @@
 
         btn.onclick = function() {
           selectedDayIndex = idx;
-          renderTabs();
+          renderTabs(true);
           renderActiveDay();
         };
 
@@ -420,7 +420,30 @@
         `;
         container.appendChild(btn);
       });
+      centerSelectedTab(container, smooth);
     }
+
+    // Scroll the tab bar so the selected day (today, on first load) sits in the middle
+    function centerSelectedTab(container, smooth) {
+      const btn = container.children[selectedDayIndex];
+      if (!btn) return;
+      const offset = btn.getBoundingClientRect().left - container.getBoundingClientRect().left;
+      const left = container.scrollLeft + offset - (container.clientWidth - btn.offsetWidth) / 2;
+      container.scrollTo({ left: Math.max(0, left), behavior: smooth ? 'smooth' : 'auto' });
+    }
+
+    // Tab widths keep changing while styles and web fonts load, so keep today's tab centered for the first
+    // few seconds, unless the visitor starts scrolling the bar themselves
+    let tabsTouched = false;
+    ['pointerdown', 'wheel', 'touchstart'].forEach(ev =>
+      document.getElementById('dayTabsContainer')?.addEventListener(ev, () => { tabsTouched = true; }, { passive: true }));
+    const settleUntil = performance.now() + 3000;
+    (function keepCentered() {
+      const container = document.getElementById('dayTabsContainer');
+      if (tabsTouched || !container) return;
+      centerSelectedTab(container, false);
+      if (performance.now() < settleUntil) requestAnimationFrame(keepCentered);
+    })();
 
     function renderActiveDay() {
       const day = scheduleData.days[selectedDayIndex];
