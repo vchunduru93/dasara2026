@@ -218,7 +218,8 @@ const AutoScroll = (() => {
     main.addEventListener('touchstart', () => { touching = true; }, { passive: true });
     window.addEventListener('touchend', () => { touching = false; last = 0; }, { passive: true });
     window.addEventListener('touchcancel', () => { touching = false; last = 0; }, { passive: true });
-    document.addEventListener('visibilitychange', () => { if (playing && document.visibilityState === 'visible') keepAwake(true); });
+    // The screen turning off (or switching apps) pauses it, so it doesn't run on from where the reader left off
+    document.addEventListener('visibilitychange', () => { if (playing && document.visibilityState === 'hidden') set(false); });
   }
 
   // Let a smooth jump (section or bhajan picker) finish before scrolling resumes

@@ -2,6 +2,13 @@
 // The footers show the newest one as "Last updated".
 window.UPDATES = [
   {
+    date: '2026-10-19T16:09:00-07:00',
+    title: 'Auto scroll pauses when the screen turns off',
+    items: [
+      'Auto scroll pauses when your phone’s screen turns off or you switch apps, so you pick up right where you left off.'
+    ]
+  },
+  {
     date: '2026-10-19T16:07:00-07:00',
     title: 'Play button in the toolbar and clearer puja steps',
     items: [
