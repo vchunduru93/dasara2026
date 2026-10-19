@@ -61,6 +61,25 @@ body { background-color: #FAF7F2; color: #2D1A1E; font-family: 'Noto Serif', ser
 /* Full screen: nothing pinned at the top, so headings scroll to the very top */
 .focus-mode { --top-h: 0px; }
 
+/* Floating auto-scroll dock, stacked + ▶ − (faster on top), above the bottom bar until it's dragged somewhere else */
+.scroll-dock { position: fixed; right: 0.75rem; bottom: 5.75rem; z-index: 30; display: flex; flex-direction: column-reverse; align-items: center; gap: 2px;
+  padding: 4px; border-radius: 9999px; border: 1px solid #D4AF37; background-image: linear-gradient(to bottom, #9E1B1B, #6E0000);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.25), 0 4px 14px rgba(74,14,23,0.35); touch-action: none; user-select: none;
+  -webkit-user-select: none; cursor: grab; }
+@media (min-width: 768px) { .scroll-dock { right: 2rem; } }
+.scroll-dock.dragging { cursor: grabbing; box-shadow: inset 0 1px 0 rgba(255,255,255,0.25), 0 10px 24px rgba(74,14,23,0.45); }
+.dock-step { width: 2.5rem; height: 2.5rem; border-radius: 9999px; color: #FEF3C7; font-size: 1.6rem; font-weight: 700; line-height: 1;
+  display: flex; align-items: center; justify-content: center; }
+.dock-step:active { background: rgba(255,255,255,0.15); }
+.dock-play { width: 3.25rem; height: 3.25rem; border-radius: 9999px; background: #FEF3C7; color: #800000; border: 1px solid #D4AF37;
+  display: flex; align-items: center; justify-content: center; box-shadow: inset 0 -2px 0 rgba(128,0,0,0.12); }
+.dock-play:active { transform: translateY(1px); }
+.dock-play[aria-pressed="true"] { background: #FDE68A; }
+/* The speed sits on the dock's top edge */
+.dock-speed { position: absolute; top: -0.7rem; left: 50%; transform: translateX(-50%); padding: 0 0.4rem; border-radius: 9999px;
+  background: #FFFFFF; border: 1px solid #D4AF37; color: #800000; font-size: 0.75rem; font-weight: 700; line-height: 1.15rem;
+  font-variant-numeric: tabular-nums; white-space: nowrap; pointer-events: none; }
+
 /* Smaller section headings (Khadgamala): the maroon heading style at about verse size */
 .reading .p-section { font-weight: 600; color: #800000; font-size: 1em;
                       margin-top: 1.4em; margin-bottom: 0.35em; padding-bottom: 0.15em;
@@ -77,6 +96,14 @@ body { background-color: #FAF7F2; color: #2D1A1E; font-family: 'Noto Serif', ser
 .reading .line.has-count { padding-right: 2.6em; }
 .reading .line-count { position: absolute; right: 0; top: 0.38em; text-indent: 0;
                        font-size: 0.72em; font-style: italic; color: #A16207; line-height: 1; white-space: nowrap; }
+
+/* Kabhi Durga Banke: stanzas for days still to come are grayed out; today's stanza is repeated at the end */
+.reading .p-muted { margin: 0.55em 0; color: #A8A29E; font-style: italic; }
+.reading .p-muted .line-count { color: #C4BDB6; }
+.reading .p-muted-refrain { font-style: italic; color: #C4BDB6; margin: 0.1em 0 0.6em; }
+.reading .p-muted-refrain .line { padding-left: 0; text-indent: 0; }
+.reading .p-muted-refrain .line::before { content: "↻ "; font-style: normal; }
+.reading .p-again { margin: 0.55em 0; }
 
 /* A stanza that is only the chorus, written out the first time: spaced like a stanza, but not numbered */
 .reading .p-chorus { margin: 0.55em 0; }

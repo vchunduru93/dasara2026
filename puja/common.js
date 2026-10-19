@@ -104,13 +104,14 @@ function setupTextSize(target) {
   apply();
 }
 
-// Play/pause auto scroll at 0.25x–2x speed; the speed slider shows while it runs.
-// Holding a finger on the screen pauses it, and it stops at the bottom of the page.
+// Play/pause auto scroll at 0.25x–2x speed, from the floating dock (− ▶ +) that can be dragged anywhere.
+// Holding a finger on the text pauses it, and it stops at the bottom of the page.
 const AutoScroll = (() => {
   let playing = false, last = 0, carry = 0, touching = false, holdUntil = 0, wakeLock = null;
   const BASE = 30;  // pixels per second at 1x
+  const MIN = 0.25, MAX = 2, STEP = 0.05;
   let rate = 1;
-  let btn, row;
+  let btn;
 
   function frame(t) {
     if (!playing) return;
@@ -135,25 +136,33 @@ const AutoScroll = (() => {
   function set(on) {
     playing = on; last = 0; carry = 0;
     btn.setAttribute('aria-pressed', on);
-    btn.classList.toggle('tool-btn-on', on);
     document.getElementById('playIcon').classList.toggle('hidden', on);
     document.getElementById('pauseIcon').classList.toggle('hidden', !on);
-    row.classList.toggle('hidden', !on);
     keepAwake(on);
     if (on) requestAnimationFrame(frame);
   }
 
   function setup() {
     btn = document.getElementById('scrollToggle');
-    row = document.getElementById('speedRow');
-    const slider = document.getElementById('speedSlider');
     const label = document.getElementById('speedLabel');
-    rate = Math.min(2, Math.max(0.25, parseFloat(Prefs.get('pujaScrollRate')) || 1));
+    rate = Math.min(MAX, Math.max(MIN, parseFloat(Prefs.get('pujaScrollRate')) || 1));
     const show = () => { label.textContent = `${+rate.toFixed(2)}x`; };
-    slider.value = rate;
-    slider.oninput = () => { rate = +slider.value; Prefs.set('pujaScrollRate', rate); show(); };
     show();
+    // − and + change the speed one step; holding one keeps stepping
+    document.querySelectorAll('#scrollDock .dock-step').forEach(b => {
+      let timer = null;
+      const step = () => {
+        rate = Math.min(MAX, Math.max(MIN, Math.round((rate + STEP * +b.dataset.dir) * 100) / 100));
+        Prefs.set('pujaScrollRate', rate);
+        show();
+      };
+      const stop = () => { clearTimeout(timer); clearInterval(timer); timer = null; };
+      b.addEventListener('pointerdown', () => { stop(); timer = setTimeout(() => { timer = setInterval(step, 110); }, 450); });
+      ['pointerup', 'pointercancel', 'pointerleave'].forEach(ev => b.addEventListener(ev, stop));
+      b.addEventListener('click', step);
+    });
     btn.onclick = () => set(!playing);
+    setupDockDrag(document.getElementById('scrollDock'));
     const main = document.querySelector('main');
     main.addEventListener('touchstart', () => { touching = true; }, { passive: true });
     window.addEventListener('touchend', () => { touching = false; last = 0; }, { passive: true });
@@ -167,14 +176,62 @@ const AutoScroll = (() => {
   return { setup, hold, isPlaying: () => playing };
 })();
 
+// Drag the floating dock anywhere on the screen (a short tap still presses its buttons).
+// Its spot is saved per device as a fraction of the screen, so it lands in the same place after rotating.
+function setupDockDrag(dock) {
+  const place = (fx, fy) => {
+    const maxX = window.innerWidth - dock.offsetWidth - 4, maxY = window.innerHeight - dock.offsetHeight - 4;
+    dock.style.left = `${Math.max(4, Math.min(maxX, fx * maxX))}px`;
+    dock.style.top = `${Math.max(4, Math.min(maxY, fy * maxY))}px`;
+    dock.style.right = 'auto';
+    dock.style.bottom = 'auto';
+  };
+  let saved = null;
+  try { saved = JSON.parse(Prefs.get('pujaDock')); } catch (e) {}
+  if (saved) place(saved.x, saved.y);
+  window.addEventListener('resize', () => { if (saved) place(saved.x, saved.y); });
+
+  let start = null, dragged = false;
+  dock.addEventListener('pointerdown', e => {
+    if (e.button > 0) return;
+    const r = dock.getBoundingClientRect();
+    start = { x: e.clientX, y: e.clientY, left: r.left, top: r.top, id: e.pointerId };
+    dragged = false;
+  });
+  dock.addEventListener('pointermove', e => {
+    if (!start || e.pointerId !== start.id) return;
+    const dx = e.clientX - start.x, dy = e.clientY - start.y;
+    if (!dragged && Math.hypot(dx, dy) < 8) return;
+    if (!dragged) {
+      dragged = true;
+      try { dock.setPointerCapture(e.pointerId); } catch (err) {}
+      dock.classList.add('dragging');
+      // A drag isn't a press: stop any held − / + from repeating
+      dock.querySelectorAll('.dock-step').forEach(b => b.dispatchEvent(new Event('pointercancel')));
+    }
+    const maxX = window.innerWidth - dock.offsetWidth - 4, maxY = window.innerHeight - dock.offsetHeight - 4;
+    saved = { x: Math.max(0, Math.min(1, (start.left + dx) / maxX)), y: Math.max(0, Math.min(1, (start.top + dy) / maxY)) };
+    place(saved.x, saved.y);
+  });
+  const end = () => {
+    if (dragged) Prefs.set('pujaDock', JSON.stringify(saved));
+    dock.classList.remove('dragging');
+    start = null;
+  };
+  dock.addEventListener('pointerup', end);
+  dock.addEventListener('pointercancel', end);
+  // The click that ends a drag doesn't press the button under the finger
+  dock.addEventListener('click', e => { if (dragged) { e.stopPropagation(); e.preventDefault(); dragged = false; } }, true);
+}
+
 function setUrlParams(params) {
   const url = new URL(location.href);
   Object.entries(params).forEach(([k, v]) => url.searchParams.set(k, v));
   history.replaceState(null, '', url);
 }
 
-// Full screen: the ⛶ button hides the pinned title and toolbar so only the text and the bottom bar show;
-// the round button in the corner brings them back (remembered per device), and a floating ▶ runs auto scroll.
+// Full screen: the expand button hides the pinned title and toolbar so only the text, the bottom bar and the
+// auto-scroll dock show; the round button in the corner brings them back (remembered per device).
 // The pinned block's height is kept in --top-h so headings scroll in just below it.
 function setupFocusMode() {
   const top = document.getElementById('topBar');
@@ -182,22 +239,9 @@ function setupFocusMode() {
   const setH = () => document.documentElement.style.setProperty('--top-h', `${top.offsetHeight}px`);
   new ResizeObserver(setH).observe(top);
   setH();
-  // The floating play/pause works the toolbar's ▶ button and mirrors its state
-  const play = document.getElementById('focusPlay');
-  const toolbarPlay = document.getElementById('scrollToggle');
-  const sync = () => {
-    const on = toolbarPlay.getAttribute('aria-pressed') === 'true';
-    play.setAttribute('aria-pressed', on);
-    play.querySelector('.focus-play').classList.toggle('hidden', on);
-    play.querySelector('.focus-pause').classList.toggle('hidden', !on);
-  };
-  play.onclick = () => toolbarPlay.click();
-  new MutationObserver(sync).observe(toolbarPlay, { attributes: true, attributeFilter: ['aria-pressed'] });
-  sync();
   const set = (on) => {
     top.classList.toggle('hidden', on);
     exit.classList.toggle('hidden', !on);
-    play.classList.toggle('hidden', !on);
     document.documentElement.classList.toggle('focus-mode', on);
     Prefs.set('pujaFocus', on ? '1' : '0');
   };
@@ -231,17 +275,18 @@ function shortenRefrains(blocks) {
       // "×N" goes before the stanza number, which then shows at the right edge
       prev[1] = [cue(last, 3).replace(marker(last), '') + ` ×${prev[2]}` + marker(last).replace(/^\s*/, ' ')];
     } else {
-      out.push(['refrain', [cue(last)]]);
+      // A grayed-out stanza's cue is grayed out too
+      out.push([kind === 'muted' ? 'muted-refrain' : 'refrain', [cue(last)]]);
     }
   }
   return out.map(([kind, lines]) => [kind, lines]);
 }
 
 // Number each stanza of a bhajan (on its last line, shown at the right edge like the stotram verse numbers).
-// Chorus repeats aren't stanzas, so refrain cues and chorus-only stanzas are skipped.
+// Chorus repeats aren't stanzas, so refrain cues, chorus-only stanzas and repeats ("again") are skipped.
 function numberStanzas(blocks) {
   let n = 0;
-  return blocks.map(([kind, lines]) => kind === 'text' && lines.length
+  return blocks.map(([kind, lines]) => (kind === 'text' || kind === 'muted') && lines.length
     ? [kind, [...lines.slice(0, -1), `${lines[lines.length - 1]} ⟦${++n}⟧`]]
     : [kind, lines]);
 }
@@ -254,7 +299,8 @@ function verseNumbers(blocks) {
 // A list picker: a sheet that slides up on phones, a centered dialog on wider screens.
 // options: [{value, text}] ("3. Title" gets a number badge); onPick(value) runs when one is chosen.
 // opener: a bottom-bar button that opened it; it stays visible and highlighted, and on phones the sheet rises from just above the bar.
-function openPicker({ title, options, current, onPick, listLang = '', returnFocus = null, opener = null, note = '', onClose = null }) {
+// note is plain text; noteHtml is trusted markup (e.g. with an icon in it).
+function openPicker({ title, options, current, onPick, listLang = '', returnFocus = null, opener = null, note = '', noteHtml = '', onClose = null }) {
   const back = document.createElement('div');
   back.className = 'picker-backdrop';
   const sheet = document.createElement('div');
@@ -264,7 +310,7 @@ function openPicker({ title, options, current, onPick, listLang = '', returnFocu
   sheet.innerHTML = `<div class="picker-grab"></div>
     <div class="picker-head"><span class="picker-title">${escapeHtml(title)}</span>
       <button type="button" class="picker-close" aria-label="Close">×</button></div>
-    ${note ? `<p class="picker-note">${escapeHtml(note)}</p>` : ''}
+    ${note || noteHtml ? `<p class="picker-note">${noteHtml || escapeHtml(note)}</p>` : ''}
     <div class="picker-list" lang="${listLang}">${options.map(o => {
       const m = o.text.match(/^(\d+)\.\s*(.*)$/);
       return `<button type="button" class="picker-opt${o.value === current ? ' on' : ''}" data-v="${escapeHtml(o.value)}">
@@ -334,7 +380,9 @@ function promptLanguageIfUnset() {
   if (!picker || Prefs.get('pujaLang') || new URLSearchParams(location.search).get('lang')) return;
   openPicker({
     title: 'Choose your language',
-    note: 'Your choice is saved on this device for every puja and bhajan. Change it anytime with the 🌐 button at the top.',
+    noteHtml: 'Your choice is saved on this device for every puja and bhajan. Change it anytime with the '
+      + '<svg class="inline-block w-4 h-4 align-[-0.15em]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a14 14 0 0 1 0 18"/><path d="M12 3a14 14 0 0 0 0 18"/></svg>'
+      + ' button at the top.',
     options: Object.keys(LANG_LABELS).map(code => ({ value: code, text: LANG_LABELS[code] })),
     current: initialLang(),
     returnFocus: document.getElementById('langBtn'),

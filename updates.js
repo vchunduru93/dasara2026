@@ -2,6 +2,18 @@
 // The footers show the newest one as "Last updated".
 window.UPDATES = [
   {
+    date: '2026-10-18T21:07:00-07:00',
+    title: 'Durga Suktam and a floating play button',
+    items: [
+      'Durga Suktam is on the Bhajans page, in every language.',
+      'Kabhi Durga Banke follows the day: stanzas for days still to come are grayed out, and today’s Devi’s stanza repeats twice at the end.',
+      'Auto scroll has a floating play button with slower and faster buttons. Drag it anywhere on the screen; it stays where you put it.',
+      'A simpler toolbar on the puja and bhajan pages.',
+      'The home page loads faster, with lighter gallery photos.',
+      'Cleaner icons throughout the site.'
+    ]
+  },
+  {
     date: '2026-10-18T16:55:00-07:00',
     title: 'Gallery and full-screen reading',
     items: [
@@ -9,7 +21,7 @@ window.UPDATES = [
       'The home page opens with the Gallery, the Zoom details and the 10-day schedule all on the first screen.',
       'Page titles stay at the top as you scroll.',
       'Full screen in the puja and bhajan pages: tap ⛶ to hide everything but the text, with a big ▶ button to start and pause auto scroll.',
-      'Language is now the 🌐 button in the toolbar, and the first time you open a puja you’re asked to pick your language.'
+      'Language is now the globe button in the toolbar, and the first time you open a puja you’re asked to pick your language.'
     ]
   },
   {
