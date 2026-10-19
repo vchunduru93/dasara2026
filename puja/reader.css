@@ -78,9 +78,25 @@ main { touch-action: pan-x pan-y; }
 /* The exit button is the full-screen toggle switched on, so it's the deeper cream, like Aa while it's open */
 #focusExit { background-color: #F1DCAE; }
 @media (min-width: 768px) { .focus-mode body > nav > div { padding-right: 2.5rem; } }  /* in from the card's edge, like ▶ */
+/* Full screen buttons are the toolbar's size (2.75rem, 2.25rem on phones), not the bottom bar's, so they stay small
+   over the text. Home sits one button and a gap left of exit. */
+.focus-mode { --fs-btn: 2.75rem; --fs-icon: 1.5rem; --fs-gap: 0.375rem; }
+@media (max-width: 767px) { .focus-mode { --fs-btn: 2.25rem; --fs-icon: 1.25rem; } }
+.focus-mode body > nav a, .focus-mode body > nav button, #focusHome, #focusExit {
+  height: var(--fs-btn) !important; border-radius: 0.375rem; }
+.focus-mode #bhajansLink, .focus-mode #prevBtn, .focus-mode #nextBtn:not(.is-last), .focus-mode #backLink,
+#focusHome, #focusExit { width: var(--fs-btn) !important; }
+.focus-mode #nextBtn.is-last #nextTitle { font-size: 1rem; }
+.focus-mode body > nav svg, #focusHome svg, #focusExit svg { width: var(--fs-icon); height: var(--fs-icon); }
+#focusExit { right: 0.5rem; }
+#focusHome { right: calc(0.5rem + var(--fs-btn) + var(--fs-gap)); }
+@media (min-width: 768px) {
+  #focusExit { right: 2.5rem; }
+  #focusHome { right: calc(2.5rem + var(--fs-btn) + var(--fs-gap)); }
+}
 
 /* Floating auto-scroll dock: a round ▶ above the bottom bar until it's dragged somewhere else. While it scrolls,
-   faster (+, on top) and slower (−, below) show beside it as bare symbols, and the speed sits on top.
+   faster (+, on top) and slower (−, below) show beside it as bare symbols.
    On a phone held sideways the column turns clockwise into a row: − ▶ +. */
 .scroll-dock { position: fixed; right: 0.75rem; bottom: 5.75rem; z-index: 30; display: flex; flex-direction: column-reverse;
   align-items: center; gap: 2px; pointer-events: none; touch-action: none; user-select: none; -webkit-user-select: none; }
@@ -101,20 +117,20 @@ main { touch-action: pan-x pan-y; }
   text-shadow: 0 0 3px #FAF7F2, 0 0 6px #FAF7F2; visibility: hidden; opacity: 0; transform: var(--tuck) scale(0.4);
   transition: transform .26s cubic-bezier(.2,.9,.3,1.25), opacity .18s, visibility 0s .26s; }
 .dock-step:active { background: rgba(128,0,0,0.08); }
-/* ▶ is the one maroon button: flat, with a gold edge */
+/* ▶ is the one maroon button: flat, with a gold edge, and a little see-through so the text shows behind it */
 .dock-play { width: 3.5rem; height: 3.5rem; border-radius: 9999px; color: #FEF3C7; border: 1px solid #D4AF37; cursor: grab;
   position: relative; z-index: 1;  /* above + and −, which tuck in behind it */
-  display: flex; align-items: center; justify-content: center; background-color: #800000; transition: background-color 0.1s; }
-.dock-play:active { background-color: #6E0000; }
-.dock-speed { position: absolute; top: -0.7rem; left: 50%; transform: translateX(-50%); padding: 0 0.4rem; border-radius: 9999px;
-  background: #FFFFFF; border: 1px solid #D4AF37; color: #800000; font-size: 0.75rem; font-weight: 700; line-height: 1.15rem;
-  font-variant-numeric: tabular-nums; white-space: nowrap; pointer-events: none; z-index: 2;
-  visibility: hidden; opacity: 0; transform: translate(-50%, 1.6rem) scale(0.5);
-  transition: transform .26s cubic-bezier(.2,.9,.3,1.25), opacity .18s, visibility 0s .26s; }
-.scroll-dock.playing .dock-step, .scroll-dock.playing .dock-speed { visibility: visible; opacity: 1; transition-delay: 0s; }
-.scroll-dock.playing .dock-step { transform: none; }
-.scroll-dock.playing .dock-speed { transform: translate(-50%, 0); }
-@media (prefers-reduced-motion: reduce) { .dock-step, .dock-speed { transition: opacity .15s, visibility 0s .15s; } }
+  display: flex; align-items: center; justify-content: center; background-color: rgba(128, 0, 0, 0.8); transition: background-color 0.1s; }
+.dock-play:active { background-color: rgba(110, 0, 0, 0.9); }
+/* While it scrolls, ▶ becomes a smaller pause with the speed written under it, inside the circle */
+.dock-play { flex-direction: column; gap: 1px; }
+.dock-play svg { transition: width .2s, height .2s; }
+.scroll-dock.playing .dock-play svg { width: 1.25rem; height: 1.25rem; }
+.dock-speed { display: none; color: #FEF3C7; font-size: 0.8rem; font-weight: 700; line-height: 1;
+  font-variant-numeric: tabular-nums; white-space: nowrap; pointer-events: none; }
+.scroll-dock.playing .dock-speed { display: block; }
+.scroll-dock.playing .dock-step { visibility: visible; opacity: 1; transition-delay: 0s; transform: none; }
+@media (prefers-reduced-motion: reduce) { .dock-step { transition: opacity .15s, visibility 0s .15s; } }
 
 /* Smaller section headings (Khadgamala): the maroon heading style at about verse size */
 .reading .p-section { font-weight: 600; color: #800000; font-size: 1em;
@@ -133,13 +149,16 @@ main { touch-action: pan-x pan-y; }
 .reading .line-count { position: absolute; right: 0; top: 0.38em; text-indent: 0;
                        font-size: 0.72em; font-style: italic; color: #A16207; line-height: 1; white-space: nowrap; }
 
-/* Kabhi Durga Banke: stanzas for days still to come are grayed out; today's stanza is repeated at the end */
+/* Kabhi Durga Banke: stanzas for days still to come are grayed out; today's stanza is sung twice */
 .reading .p-muted { margin: 0.55em 0; color: #A8A29E; font-style: italic; }
 .reading .p-muted .line-count { color: #C4BDB6; }
 .reading .p-muted-refrain { font-style: italic; color: #C4BDB6; margin: 0.1em 0 0.6em; }
 .reading .p-muted-refrain .line { padding-left: 0; text-indent: 0; }
 .reading .p-muted-refrain .line::before { content: "↻ "; font-style: normal; }
-.reading .p-again { margin: 0.55em 0; }
+/* ...and "again" is the ↻ cue to sing today's stanza a second time, styled like the chorus cue */
+.reading .p-again { font-style: italic; color: #92400E; margin: 0.1em 0 0.6em; }
+.reading .p-again .line { padding-left: 0; text-indent: 0; }
+.reading .p-again .line::before { content: "↻ "; font-style: normal; color: #B45309; }
 
 /* A stanza that is only the chorus, written out the first time: spaced like a stanza, but not numbered */
 .reading .p-chorus { margin: 0.55em 0; }

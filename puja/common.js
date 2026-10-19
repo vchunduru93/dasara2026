@@ -175,7 +175,7 @@ const AutoScroll = (() => {
     btn = document.getElementById('scrollToggle');
     const label = document.getElementById('speedLabel');
     rate = Math.min(MAX, Math.max(MIN, parseFloat(Prefs.get('pujaScrollRate')) || 1));
-    const show = () => { label.textContent = `${+rate.toFixed(2)}x`; };
+    const show = () => { label.textContent = `${+rate.toFixed(2)}`; };
     show();
     // − and + change the speed one step; holding one keeps stepping
     document.querySelectorAll('#scrollDock .dock-step').forEach(b => {
@@ -210,21 +210,32 @@ const AutoScroll = (() => {
 // It always stays above the bottom bar, so a spot saved in portrait can't cover Next in landscape.
 function setupDockDrag(dock) {
   const bar = document.querySelector('body > nav');
+  // The dock stays between the buttons at the top (the toolbar, or home and exit in full screen) and the bottom bar
+  const tops = ['topBar', 'focusExit'].map(id => document.getElementById(id)).filter(Boolean);
+  const shown = el => !el.classList.contains('hidden');
   const bounds = () => {
-    const floor = bar && !bar.classList.contains('hidden') ? bar.getBoundingClientRect().top : window.innerHeight;
-    return { maxX: window.innerWidth - dock.offsetWidth - 4, maxY: Math.max(4, floor - dock.offsetHeight - 8) };
+    const floor = bar && shown(bar) ? bar.getBoundingClientRect().top : window.innerHeight;
+    const ceil = Math.max(0, ...tops.filter(shown).map(el => el.getBoundingClientRect().bottom)) + 8;
+    const maxY = Math.max(ceil, floor - dock.offsetHeight - 8);
+    return { maxX: window.innerWidth - dock.offsetWidth - 4, minY: Math.min(ceil, maxY), maxY };
   };
+  // Saved as fractions of the room left and right, and top to bottom (x, y), so it lands in the same spot on any screen
   const place = (fx, fy) => {
-    const { maxX, maxY } = bounds();
+    const { maxX, minY, maxY } = bounds();
     dock.style.left = `${Math.max(4, Math.min(maxX, fx * maxX))}px`;
-    dock.style.top = `${Math.max(4, Math.min(maxY, fy * maxY))}px`;
+    dock.style.top = `${minY + Math.max(0, Math.min(1, fy)) * (maxY - minY)}px`;
     dock.style.right = 'auto';
     dock.style.bottom = 'auto';
   };
   let saved = null;
   try { saved = JSON.parse(Prefs.get('pujaDock')); } catch (e) {}
   if (saved) place(saved.x, saved.y);
-  window.addEventListener('resize', () => { if (saved) place(saved.x, saved.y); });
+  const replace = () => { if (saved) place(saved.x, saved.y); };
+  window.addEventListener('resize', replace);
+  // Going in or out of full screen moves the top and bottom buttons
+  new MutationObserver(replace).observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+  if (bar) new ResizeObserver(replace).observe(bar);
+  tops.forEach(el => new ResizeObserver(replace).observe(el));
 
   let start = null, dragged = false;
   dock.addEventListener('pointerdown', e => {
@@ -244,8 +255,8 @@ function setupDockDrag(dock) {
       // A drag isn't a press: stop any held − / + from repeating
       dock.querySelectorAll('.dock-step').forEach(b => b.dispatchEvent(new Event('pointercancel')));
     }
-    const { maxX, maxY } = bounds();
-    saved = { x: Math.max(0, Math.min(1, (start.left + dx) / maxX)), y: Math.max(0, Math.min(1, (start.top + dy) / maxY)) };
+    const { maxX, minY, maxY } = bounds();
+    saved = { x: Math.max(0, Math.min(1, (start.left + dx) / maxX)), y: maxY > minY ? Math.max(0, Math.min(1, (start.top + dy - minY) / (maxY - minY))) : 0 };
     place(saved.x, saved.y);
   });
   const end = () => {

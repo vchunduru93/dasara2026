@@ -2,6 +2,19 @@
 // The footers show the newest one as "Last updated".
 window.UPDATES = [
   {
+    date: '2026-10-19T08:51:00-07:00',
+    title: 'Athāṅgapūja step and a new bhajan order',
+    items: [
+      'Athāṅgapūja (worship from feet to head) is now its own step, right after Devi Puja Part 1.',
+      'The aartis are together on the Bhajans page: Sri Lalitha Sivajyothi Aarti, Jay Ambe Gauri, Om Jai Lakshmi Mata and Ambe Tu Hai Jagdambe.',
+      'Kabhi Durga Banke writes today’s stanza once, with a short ↻ cue to sing it again.',
+      'The play button shows the scroll speed inside it while it scrolls, and is a little see-through.',
+      'Smaller buttons in full screen, and the play button keeps clear of the buttons at the top.',
+      'The puja order and bhajans headings on the home page stay in view as you scroll their lists.',
+      'Gallery and Updates have a back button and the same footer as the home page.'
+    ]
+  },
+  {
     date: '2026-10-19T00:43:00-07:00',
     title: 'Day 8 photos and simpler buttons',
     items: [
