@@ -2,10 +2,11 @@
 // The footers show the newest one as "Last updated".
 window.UPDATES = [
   {
-    date: '2026-10-19T08:51:00-07:00',
-    title: 'Athāṅgapūja step and a new bhajan order',
+    date: '2026-10-19T09:16:00-07:00',
+    title: 'Athāṅgapūja step and a new Kali bhajan',
     items: [
       'Athāṅgapūja (worship from feet to head) is now its own step, right after Devi Puja Part 1.',
+      'New bhajan: Jai Jai Kali, Jai Maha Kali, from our family’s handwritten copy.',
       'The aartis are together on the Bhajans page: Sri Lalitha Sivajyothi Aarti, Jay Ambe Gauri, Om Jai Lakshmi Mata and Ambe Tu Hai Jagdambe.',
       'Kabhi Durga Banke writes today’s stanza once, with a short ↻ cue to sing it again.',
       'The play button shows the scroll speed inside it while it scrolls, and is a little see-through.',
