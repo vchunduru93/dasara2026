@@ -73,7 +73,7 @@ function langOptions(lang) {
 // Aa opens a slider for the reading text size (saved per device)
 // The − and + buttons beside a slider move it one step
 function setupStepButtons() {
-  document.querySelectorAll('.step-btn').forEach(b => {
+  document.querySelectorAll('.step-btn[data-slider]').forEach(b => {
     const slider = document.getElementById(b.dataset.slider);
     b.onclick = () => {
       b.dataset.dir === '1' ? slider.stepUp() : slider.stepDown();
@@ -134,14 +134,15 @@ function setupPinchZoom(target, getScale, setScale) {
   ['gesturestart', 'gesturechange', 'gestureend'].forEach(ev => document.addEventListener(ev, e => e.preventDefault(), { passive: false }));
 }
 
-// Play/pause auto scroll at 0.25x–2x speed, from the floating dock (▶, with − and + while it runs) that can be dragged anywhere.
+// Play/pause auto scroll at 0.25x–2x speed: from the ▶ in the toolbar (with a speed slider under it while it runs),
+// or in full screen from the floating dock (▶, with − and + while it runs) that can be dragged anywhere.
 // Holding a finger on the text pauses it, and it stops at the bottom of the page.
 const AutoScroll = (() => {
   let playing = false, last = 0, carry = 0, touching = false, holdUntil = 0, wakeLock = null;
   const BASE = 30;  // pixels per second at 1x
   const MIN = 0.25, MAX = 2, STEP = 0.05;
   let rate = 1;
-  let btn;
+  let btn, barBtn;
 
   function frame(t) {
     if (!playing) return;
@@ -167,17 +168,30 @@ const AutoScroll = (() => {
     playing = on; last = 0; carry = 0;
     btn.setAttribute('aria-pressed', on);
     btn.closest('.scroll-dock').classList.toggle('playing', on);  // the speed buttons show only while scrolling
+    document.documentElement.classList.toggle('auto-scrolling', on);  // ...and the toolbar's speed row
     document.getElementById('playIcon').classList.toggle('hidden', on);
     document.getElementById('pauseIcon').classList.toggle('hidden', !on);
+    if (barBtn) {
+      barBtn.setAttribute('aria-pressed', on);
+      barBtn.querySelector('.bar-play-icon').classList.toggle('hidden', on);
+      barBtn.querySelector('.bar-pause-icon').classList.toggle('hidden', !on);
+    }
     keepAwake(on);
     if (on) requestAnimationFrame(frame);
   }
 
   function setup() {
     btn = document.getElementById('scrollToggle');
+    barBtn = document.getElementById('barPlay');
     const label = document.getElementById('speedLabel');
+    const text = document.getElementById('speedText');
+    const slider = document.getElementById('speedSlider');
     rate = Math.min(MAX, Math.max(MIN, parseFloat(Prefs.get('pujaScrollRate')) || 1));
-    const show = () => { label.textContent = `${+rate.toFixed(2)}`; };
+    const show = () => {
+      label.textContent = `${+rate.toFixed(2)}`;
+      if (text) text.textContent = `${+rate.toFixed(2)}×`;
+      if (slider) slider.value = rate;
+    };
     show();
     // − and + change the speed one step; holding one keeps stepping
     document.querySelectorAll('#scrollDock .dock-step').forEach(b => {
@@ -193,6 +207,12 @@ const AutoScroll = (() => {
       b.addEventListener('click', step);
     });
     btn.onclick = () => set(!playing);
+    // The toolbar's speed slider (its − and + step it, as for text size)
+    if (slider) slider.addEventListener('input', () => { rate = +slider.value; Prefs.set('pujaScrollRate', rate); show(); });
+    if (barBtn) barBtn.onclick = () => {
+      set(!playing);
+      if (playing) document.dispatchEvent(new Event('autoscrollstart'));  // may suggest full screen (setupFocusMode)
+    };
     setupDockDrag(document.getElementById('scrollDock'));
     const main = document.querySelector('main');
     main.addEventListener('touchstart', () => { touching = true; }, { passive: true });
@@ -296,9 +316,45 @@ function setupFocusMode() {
     document.documentElement.classList.toggle('focus-mode', on);
     Prefs.set('pujaFocus', on ? '1' : '0');
   };
-  document.getElementById('focusToggle').onclick = () => set(true);
+  const toggle = document.getElementById('focusToggle');
+  // Until someone has tried full screen, its button glows a few times and a tip bubble points it out
+  // (on their first three visits, and again the first time they press ▶ outside full screen)
+  let tried = Prefs.get('pujaFocusTried') === '1' || Prefs.get('pujaFocus') === '1';
+  let tip = null, playTipShown = false;
+  const hideTip = () => { if (tip) { tip.remove(); tip = null; } };
+  const showTip = key => {
+    hideTip();
+    if (tried || top.classList.contains('hidden')) return;
+    const r = toggle.getBoundingClientRect();
+    tip = document.createElement('div');
+    tip.className = 'fs-tip';
+    tip.setAttribute('role', 'status');
+    tip.textContent = UI[key][initialLang()] || UI[key].en;
+    tip.style.top = `${r.bottom + 10}px`;
+    tip.style.right = '0.75rem';
+    document.body.appendChild(tip);
+    // The little arrow points up at the button's middle
+    tip.style.setProperty('--arrow-x', `${r.left + r.width / 2 - tip.getBoundingClientRect().left}px`);
+    tip.onclick = () => { hideTip(); set(true); markTried(); };
+    const t = tip;
+    setTimeout(() => { if (tip === t) hideTip(); }, 8000);
+  };
+  const markTried = () => {
+    tried = true;
+    Prefs.set('pujaFocusTried', '1');
+    toggle.classList.remove('fs-nudge');
+  };
+  toggle.onclick = () => { hideTip(); set(true); markTried(); };
   exit.onclick = () => set(false);
   set(Prefs.get('pujaFocus') === '1');
+  if (!tried) {
+    toggle.classList.add('fs-nudge');
+    const shown = parseInt(Prefs.get('pujaFocusTips'), 10) || 0;
+    if (shown < 3) setTimeout(() => { if (!tried) { showTip('focus_tip'); Prefs.set('pujaFocusTips', shown + 1); } }, 1500);
+    document.addEventListener('autoscrollstart', () => { if (!playTipShown) { playTipShown = true; showTip('play_tip'); } });
+    window.addEventListener('resize', hideTip);
+    document.addEventListener('pointerdown', e => { if (tip && !tip.contains(e.target)) hideTip(); }, true);
+  }
 }
 
 // The space under the text is the bottom bar's height plus the same margin as the sides (see main in reader.css);

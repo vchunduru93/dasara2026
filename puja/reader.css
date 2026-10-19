@@ -132,6 +132,26 @@ main { touch-action: pan-x pan-y; }
 .scroll-dock.playing .dock-step { visibility: visible; opacity: 1; transition-delay: 0s; transform: none; }
 @media (prefers-reduced-motion: reduce) { .dock-step { transition: opacity .15s, visibility 0s .15s; } }
 
+/* Outside full screen, auto scroll is the maroon ▶ in the toolbar, with a − speed + row under the toolbar while it
+   runs; the floating dock is only for full screen */
+html:not(.focus-mode) .scroll-dock { display: none; }
+.speed-row { display: none; }
+.auto-scrolling .speed-row { display: flex; }
+.bar-play { background-color: #800000; color: #FEF3C7; border-color: #D4AF37; transition: background-color 0.1s; }
+.bar-play:active { background-color: #6E0000; }
+
+/* Until someone has tried full screen, its button glows gold a few times, and a tip bubble points to it */
+@keyframes fs-glow { 0% { box-shadow: 0 0 0 0 rgba(212,175,55,0.9); } 70% { box-shadow: 0 0 0 10px rgba(212,175,55,0); }
+                     100% { box-shadow: 0 0 0 0 rgba(212,175,55,0); } }
+.fs-nudge { animation: fs-glow 1.6s ease-out 1s 4; }
+.fs-tip { position: fixed; z-index: 40; max-width: min(17rem, calc(100vw - 1.5rem)); padding: 0.6rem 0.8rem;
+  background: #800000; color: #FEF3C7; border: 1px solid #D4AF37; border-radius: 0.6rem; font-size: 1rem; line-height: 1.35;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.18); cursor: pointer; animation: fs-tip-in .25s ease-out; }
+.fs-tip::before { content: ""; position: absolute; top: -7px; left: calc(var(--arrow-x, 50%) - 7px); width: 12px; height: 12px;
+  background: #800000; border-left: 1px solid #D4AF37; border-top: 1px solid #D4AF37; transform: rotate(45deg); }
+@keyframes fs-tip-in { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .fs-nudge, .fs-tip { animation: none; } }
+
 /* Smaller section headings (Khadgamala): the maroon heading style at about verse size */
 .reading .p-section { font-weight: 600; color: #800000; font-size: 1em;
                       margin-top: 1.4em; margin-bottom: 0.35em; padding-bottom: 0.15em;

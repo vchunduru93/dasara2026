@@ -57,6 +57,11 @@
         <button type="button" id="focusToggle" class="tool-btn w-11 h-11 flex-shrink-0 rounded-md border btn-cream flex items-center justify-center" aria-label="Full screen" title="Full screen">
           <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9V4h5"/><path d="M20 9V4h-5"/><path d="M4 15v5h5"/><path d="M20 15v5h-5"/></svg>
         </button>
+        <!-- Auto scroll (in full screen it's the floating round ▶ instead) -->
+        <button type="button" id="barPlay" class="tool-btn bar-play w-11 h-11 flex-shrink-0 rounded-md border flex items-center justify-center" aria-label="Auto scroll" title="Auto scroll" aria-pressed="false">
+          <svg class="bar-play-icon w-6 h-6" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg>
+          <svg class="bar-pause-icon w-6 h-6 hidden" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>
+        </button>
       </div>
       <!-- Text size slider (opened by Aa) -->
       <div id="sizeRow" class="hidden flex items-center gap-2">
@@ -67,11 +72,20 @@
         </div>
         <button type="button" class="step-btn" data-slider="sizeSlider" data-dir="1" aria-label="Larger text" title="Larger text">+</button>
       </div>
+      <!-- Auto-scroll speed slider, like the text size one, shown while it scrolls -->
+      <div id="speedRow" class="speed-row items-center gap-2">
+        <button type="button" class="step-btn" data-slider="speedSlider" data-dir="-1" aria-label="Slower" title="Slower">−</button>
+        <div class="relative flex-1 min-w-0">
+          <input id="speedSlider" type="range" min="0.25" max="2" step="0.05" class="slider block w-full" aria-label="Scroll speed">
+          <output id="speedText" for="speedSlider" class="slider-label text-sm font-semibold text-stone-500 tabular-nums">1×</output>
+        </div>
+        <button type="button" class="step-btn" data-slider="speedSlider" data-dir="1" aria-label="Faster" title="Faster">+</button>
+      </div>
     </div>
   </div>
   </div>
 
-  <!-- Auto scroll: a floating play/pause with slower and faster buttons; drag it anywhere on the screen -->
+  <!-- Auto scroll in full screen: a floating play/pause with slower and faster buttons; drag it anywhere on the screen -->
   <div id="scrollDock" class="scroll-dock" role="group" aria-label="Auto scroll">
     <button type="button" class="dock-step" data-dir="-1" aria-label="Slower" title="Slower">−</button>
     <button type="button" id="scrollToggle" class="dock-play" aria-label="Auto scroll" title="Auto scroll" aria-pressed="false">

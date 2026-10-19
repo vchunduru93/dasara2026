@@ -2,6 +2,18 @@
 // The footers show the newest one as "Last updated".
 window.UPDATES = [
   {
+    date: '2026-10-19T16:07:00-07:00',
+    title: 'Play button in the toolbar and clearer puja steps',
+    items: [
+      'The play button sits in the toolbar, with a speed slider under it while it scrolls. In full screen it is still the round floating button.',
+      'A tip and a gentle glow point out the full screen button until you have tried it.',
+      'The two Devi Puja steps are named for what they cover: Beginning to Pushpam Offering, and Dhupam to Conclusion.',
+      'The offerings name Sri Lalitha as Sri Mahakali, Sri Mahalakshmi and Sri Mahasaraswati Swarupini, and the last line of the Athangapuja names the day’s Devi.',
+      'Taking the Devi’s flowers and akshatas onto your head has its own instruction.',
+      'Every instruction ends with a full stop, and the ashtottaram titles read Namaavali.'
+    ]
+  },
+  {
     date: '2026-10-19T13:21:00-07:00',
     title: 'Udvasana only on the last day',
     items: [
