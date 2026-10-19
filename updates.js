@@ -5,7 +5,7 @@ window.UPDATES = [
     date: '2026-10-19T12:10:00-07:00',
     title: 'Every Devi named in the offerings',
     items: [
-      'Each offering in the Devi Puja now names Sri Mahakali, Sri Mahalakshmi, Sri Lalitha Paradevata and the day’s Devi.',
+      'Each offering in the Devi Puja now begins with Om and names Sri Mahakali, Sri Mahalakshmi, Sri Mahasaraswati, Sri Lalitha Paradevata and the day’s Devi.',
       'Flowers, turmeric and kumkum each get their own offering line.',
       'Easier-to-tap buttons in full screen.'
     ]
