@@ -2,6 +2,15 @@
 // The footers show the newest one as "Last updated".
 window.UPDATES = [
   {
+    date: '2026-10-19T12:10:00-07:00',
+    title: 'Every Devi named in the offerings',
+    items: [
+      'Each offering in the Devi Puja now names Sri Mahakali, Sri Mahalakshmi, Sri Lalitha Paradevata and the day’s Devi.',
+      'Flowers, turmeric and kumkum each get their own offering line.',
+      'Easier-to-tap buttons in full screen.'
+    ]
+  },
+  {
     date: '2026-10-19T09:16:00-07:00',
     title: 'Athāṅgapūja step and a new Kali bhajan',
     items: [

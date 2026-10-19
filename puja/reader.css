@@ -78,10 +78,10 @@ main { touch-action: pan-x pan-y; }
 /* The exit button is the full-screen toggle switched on, so it's the deeper cream, like Aa while it's open */
 #focusExit { background-color: #F1DCAE; }
 @media (min-width: 768px) { .focus-mode body > nav > div { padding-right: 2.5rem; } }  /* in from the card's edge, like ▶ */
-/* Full screen buttons are the toolbar's size (2.75rem, 2.25rem on phones), not the bottom bar's, so they stay small
-   over the text. Home sits one button and a gap left of exit. */
-.focus-mode { --fs-btn: 2.75rem; --fs-icon: 1.5rem; --fs-gap: 0.375rem; }
-@media (max-width: 767px) { .focus-mode { --fs-btn: 2.25rem; --fs-icon: 1.25rem; } }
+/* Full screen buttons sit between the toolbar's size and the bottom bar's (3.125rem, 2.75rem on phones, still an
+   easy tap), so they stay out of the way over the text. Home sits one button and a gap left of exit. */
+.focus-mode { --fs-btn: 3.125rem; --fs-icon: 1.75rem; --fs-gap: 0.375rem; }
+@media (max-width: 767px) { .focus-mode { --fs-btn: 2.75rem; --fs-icon: 1.5rem; } }
 .focus-mode body > nav a, .focus-mode body > nav button, #focusHome, #focusExit {
   height: var(--fs-btn) !important; border-radius: 0.375rem; }
 .focus-mode #bhajansLink, .focus-mode #prevBtn, .focus-mode #nextBtn:not(.is-last), .focus-mode #backLink,
