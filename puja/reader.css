@@ -160,6 +160,10 @@ main { touch-action: pan-x pan-y; }
 .reading .p-again .line { padding-left: 0; text-indent: 0; }
 .reading .p-again .line::before { content: "↻ "; font-style: normal; color: #B45309; }
 
+/* Puja passages not done today (the Udvasana before the last day) are grayed out */
+.reading .p-skip, .reading .p-skip * { color: #B8B0A8 !important; }
+.reading .p-instruction.p-skip { opacity: 0.6; }
+
 /* A stanza that is only the chorus, written out the first time: spaced like a stanza, but not numbered */
 .reading .p-chorus { margin: 0.55em 0; }
 

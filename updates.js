@@ -2,6 +2,13 @@
 // The footers show the newest one as "Last updated".
 window.UPDATES = [
   {
+    date: '2026-10-19T13:21:00-07:00',
+    title: 'Udvasana only on the last day',
+    items: [
+      'In the Devi Puja, the Udvasana (sending Devi off) is grayed out on Days 1 to 9 with a note to skip it, since we send her off only on Day 10.'
+    ]
+  },
+  {
     date: '2026-10-19T12:10:00-07:00',
     title: 'Every Devi named in the offerings',
     items: [

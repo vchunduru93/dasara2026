@@ -50,15 +50,17 @@ function renderLine(l) {
 // Render a text's blocks; returns [{id, label}] for its section headings
 function renderBlocks(blocks, idPrefix) {
   const headings = [];
-  const html = blocks.map(([kind, lines]) => {
+  // A third "skip" entry grays a block out (e.g. the Udvasana, done only on the last day)
+  const html = blocks.map(([kind, lines, skip]) => {
     const text = lines.map(renderLine).join('');
+    const cls = `p-${kind}${skip ? ' p-skip' : ''}`;
     // "heading" is a maroon section title; "section" is a quieter gray italic one. Both are jump targets.
     if (kind === 'heading' || kind === 'section') {
       const id = `${idPrefix}-s${headings.length}`;
       headings.push({ id, label: lines[0].replace(/[:\s]+$/, '') });
-      return `<h3 id="${id}" class="p-${kind}">${text}</h3>`;
+      return `<h3 id="${id}" class="${cls}">${text}</h3>`;
     }
-    return `<div class="p-${kind}">${text}</div>`;
+    return `<div class="${cls}">${text}</div>`;
   }).join('');
   return { html, headings };
 }
