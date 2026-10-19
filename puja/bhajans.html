@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- No page zoom: pinching the text changes the reading size instead (setupPinchZoom) -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Bhajans | Sri Devi Navaratri 2026</title>
   <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png">
   <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
@@ -31,11 +32,12 @@
   <header class="bg-gradient-to-b from-vedic-darkmaroon to-vedic-deepred text-white py-4 px-4 md:px-8 text-center border-b-4 border-vedic-gold">
     <div class="w-full flex items-center justify-between gap-3">
       <a href="../index.html" class="w-10 h-10 flex-shrink-0 rounded-full border border-amber-200/60 text-amber-100 hover:bg-white/10 flex items-center justify-center" aria-label="Home" title="Home"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"/><path d="M5.5 9v11h13V9"/><path d="M10 20v-5.5h4V20"/></svg></a>
-      <div class="flex-1 text-center min-w-0">
+      <!-- The title opens the home page too, like the house button -->
+      <a href="../index.html" class="block flex-1 text-center min-w-0 hover:opacity-90" title="Home">
         <h1 class="text-2xl md:text-4xl font-extrabold font-title tracking-wider text-amber-100 flex items-center justify-center gap-3"><svg class="inline-block flex-shrink-0 w-7 h-7 md:w-9 md:h-9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 19V7.5c1.5.5 3 1.6 3 3.5"/><ellipse cx="5.6" cy="19" rx="2.4" ry="1.9" fill="currentColor"/><path d="M18.6 15V3.5c1.5.5 3 1.6 3 3.5"/><ellipse cx="16.2" cy="15" rx="2.4" ry="1.9" fill="currentColor"/></svg>Bhajans<svg class="inline-block flex-shrink-0 w-7 h-7 md:w-9 md:h-9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 19V7.5c1.5.5 3 1.6 3 3.5"/><ellipse cx="5.6" cy="19" rx="2.4" ry="1.9" fill="currentColor"/><path d="M18.6 15V3.5c1.5.5 3 1.6 3 3.5"/><ellipse cx="16.2" cy="15" rx="2.4" ry="1.9" fill="currentColor"/></svg></h1>
         <p id="nativeTitle" class="text-amber-200 text-xl mt-0.5"></p>
-      </div>
-      <a href="https://chat.whatsapp.com/GDYeEZFk9EN0AdC6W2S295" target="_blank" rel="noopener" class="w-10 h-10 flex-shrink-0 rounded-full border border-amber-200/60 text-amber-100 hover:bg-white/10 flex items-center justify-center" aria-label="Join our Community" title="Join our Community"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.47 14.38c-.3-.15-1.75-.86-2.02-.96-.27-.1-.47-.15-.67.15-.2.3-.77.96-.94 1.16-.17.2-.35.22-.65.07-.3-.15-1.25-.46-2.38-1.47-.88-.79-1.47-1.76-1.64-2.06-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.21 3.08c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.23 1.36.2 1.87.12.57-.08 1.75-.72 2-1.41.25-.69.25-1.29.17-1.41-.07-.13-.27-.2-.57-.35M12.04 21.5h-.01a9.4 9.4 0 0 1-4.8-1.31l-.34-.2-3.57.93.95-3.48-.22-.36a9.4 9.4 0 0 1-1.44-5.02c0-5.2 4.23-9.43 9.44-9.43 2.52 0 4.89.98 6.67 2.77a9.37 9.37 0 0 1 2.76 6.67c0 5.2-4.23 9.43-9.44 9.43m8.03-17.46A11.27 11.27 0 0 0 12.04.72C5.79.72.7 5.8.7 12.06c0 2 .52 3.95 1.52 5.67L.6 23.28l5.68-1.49a11.3 11.3 0 0 0 5.75 1.47h.01c6.25 0 11.34-5.09 11.34-11.34 0-3.03-1.18-5.88-3.32-8.02"/></svg></a>
+      </a>
+      <span class="w-10 h-10 flex-shrink-0" aria-hidden="true"></span>
     </div>
   </header>
 
@@ -76,6 +78,8 @@
     <button type="button" class="dock-step" data-dir="1" aria-label="Faster" title="Faster">+</button>
     <output id="speedLabel" class="dock-speed" aria-label="Scroll speed">1x</output>
   </div>
+  <!-- Full screen: a floating home button, mirroring the exit button -->
+  <a id="focusHome" href="../index.html" class="hidden fixed top-2 left-2 z-30 w-11 h-11 rounded-full bg-vedic-darkmaroon/90 text-amber-100 border border-vedic-gold shadow-md flex items-center justify-center" aria-label="Home" title="Home"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"/><path d="M5.5 9v11h13V9"/><path d="M10 20v-5.5h4V20"/></svg></a>
   <!-- Full screen: the title and toolbar are hidden; this brings them back -->
   <button type="button" id="focusExit" class="hidden fixed top-2 right-2 z-30 w-11 h-11 rounded-full bg-vedic-darkmaroon/90 text-amber-100 border border-vedic-gold shadow-md flex items-center justify-center" aria-label="Exit full screen" title="Exit full screen">
     <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4v5H4"/><path d="M15 4v5h5"/><path d="M9 20v-5H4"/><path d="M15 20v-5h5"/></svg>
@@ -86,12 +90,9 @@
   </main>
 
 
-  <!-- Home · Back to puja (when opened from the reader) -->
+  <!-- Back to puja, when opened from the reader (home is the title bar at the top) -->
   <nav class="fixed bottom-0 inset-x-0 z-10 bg-white/95 backdrop-blur border-t border-amber-200 shadow-[0_-4px_12px_rgba(0,0,0,0.06)]">
     <div class="w-full px-2 md:px-8 py-1.5 flex items-center gap-1.5">
-      <a id="scheduleLink" href="../index.html" class="h-14 w-14 btn-emboss flex-shrink-0 rounded-lg border border-stone-300 bg-white text-stone-700 flex flex-col items-center justify-center leading-none">
-        <svg class="w-9 h-9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"/><path d="M5.5 9v11h13V9"/><path d="M10 20v-5.5h4V20"/></svg>
-      </a>
       <a id="backLink" href="day.html" class="h-14 flex-1 min-w-0 rounded-lg border border-vedic-gold btn-soft px-2 text-xl font-semibold flex items-center gap-2 hidden"><svg class="w-9 h-9 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span id="backText" class="truncate"></span></a>
     </div>
   </nav>
@@ -106,8 +107,8 @@
     const fromDay = params.get('day'), fromStep = params.get('step');
     let lang = initialLang();
 
-    // Kabhi Durga Banke follows the Navaratri days: stanza N calls Day N's Devi. Stanzas for days still to come
-    // are grayed out, and today's stanza is sung twice more before the closing line. "Today" is the puja day
+    // Kabhi Durga Banke follows the Navaratri days: stanza N calls Day N's Devi. Today's stanza is sung twice
+    // (repeated right where it is), and the stanzas for days still to come are grayed out. "Today" is the puja day
     // the page was opened from, else today's date; outside the ten days the song shows as written.
     const songDay = (() => {
       const d = parseInt(fromDay, 10);
@@ -117,9 +118,11 @@
     })();
     function kabhiDurgaForDay(blocks) {
       if (!songDay || blocks.length !== DAYS.length + 2) return blocks;
-      const stanzas = blocks.slice(0, -1).map((b, i) => (i > songDay ? ['muted', b[1]] : b));
-      const today = ['again', blocks[songDay][1]];
-      return [...stanzas, today, today, blocks[blocks.length - 1]];
+      // The song's closing chorus line is dropped: each stanza already ends with the chorus
+      return blocks.slice(0, -1).flatMap((b, i) =>
+        i === songDay ? [b, ['again', b[1]]]
+        : i > songDay ? [['muted', b[1]]]
+        : [b]);
     }
 
     // Bhajans whose lyrics live on another site: title, credit, and one big button out.
@@ -147,12 +150,13 @@
       document.getElementById('nativeTitle').textContent = lang === 'en' ? '' : UI.bhajans[lang];
       const back = document.getElementById('backLink');
       back.classList.toggle('hidden', !fromDay);
+      // Back to puja is the bar's only button, so there's no bar without it
+      back.closest('nav').classList.toggle('hidden', !fromDay);
       if (fromDay) {
         back.href = `day.html?day=${fromDay}&step=${fromStep || 1}&lang=${lang}`;
         // The arrow is an icon, so drop the text arrow from the translated label
         document.getElementById('backText').textContent = UI.back_to_puja[lang].replace(/^←\s*/, '');
       }
-      setName('scheduleLink', UI.schedule[lang]);
 
       const current = location.hash.slice(1);
       document.getElementById('bhajanJump').innerHTML = BHAJANS.map((b, i) =>

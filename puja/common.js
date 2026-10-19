@@ -95,6 +95,13 @@ function setupTextSize(target) {
   };
   slider.value = scale;
   slider.oninput = () => { scale = +slider.value; Prefs.set('pujaScale', scale); apply(); };
+  setupPinchZoom(target, () => scale, v => {
+    scale = Math.min(1.6, Math.max(0.8, Math.round(v * 20) / 20));
+    if (+slider.value === scale) return;
+    slider.value = scale;
+    Prefs.set('pujaScale', scale);
+    apply();
+  });
   toggle.onclick = () => {
     const open = row.classList.toggle('hidden') === false;
     toggle.setAttribute('aria-expanded', open);
@@ -104,7 +111,28 @@ function setupTextSize(target) {
   apply();
 }
 
-// Play/pause auto scroll at 0.25x–2x speed, from the floating dock (− ▶ +) that can be dragged anywhere.
+// Pinching the text with two fingers changes the reading size (same setting as the Aa slider) instead of
+// zooming the whole page; the spot between the fingers stays put on screen. Page zoom is turned off.
+function setupPinchZoom(target, getScale, setScale) {
+  let start = null;
+  const span = t => Math.hypot(t[0].clientX - t[1].clientX, t[0].clientY - t[1].clientY);
+  target.addEventListener('touchstart', e => {
+    if (e.touches.length !== 2) return;
+    const midY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+    start = { span: span(e.touches), scale: getScale(), midY, at: (scrollY + midY) / document.documentElement.scrollHeight };
+  }, { passive: true });
+  target.addEventListener('touchmove', e => {
+    if (!start || e.touches.length !== 2) return;
+    e.preventDefault();
+    setScale(start.scale * span(e.touches) / start.span);
+    window.scrollTo(0, start.at * document.documentElement.scrollHeight - start.midY);
+  }, { passive: false });
+  target.addEventListener('touchend', e => { if (e.touches.length < 2) start = null; }, { passive: true });
+  // Safari zooms the page with its own gesture events, ignoring the viewport setting
+  ['gesturestart', 'gesturechange', 'gestureend'].forEach(ev => document.addEventListener(ev, e => e.preventDefault(), { passive: false }));
+}
+
+// Play/pause auto scroll at 0.25x–2x speed, from the floating dock (▶, with − and + while it runs) that can be dragged anywhere.
 // Holding a finger on the text pauses it, and it stops at the bottom of the page.
 const AutoScroll = (() => {
   let playing = false, last = 0, carry = 0, touching = false, holdUntil = 0, wakeLock = null;
@@ -136,6 +164,7 @@ const AutoScroll = (() => {
   function set(on) {
     playing = on; last = 0; carry = 0;
     btn.setAttribute('aria-pressed', on);
+    btn.closest('.scroll-dock').classList.toggle('playing', on);  // the speed buttons show only while scrolling
     document.getElementById('playIcon').classList.toggle('hidden', on);
     document.getElementById('pauseIcon').classList.toggle('hidden', !on);
     keepAwake(on);
@@ -178,9 +207,15 @@ const AutoScroll = (() => {
 
 // Drag the floating dock anywhere on the screen (a short tap still presses its buttons).
 // Its spot is saved per device as a fraction of the screen, so it lands in the same place after rotating.
+// It always stays above the bottom bar, so a spot saved in portrait can't cover Next in landscape.
 function setupDockDrag(dock) {
+  const bar = document.querySelector('body > nav');
+  const bounds = () => {
+    const floor = bar && !bar.classList.contains('hidden') ? bar.getBoundingClientRect().top : window.innerHeight;
+    return { maxX: window.innerWidth - dock.offsetWidth - 4, maxY: Math.max(4, floor - dock.offsetHeight - 8) };
+  };
   const place = (fx, fy) => {
-    const maxX = window.innerWidth - dock.offsetWidth - 4, maxY = window.innerHeight - dock.offsetHeight - 4;
+    const { maxX, maxY } = bounds();
     dock.style.left = `${Math.max(4, Math.min(maxX, fx * maxX))}px`;
     dock.style.top = `${Math.max(4, Math.min(maxY, fy * maxY))}px`;
     dock.style.right = 'auto';
@@ -209,7 +244,7 @@ function setupDockDrag(dock) {
       // A drag isn't a press: stop any held − / + from repeating
       dock.querySelectorAll('.dock-step').forEach(b => b.dispatchEvent(new Event('pointercancel')));
     }
-    const maxX = window.innerWidth - dock.offsetWidth - 4, maxY = window.innerHeight - dock.offsetHeight - 4;
+    const { maxX, maxY } = bounds();
     saved = { x: Math.max(0, Math.min(1, (start.left + dx) / maxX)), y: Math.max(0, Math.min(1, (start.top + dy) / maxY)) };
     place(saved.x, saved.y);
   });
@@ -230,18 +265,21 @@ function setUrlParams(params) {
   history.replaceState(null, '', url);
 }
 
-// Full screen: the expand button hides the pinned title and toolbar so only the text, the bottom bar and the
-// auto-scroll dock show; the round button in the corner brings them back (remembered per device).
+// Full screen: the expand button in the toolbar hides the pinned title and toolbar so only the text, the
+// bottom bar and the auto-scroll dock show; round buttons float in the top corners: home at the left, and
+// at the right the one that brings the title and toolbar back (remembered per device).
 // The pinned block's height is kept in --top-h so headings scroll in just below it.
 function setupFocusMode() {
   const top = document.getElementById('topBar');
   const exit = document.getElementById('focusExit');
+  const home = document.getElementById('focusHome');
   const setH = () => document.documentElement.style.setProperty('--top-h', `${top.offsetHeight}px`);
   new ResizeObserver(setH).observe(top);
   setH();
   const set = (on) => {
     top.classList.toggle('hidden', on);
     exit.classList.toggle('hidden', !on);
+    home.classList.toggle('hidden', !on);
     document.documentElement.classList.toggle('focus-mode', on);
     Prefs.set('pujaFocus', on ? '1' : '0');
   };

@@ -2,11 +2,21 @@
 // The footers show the newest one as "Last updated".
 window.UPDATES = [
   {
+    date: '2026-10-19T00:01:00-07:00',
+    title: 'Pinch to resize and a cleaner full screen',
+    items: [
+      'Pinch the text with two fingers to make it bigger or smaller; the rest of the page stays put.',
+      'Full screen keeps only small floating buttons: home at the top left, and bhajans, back and next at the bottom right.',
+      'The play button stays out of the way: tap it and the slower and faster buttons slide out beside it. On a phone held sideways they line up in a row.',
+      'Tap the title at the top of the puja and bhajan pages to go home.'
+    ]
+  },
+  {
     date: '2026-10-18T21:07:00-07:00',
     title: 'Durga Suktam and a floating play button',
     items: [
       'Durga Suktam is on the Bhajans page, in every language.',
-      'Kabhi Durga Banke follows the day: stanzas for days still to come are grayed out, and today’s Devi’s stanza repeats twice at the end.',
+      'Kabhi Durga Banke follows the day: today’s Devi’s stanza is sung twice, and the stanzas for days still to come are grayed out.',
       'Auto scroll has a floating play button with slower and faster buttons. Drag it anywhere on the screen; it stays where you put it.',
       'A simpler toolbar on the puja and bhajan pages.',
       'The home page loads faster, with lighter gallery photos.',
