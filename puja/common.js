@@ -288,6 +288,16 @@ function setupFocusMode() {
   set(Prefs.get('pujaFocus') === '1');
 }
 
+// The space under the text is the bottom bar's height plus the same margin as the sides (see main in reader.css);
+// the bar's height is kept in --bar-h, and is 0 when the page has no bar (Bhajans opened on its own)
+function trackBottomBar() {
+  const bar = document.querySelector('body > nav');
+  if (!bar) return;
+  const setH = () => document.documentElement.style.setProperty('--bar-h', `${bar.offsetHeight}px`);
+  new ResizeObserver(setH).observe(bar);
+  setH();
+}
+
 // Refrain notation for bhajans and stotrams with a repeated closing line: the line is written out the
 // first time, then each later stanza ends with a short "↻ first words…" cue (verse numbers kept, and
 // back-to-back repeats shown once as "×2")
@@ -336,7 +346,8 @@ function verseNumbers(blocks) {
 
 // A list picker: a sheet that slides up on phones, a centered dialog on wider screens.
 // options: [{value, text}] ("3. Title" gets a number badge); onPick(value) runs when one is chosen.
-// opener: a bottom-bar button that opened it; it stays visible and highlighted, and on phones the sheet rises from just above the bar.
+// opener: the button that opened it (a bottom-bar or toolbar button); it stays above the dimmed page, shown pressed,
+// and tapping it again closes the list. From the bottom bar, on phones the sheet rises from just above the bar.
 // note is plain text; noteHtml is trusted markup (e.g. with an icon in it).
 function openPicker({ title, options, current, onPick, listLang = '', returnFocus = null, opener = null, note = '', noteHtml = '', onClose = null }) {
   const back = document.createElement('div');
@@ -356,11 +367,14 @@ function openPicker({ title, options, current, onPick, listLang = '', returnFocu
         <span class="picker-tick" aria-hidden="true">✓</span></button>`;
     }).join('')}</div>`;
   const bar = opener?.closest('nav');
+  const holder = bar || opener?.closest('#topBar');  // kept above the backdrop so the pressed button shows
+  if (opener) {
+    holder?.classList.add('picker-bar');
+    opener.classList.add('picker-opener');
+  }
   if (bar) {
     sheet.classList.add('from-bar');
     sheet.style.setProperty('--bar-h', `${bar.offsetHeight}px`);
-    bar.classList.add('picker-bar');
-    opener.classList.add('picker-opener');
   }
   document.body.append(back, sheet);
   requestAnimationFrame(() => { back.classList.add('open'); sheet.classList.add('open'); });
@@ -371,7 +385,7 @@ function openPicker({ title, options, current, onPick, listLang = '', returnFocu
     back.classList.remove('open');
     sheet.classList.remove('open');
     setTimeout(() => { back.remove(); sheet.remove(); }, 230);
-    bar?.classList.remove('picker-bar');
+    holder?.classList.remove('picker-bar');
     opener?.classList.remove('picker-opener');
     if (opener) opener.closePicker = null;
     returnFocus?.focus({ preventScroll: true });
@@ -391,12 +405,13 @@ function setupPickers() {
     const t = { langPicker: UI.language, stepPicker: UI.puja, sectionJump: UI.sections, bhajanJump: UI.bhajans }[select.id];
     return t ? (t[lang] || t.en).replace(/…$/, '') : '';
   };
-  const open = (select, focusEl = select) => openPicker({
+  const open = (select, focusEl = select, opener = null) => openPicker({
     title: titleFor(select),
     options: [...select.options].filter(o => o.value !== '').map(o => ({ value: o.value, text: o.text })),
     current: select.value,
     listLang: select.id === 'langPicker' ? '' : document.documentElement.lang,
     returnFocus: focusEl,
+    opener,
     onPick: v => { select.value = v; select.dispatchEvent(new Event('change', { bubbles: true })); },
   });
   ['langPicker', 'stepPicker', 'sectionJump', 'bhajanJump'].forEach(id => {
@@ -405,10 +420,13 @@ function setupPickers() {
     select.addEventListener('mousedown', e => { e.preventDefault(); open(select); });
     select.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(select); } });
   });
-  // The globe button opens the language list (its select is hidden)
+  // The globe button opens the language list (its select is hidden), shown pressed while it's open
   const langBtn = document.getElementById('langBtn');
   const langPicker = document.getElementById('langPicker');
-  if (langBtn && langPicker) langBtn.addEventListener('click', () => open(langPicker, langBtn));
+  if (langBtn && langPicker) langBtn.addEventListener('click', () => {
+    if (langBtn.closePicker) langBtn.closePicker();
+    else open(langPicker, langBtn, langBtn);
+  });
 }
 
 // First visit to a reader page (no saved language, none in the link): open the language list right away.
@@ -424,6 +442,7 @@ function promptLanguageIfUnset() {
     options: Object.keys(LANG_LABELS).map(code => ({ value: code, text: LANG_LABELS[code] })),
     current: initialLang(),
     returnFocus: document.getElementById('langBtn'),
+    opener: document.getElementById('langBtn'),  // lights up the globe, so people see where to change it later
     onPick: v => { picker.value = v; picker.dispatchEvent(new Event('change', { bubbles: true })); },
     onClose: () => { if (!Prefs.get('pujaLang')) Prefs.set('pujaLang', initialLang()); },
   });

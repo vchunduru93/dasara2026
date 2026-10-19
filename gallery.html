@@ -75,9 +75,10 @@
       <section id="day${n}" class="border rounded-xl p-4 scroll-mt-28 ${!m.album && !m.reel && !past ? 'opacity-70' : ''}" style="${style}">
         <!-- The day's heading opens that day on the home page -->
         <a href="index.html#day${n}" class="group block mb-3" title="Open Day ${n} on the home page">
-          <span class="flex items-center gap-2">
-            <span class="bg-vedic-deepred text-amber-100 text-xs px-2.5 py-1 rounded-full font-title font-bold">Day ${n}</span>
-            <span class="text-sm font-semibold text-stone-600">${date}</span>
+          <!-- Pills never wrap their text; when the row is too narrow, the date and "View day" move down instead -->
+          <span class="flex flex-wrap items-center gap-x-2 gap-y-1">
+            <span class="flex-shrink-0 whitespace-nowrap bg-vedic-deepred text-amber-100 text-xs px-2.5 py-1 rounded-full font-title font-bold">Day ${n}</span>
+            <span class="whitespace-nowrap text-sm font-semibold text-stone-600">${date}</span>
             <span class="ml-auto text-vedic-deepred text-sm font-semibold whitespace-nowrap group-hover:translate-x-0.5 transition-transform">View day →</span>
           </span>
           <span class="block font-title text-lg font-bold text-vedic-deepred mt-2 leading-snug group-hover:underline">${day.alankaram}</span>

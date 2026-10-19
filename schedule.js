@@ -78,11 +78,12 @@ const scheduleData = {
       date: "2026-10-18",
       dayOfWeek: "Sunday",
       thithi: "Durgashtami",
-      alankaram: "Sri Durga Devi"
+      alankaram: "Sri Durga Devi",
+      memories: { album: "https://photos.app.goo.gl/YVJJgYbfi89LfTj4A", reel: "https://www.instagram.com/reel/Deqj_BIu3-p/" }
     },
     {
       dayNumber: 9,
-      dressColor: { name: "Purple", hex: "#7E22CE", alt: "any dark color" },
+      dressColor: { name: "Purple", hex: "#7E22CE" },
       date: "2026-10-19",
       dayOfWeek: "Monday",
       thithi: "Maharnavami",
@@ -90,7 +91,7 @@ const scheduleData = {
     },
     {
       dayNumber: 10,
-      dressColor: { name: "Gold", hex: "#B8860B", alt: "anything colorful" },
+      dressColor: { name: "Gold", hex: "#B8860B" },
       date: "2026-10-20",
       dayOfWeek: "Tuesday",
       thithi: "Vijaya Dasami",

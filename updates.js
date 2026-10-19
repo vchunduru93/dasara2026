@@ -2,6 +2,15 @@
 // The footers show the newest one as "Last updated".
 window.UPDATES = [
   {
+    date: '2026-10-19T00:43:00-07:00',
+    title: 'Day 8 photos and simpler buttons',
+    items: [
+      'Day 8 (Sri Durga Devi) photo album and reel are in the Gallery and on the home page.',
+      'Cleaner buttons on the puja and bhajan pages, with home now next to the language button. A button stays highlighted while its list is open.',
+      'Durga Suktam reads cleanly in English.'
+    ]
+  },
+  {
     date: '2026-10-19T00:01:00-07:00',
     title: 'Pinch to resize and a cleaner full screen',
     items: [

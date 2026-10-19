@@ -46,7 +46,7 @@
     document.getElementById('updates').innerHTML = UPDATES.map((u, i) => `
       <li class="pl-6 relative">
         <span class="absolute -left-[9px] top-1.5 w-4 h-4 rounded-full border-2 border-vedic-gold ${i === 0 ? 'bg-vedic-deepred' : 'bg-[#FAF7F2]'}"></span>
-        <p class="text-sm font-semibold uppercase tracking-wide text-amber-800">${formatUpdateDate(u.date)}${i === 0 ? ' <span class="ml-1 rounded-full bg-vedic-deepred text-amber-100 px-2 py-0.5 text-[11px] normal-case tracking-normal">Latest</span>' : ''}</p>
+        <p class="text-sm font-semibold uppercase tracking-wide text-amber-800">${formatUpdateDate(u.date)}${i === 0 ? ' <span class="ml-1 whitespace-nowrap rounded-full bg-vedic-deepred text-amber-100 px-2 py-0.5 text-[11px] normal-case tracking-normal">Latest</span>' : ''}</p>
         <h2 class="text-xl font-bold text-vedic-deepred mt-1">${esc(u.title)}</h2>
         <ul class="mt-2 space-y-1.5 text-[17px] leading-relaxed text-stone-800 list-disc pl-5 marker:text-vedic-gold">
           ${u.items.map(t => `<li>${esc(t)}</li>`).join('')}
