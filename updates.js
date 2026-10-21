@@ -2,6 +2,13 @@
 // The footers show the newest one as "Last updated".
 window.UPDATES = [
   {
+    date: '2026-10-21T09:09:00-07:00',
+    title: 'Day 9 and Day 10 photos',
+    items: [
+      'Photo albums for Day 9 (Sri Mahishasura Mardini Devi) and Day 10 (Sri Raja Rajeswari Devi), and the Day 10 reel, are in the Gallery and on the home page.'
+    ]
+  },
+  {
     date: '2026-10-20T17:41:00-07:00',
     title: 'Thank you, and see you next year',
     items: [

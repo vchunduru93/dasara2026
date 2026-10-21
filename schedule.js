@@ -87,7 +87,8 @@ const scheduleData = {
       date: "2026-10-19",
       dayOfWeek: "Monday",
       thithi: "Maharnavami",
-      alankaram: "Sri Mahishasura Mardini Devi"
+      alankaram: "Sri Mahishasura Mardini Devi",
+      memories: { album: "https://photos.app.goo.gl/qeUi5VT1dW98rGhQ9", reel: "" }
     },
     {
       dayNumber: 10,
@@ -95,7 +96,8 @@ const scheduleData = {
       date: "2026-10-20",
       dayOfWeek: "Tuesday",
       thithi: "Vijaya Dasami",
-      alankaram: "Sri Raja Rajeswari Devi"
+      alankaram: "Sri Raja Rajeswari Devi",
+      memories: { album: "https://photos.app.goo.gl/ohkSFpgRu9TJ9hEu9", reel: "https://www.instagram.com/reel/Dev3E15O7X1/" }
     }
   ]
 };
