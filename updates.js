@@ -2,6 +2,14 @@
 // The footers show the newest one as "Last updated".
 window.UPDATES = [
   {
+    date: '2026-10-20T17:41:00-07:00',
+    title: 'Thank you, and see you next year',
+    items: [
+      'From October 21 the home page thanks everyone for celebrating with us, shares next year’s dates (Sri Devi Navaratri 2027, September 30 – October 9) and puts the gallery of all ten days up front.',
+      'The schedule opens on Day 1, and days whose photos are still on the way show a placeholder.'
+    ]
+  },
+  {
     date: '2026-10-19T16:09:00-07:00',
     title: 'Auto scroll pauses when the screen turns off',
     items: [
