@@ -2,6 +2,13 @@
 // The footers show the newest one as "Last updated".
 window.UPDATES = [
   {
+    date: '2026-10-21T11:27:00-07:00',
+    title: 'Day 9 reel',
+    items: [
+      'The Day 9 (Sri Mahishasura Mardini Devi) reel is in the Gallery and on the home page, so every day now has its photos and reel.'
+    ]
+  },
+  {
     date: '2026-10-21T09:09:00-07:00',
     title: 'Day 9 and Day 10 photos',
     items: [

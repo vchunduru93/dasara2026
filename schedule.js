@@ -88,7 +88,7 @@ const scheduleData = {
       dayOfWeek: "Monday",
       thithi: "Maharnavami",
       alankaram: "Sri Mahishasura Mardini Devi",
-      memories: { album: "https://photos.app.goo.gl/qeUi5VT1dW98rGhQ9", reel: "" }
+      memories: { album: "https://photos.app.goo.gl/qeUi5VT1dW98rGhQ9", reel: "https://www.instagram.com/reel/DetMpXXOvsW/" }
     },
     {
       dayNumber: 10,
